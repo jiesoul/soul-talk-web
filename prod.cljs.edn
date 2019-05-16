@@ -1,0 +1,2 @@
+{:main soul-talk.prod}
+^{:watch-dirs ["src" "env/prod"]}
