@@ -1,7 +1,7 @@
 (ns soul-talk.routes
   (:require [goog.events :as events]
             [goog.history.EventType :as HistoryEventType]
-            [secretary.core :as secretary]
+            [secretary.core :as secretary :refer-macros [defroute]]
             [accountant.core :as accountant]
             [re-frame.core :refer [dispatch dispatch-sync subscribe]])
   (:import goog.History))
@@ -38,6 +38,7 @@
                  [:load-tags]
                  [:set-active-page :home]]
                 events)))
+(secretary/set-config! :prefix "#")
 
 ;; 首页
 (secretary/defroute "/" []

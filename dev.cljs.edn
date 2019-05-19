@@ -1,2 +1,2 @@
 ^{:watch-dirs ["src" "env/dev"]}
-{:main soul-talk.dev}
+{:main soul-talk.app}

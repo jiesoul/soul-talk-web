@@ -4,7 +4,8 @@
             [reagent.core :as r]
             [baking-soda.core :as bs]
             [reagent-modals.modals :as rm]
-            [cljsjs.showdown]))
+            [cljsjs.showdown]
+            [cljsjs.highlight]))
 
 (defn loading-throber []
   (let [loading? (subscribe [:loading?])]

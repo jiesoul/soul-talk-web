@@ -1,7 +1,7 @@
 (ns soul-talk.effects
   (:require [re-frame.core :refer [dispatch reg-fx reg-event-fx]]
             [accountant.core :as accountant]))
-
+(def api-url "http://localhost:3001")
 
 (reg-fx
   :http
@@ -14,7 +14,7 @@
         :or {error-event [:ajax-error]
              ajax-map {}}}]
     (dispatch [:set-loading])
-    (method (str "http://localhost:3001" url) (merge
+    (method (str api-url url) (merge
                   {:handler       (fn [response]
                                     (when success-event
                                       (dispatch (if ignore-response-body

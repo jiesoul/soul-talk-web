@@ -1,6 +1,8 @@
-(ns soul-talk.dev
+(ns soul-talk.app
   (:require [soul-talk.core :as core]
             [devtools.core :as devtools]))
+
+(def api-url "http://localhost:3001")
 
 (enable-console-print!)
 
