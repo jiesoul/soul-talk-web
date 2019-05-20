@@ -1,4 +1,7 @@
 /* stylelint-disable selector-list-comma-newline-after */
+html, body {
+  background-color: #FFF;
+}
 
 .blog-header {
   line-height: 1;

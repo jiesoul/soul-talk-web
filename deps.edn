@@ -2,7 +2,7 @@
            org.clojure/clojurescript       {:mvn/version "1.10.520"}
            com.bhauman/figwheel-main       {:mvn/version "0.2.0"}
            com.bhauman/rebel-readline-cljs {:mvn/version "0.1.4"}
-           reagent                         {:mvn/version "0.8.1"}
+           reagent                         {:mvn/version "0.8.1" :exclusions [react react-dom react-transition-group]}
            re-frame                        {:mvn/version "0.10.6"}
            org.webjars/bootstrap {:mvn/version "4.1.3"}
            cljsjs/jquery {:mvn/version "3.4.0-0"}
@@ -14,6 +14,7 @@
            cljsjs/highlight {:mvn/version "9.12.0-2"}
            cljsjs/reactstrap {:mvn/version "7.0.0-0"}
            cljsjs/antd {:mvn/version "3.16.4-0"}
+           antizer {:mvn/version "0.3.1"}
            com.hypaer/ant-man {:mvn/version "1.7.4"}
            org.clojars.frozenlock/reagent-modals {:mvn/version "0.2.8"}
            re-com {:mvn/version "2.5.0"}

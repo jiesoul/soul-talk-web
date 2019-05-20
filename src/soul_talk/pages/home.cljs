@@ -1,7 +1,10 @@
 (ns soul-talk.pages.home
   (:require [reagent.core :as r]
             [re-frame.core :refer [dispatch subscribe]]
-            [soul-talk.pages.common :as c])
+            [soul-talk.pages.common :as c]
+            [soul-talk.pages.landing :as landing]
+            [cljsjs.antd :as antd]
+            [antizer.reagent :as ant])
   (:import [goog.history.Html5History]))
 
 (defn blog-header-component []
@@ -126,5 +129,4 @@
      [footer-component]]))
 
 (defn home-page []
-  (fn []
-    [home-component]))
+      [landing/base-layout])
