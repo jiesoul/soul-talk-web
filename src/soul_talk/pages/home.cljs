@@ -121,6 +121,23 @@
        [where-component]
        [archives-component]]]]))
 
+(defn integration []
+  [:div
+   [:div.foo "hello " [:strong "world"]]
+   (r/create-element "div"
+                     #js{:className "foo"}
+                     "hello "
+                     (r/create-element "strong"
+                                       #js{}
+                                       "world"))
+   (r/create-element "div"
+                     #js{:className "foo"}
+                     "hello "
+                     (r/create-element [:strong "word"]))
+   [:div.foo "hello " (r/create-element "strong"
+                                        #js{}
+                                        "world")]])
+
 (defn home-component []
   (fn []
     [:div
@@ -129,4 +146,4 @@
      [footer-component]]))
 
 (defn home-page []
-      [landing/base-layout])
+  [landing/base-layout])
