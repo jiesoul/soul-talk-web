@@ -1,17 +1,16 @@
 (ns soul-talk.pages.common
-  (:require-macros)
   (:require [re-frame.core :refer [dispatch subscribe]]
             [reagent.core :as r]
-            [baking-soda.core :as bs]
             [reagent-modals.modals :as rm]
-            [cljsjs.showdown]
-            [cljsjs.highlight]))
+            [antd]
+            [showdown]
+            [hljs]))
 
 (defn loading-throber []
   (let [loading? (subscribe [:loading?])]
     (when @loading?
-      [bs/Modal {:is-open true}
-       [bs/ModalBody
+      [:> antd/Modal {:is-open true}
+       [:> antd/ModalBody
         [:div.spinner
          [:div.bounce1]
          [:div.bounce2]
@@ -19,44 +18,44 @@
 
 (defn success-modal []
   (when-let [success @(subscribe [:success])]
-    [bs/Modal {:is-open (boolean success)}
-     [bs/ModalBody
+    [:> antd/Modal {:is-open (boolean success)}
+     [:> antd/ModalBody
       [:p success]]
-     [bs/ModalFooter
-      [bs/Button {:color "primary"
+     [:> antd/ModalFooter
+      [:> antd/Button {:color "primary"
                   :on-click #(dispatch [:set-success nil])}
        "Ok"]]]))
 
 (defn error-modal []
   (when-let [error @(subscribe [:error])]
-    [bs/Modal {:is-open (boolean error)}
-     [bs/ModalHeader "An error has occured"]
-     [bs/ModalBody
+    [:> antd/Modal {:is-open (boolean error)}
+     [:> antd/ModalHeader "An error has occured"]
+     [:> antd/ModalBody
       [:p error]]
-     [bs/ModalFooter
-      [bs/Button {:color    "primary"
+     [:> antd/ModalFooter
+      [:> antd/Button {:color    "primary"
                   :on-click #(dispatch [:set-error nil])}
        "Ok"]]]))
 
 (defn validation-modal [title errors]
-  [bs/Modal {:is-open (boolean @errors)}
-   [bs/ModalHeader title]
-   [bs/ModalBody
+  [:> antd/Modal {:is-open (boolean @errors)}
+   [:> antd/ModalHeader title]
+   [:> antd/ModalBody
     [:ul
      (doall
        (for [[_ error] @errors]
          ^{:key error}
          [:li error]))]]
-   [bs/ModalFooter
+   [:> antd/ModalFooter
     [:button.btn.btn-sm.btn-danger
      {:on-click #(reset! errors nil)}
      "Close"]]])
 
 (defn confirm-modal
   [title confirm-open? action action-label]
-  [bs/Modal {:is-open @confirm-open?}
-   [bs/ModalHeader title]
-   [bs/ModalFooter
+  [:> antd/Modal {:is-open @confirm-open?}
+   [:> antd/ModalHeader title]
+   [:> antd/ModalFooter
     [:div.btn-toolbar
      [:button.btn.btn-sm.btn-danger
       {:on-click #(reset! confirm-open? false)}

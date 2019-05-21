@@ -2,18 +2,19 @@
   (:require [reagent.core :as r]
             [re-frame.core :refer [dispatch subscribe]]
             [soul-talk.pages.common :as c]
+            [ant.design]
             [antd])
   (:import [goog.history.Html5History]))
 
 (defn blog-header-component []
   (fn []
-    [:div.blog-header.py-3
+    [:> antd/Row
      [:div.row.flex-nowrap.justify-content-between.align-items-center
-      [:div.col-4.pt-1
+      [:> antd/Col {:span 4}
        [:a.text-muted {:href "#"} "Subscribe"]]
-      [:div.col-4.text-center
+      [:> antd/Col {:span 16}
        [:a.blog-header-logo.text-dark {:href "/"} "Soul Talk"]]
-      [:div.col-4.d-flex.justify-content-end.align-items-center
+      [:> antd/Col {:span 4}
        [:a.text-muted {:href "#"} "About"]]]]))
 
 (defn nav-scroller-header-component []
@@ -27,16 +28,28 @@
 
 (defn jumbotron-header-component []
   (fn []
-    [:div.jumbotron.p-3.p-md-5.text-white.rounded.bg-dark
-     [:div.col-md-6.px-0.text-center
-      [:h2.display-4.font-italic "进一步有一步的欢喜"]]]))
+    [:> antd/Layout
+     [:> antd/Carousel
+      [:div.col-md-6.px-0.text-center
+       [:h2.display-4.font-italic "进一步有一步的欢喜"]]]]))
+
+(defn menu-component []
+  (fn []
+    [:> antd/Menu {:theme "dark"
+                   :mode "horizontal"
+                   :default-select-keys ["2"]
+                   :style {:line-height "64px"}}
+     [:> antd/Menu.Item {:key "1"} "blog"]
+     [:> antd/Menu.Item {:key "2"} "timeline"]
+     [:> antd/Menu.Item {:key "3"} "about"]
+     ]))
 
 (defn header-component []
   (fn []
-    [:div.container
-     [blog-header-component]
-     [nav-scroller-header-component]
-     [jumbotron-header-component]]))
+    [:> antd/Layout
+     [:div {:className "logo"}]
+     [:> antd/Row
+      [menu-component]]]))
 
 (defn footer-component []
   (fn []
@@ -55,14 +68,14 @@
                total-pages (r/cursor pagination [:total-pages])]
 
     (fn []
-      [:div.col-md-8.blog-main
+      [:> antd/Row
        [:h3.pb-3.mb-4.font-italic.border-bottom
         "文章"]
        (for [{:keys [id title create_time author content] :as post} @posts]
          ^{:key post} [:div.blog-post
                        [:h2.blog-post-title
                         [:a.text-muted
-                         {:href (str "/posts/" id)
+                         {:href   (str "/posts/" id)
                           :target "_blank"}
                          title]]
                        [:p.blog-post-meta (str (.toDateString (js/Date. create_time)) " by " author)]
@@ -70,14 +83,14 @@
                        [:div [c/markdown-preview content]]])
        [:nav.blog-pagination
         [:a.btn.btn-outline-primary
-         {:on-click #(dispatch [:load-posts {:page @next-page
+         {:on-click #(dispatch [:load-posts {:page     @next-page
                                              :pre-page @pre-page}])
-          :class (if (>= @page @total-pages) "disabled")}
+          :class    (if (>= @page @total-pages) "disabled")}
          "Older"]
         [:a.btn.btn-outline-secondary
-         {:on-click #(dispatch [:load-posts {:page @prev-page
+         {:on-click #(dispatch [:load-posts {:page     @prev-page
                                              :pre-page @pre-page}])
-          :class (if (zero? @offset) "disabled")}
+          :class    (if (zero? @offset) "disabled")}
          "Newer"]]])))
 
 (defn where-component []
@@ -109,15 +122,19 @@
 
 (defn main-component []
   (fn []
-    [:div.container {:role "main"}
-     [:div.row
-      [blog-post-component]
-      [:aside.col-md-4.blog-sidebar
-       [:div.p-3.mb-3.bg-light.rounded
-        [:h4.font-italic "About"]
-        [:p.mb-0 ""]]
-       [where-component]
-       [archives-component]]]]))
+    [:> antd/Layout {:class "layout"}
+     [:> antd/Layout.Content {:class "layout"}
+      [jumbotron-header-component]]
+     [:> antd/Row
+      [:> antd/Col {:span 16}
+       [blog-post-component]]
+      [:> antd/Col {:span 6}
+       [:aside.col-md-4.blog-sidebar
+        [:div.p-3.mb-3.bg-light.rounded
+         [:h4.font-italic "About"]
+         [:p.mb-0 ""]
+         [where-component]]
+        [archives-component]]]]]))
 
 (defn integration []
   [:div
@@ -139,10 +156,13 @@
 (defn home-component []
   (fn []
     [:div
-     [:> Button {:variant "contained" :color "primary"}]
-     [header-component]
-     [main-component]
-     [footer-component]]))
+     [:> antd/Layout {:class "layout"}
+      [:> antd/Layout.Header {:class "header"}
+       [header-component]]
+      [:> antd/Layout.Content {:style {:padding "24px"}}
+       [main-component]]
+      [:> antd/Layout.Footer
+       [footer-component]]]]))
 
 (defn home-page []
   [home-component])

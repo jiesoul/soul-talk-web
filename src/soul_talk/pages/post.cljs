@@ -3,8 +3,7 @@
             [re-frame.core :refer [subscribe dispatch]]
             [soul-talk.pages.common :as c]
             [soul-talk.widgets.md-editor :refer [editor]]
-            [re-com.core :refer [input-text single-dropdown]]
-            [baking-soda.core :as bs]))
+            [re-com.core :refer [input-text single-dropdown]]))
 
 (defn posts-list []
   (r/with-let [posts (subscribe [:admin/posts])

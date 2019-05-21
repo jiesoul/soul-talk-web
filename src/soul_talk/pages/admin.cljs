@@ -1,7 +1,7 @@
 (ns soul-talk.pages.admin
   (:require [reagent.core :as r]
-            [baking-soda.core :as bs]
-            [re-frame.core :refer [subscribe dispatch]]))
+            [re-frame.core :refer [subscribe dispatch]]
+            [antd :as antd]))
 
 (defonce main-fields (r/atom nil))
 (defonce table-data (r/atom []))
@@ -153,24 +153,24 @@
   (let [{:keys [button-label class]} opts
         show-modals? (get @ratom :show-modal? false)]
     [:div
-     [bs/Button {:color "dangger"
+     [:> antd/Button {:color "dangger"
                  :on-click #(toggle! ratom)}
       button-label]
 
-     [bs/Modal {:is-open show-modals?
+     [:> antd/Modal {:is-open show-modals?
                 :toggle #(toggle! ratom)
                 :class class}
-      [bs/ModalHeader
+      [:> antd/ModalHeader
        "Modal title"]
 
-      [bs/ModalBody
+      [:> antd/ModalBody
        "Lorem ipsum dolor sit"]
 
-      [bs/ModalFooter
-       [bs/Button {:color "primary"
+      [:> antd/ModalFooter
+       [:> antd/Button {:color "primary"
                    :on-click #(toggle! ratom)}
         "Do Someting"]
-       [bs/Button {:color "secondary"
+       [:> antd/Button {:color "secondary"
                    :on-click #(toggle! ratom)}
         "Cancel"]]]]))
 
