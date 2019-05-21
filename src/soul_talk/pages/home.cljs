@@ -2,9 +2,7 @@
   (:require [reagent.core :as r]
             [re-frame.core :refer [dispatch subscribe]]
             [soul-talk.pages.common :as c]
-            [soul-talk.pages.landing :as landing]
-            [cljsjs.antd :as antd]
-            [antizer.reagent :as ant])
+            [antd])
   (:import [goog.history.Html5History]))
 
 (defn blog-header-component []
@@ -141,9 +139,10 @@
 (defn home-component []
   (fn []
     [:div
+     [:> Button {:variant "contained" :color "primary"}]
      [header-component]
      [main-component]
      [footer-component]]))
 
 (defn home-page []
-  [landing/base-layout])
+  [home-component])

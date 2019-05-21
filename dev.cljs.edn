@@ -1,2 +1,9 @@
 ^{:watch-dirs ["src" "env/dev"]}
-{:main soul-talk.app}
+^{:npm {:bundles {"dist/index.bundle.js" "src-js/index.js"}}}
+{:main soul-talk.app
+ :npm-deps false
+ :infer-externs true
+ :foreign-libs [{:file "dist/index.bundle.js"
+                 :provides ["reat" "react-dom"]
+                 :global-exports {react React
+                                  react-dom ReactDOM}}]}

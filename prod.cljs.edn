@@ -1,2 +1,3 @@
-{:main soul-talk.app}
+{:main soul-talk.app
+ :npm-deps false}
 ^{:watch-dirs ["src" "env/prod"]}

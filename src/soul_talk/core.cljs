@@ -1,5 +1,6 @@
 (ns soul-talk.core
   (:require [reagent.core :as r]
+            [goog.dom :as gdom]
             [soul-talk.ajax :refer [load-interceptors!]]
             [soul-talk.routes :refer [hook-browser-navigation! logged-in?]]
             [soul-talk.views :refer [main-page]]
@@ -12,7 +13,7 @@
 ;; 挂载页面组件
 (defn mount-component []
   (r/render [#'main-page]
-            (.getElementById js/document "app")))
+            (gdom/getElement "app")))
 
 ;; 初始化方法
 (defn init! []
