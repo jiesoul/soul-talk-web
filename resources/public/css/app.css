@@ -1,24 +1,8 @@
-.ant-layout-header {
-  background: #795da3;
-  height: 64px;
-  line-height: 64px;
-  color: #FFFFFF;
-}
-.ant-layout-header .ant-menu-horizontal {
-  background: #795da3;
-  height: 64px;
-  line-height: 64px;
-  color: #FFFFFF;
-  border-bottom: 0px;
-}
-.ant-carousel .slick-slide {
-  text-align: center;
-  min-height: 100vh;
-  background: #364D79;
-  vertical-align: middle;
-  overflow: hidden;
-}
-.ant-carousel .slick-slide h3 {
-  color: #FFF;
+.logo {
+  width: 120px;
+  height: 31px;
+  background: rgba(255, 255, 255, 0.2);
+  margin: 16px 24px 16px 0;
+  float: left;
 }
 /*# sourceMappingURL=app.css.map */
