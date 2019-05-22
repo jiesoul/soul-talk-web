@@ -1,19 +1,24 @@
-#header {
-  width: 10px;
-  height: 20px;
+.ant-layout-header {
+  background: #795da3;
+  height: 64px;
+  line-height: 64px;
+  color: #FFFFFF;
 }
-.bordered {
-  border-top: dotted 1px black;
-  border-bottom: solid 2px black;
+.ant-layout-header .ant-menu-horizontal {
+  background: #795da3;
+  height: 64px;
+  line-height: 64px;
+  color: #FFFFFF;
+  border-bottom: 0px;
 }
-#menu {
-  color: #111;
-  border-top: dotted 1px black;
-  border-bottom: solid 2px black;
+.ant-carousel .slick-slide {
+  text-align: center;
+  min-height: 100vh;
+  background: #364D79;
+  vertical-align: middle;
+  overflow: hidden;
 }
-.post a {
-  color: red;
-  border-top: dotted 1px black;
-  border-bottom: solid 2px black;
+.ant-carousel .slick-slide h3 {
+  color: #FFF;
 }
 /*# sourceMappingURL=app.css.map */

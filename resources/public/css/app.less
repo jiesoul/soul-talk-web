@@ -1,22 +1,33 @@
 @width: 10px;
 @height: @width + 10px;
+@white: #FFFFFF;
 
-#header {
-  width: @width;
-  height: @height;
+@header-background: #795da3;
+@header-height: 64px;
+
+.ant-layout-header {
+  background: @header-background;
+  height: @header-height;
+  line-height: @header-height;
+  color: @white;
 }
 
-.bordered {
-  border-top: dotted 1px black;
-  border-bottom: solid 2px black;
+.ant-layout-header .ant-menu-horizontal {
+  background: @header-background;
+  height: @header-height;
+  line-height: @header-height;
+  color: @white;
+  border-bottom: 0px;
 }
 
-#menu {
-  color: #111;
-  .bordered();
+.ant-carousel .slick-slide {
+  text-align: center;
+  min-height: 100vh;
+  background: #364D79;
+  vertical-align: middle;
+  overflow: hidden;
 }
 
-.post a {
-  color: red;
-  .bordered()
+.ant-carousel .slick-slide h3 {
+  color: #FFF;
 }

@@ -1,4 +1,4 @@
-(ns soul-talk.core
+(ns ^:figwheel-hooks soul-talk.core
   (:require [reagent.core :as r]
             [goog.dom :as gdom]
             [soul-talk.ajax :refer [load-interceptors!]]
@@ -22,4 +22,7 @@
   (dispatch [:load-posts])
   (load-interceptors!)
   (hook-browser-navigation!)
+  (mount-component))
+
+(defn ^:after-load re-render []
   (mount-component))

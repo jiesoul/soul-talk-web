@@ -3,7 +3,54 @@
             [re-frame.core :refer [subscribe dispatch]]
             [soul-talk.pages.common :as c]
             [soul-talk.widgets.md-editor :refer [editor]]
-            [re-com.core :refer [input-text single-dropdown]]))
+            [re-com.core :refer [input-text single-dropdown]]
+            [antd :as antd]))
+
+(defn archives-component []
+  (r/with-let [posts-archives (subscribe [:posts-archives])]
+    (fn []
+      [:div.p-3
+       [:h4.font-italic "Archives"]
+       [:ol.list-unstyled.mb-0
+        (for [{:keys [year month] :as archive} @posts-archives]
+          ^{:key archive}
+          [:li [:a {:href (str "/posts/archives/" year "/" month)} (str month " " year)]])]])))
+
+(defn blog-post-component []
+  (r/with-let [posts (subscribe [:posts])
+               pagination (subscribe [:pagination])
+               offset (r/cursor pagination [:offset])
+               page (r/cursor pagination [:page])
+               prev-page (r/cursor pagination [:previous])
+               next-page (r/cursor pagination [:next])
+               pre-page (r/cursor pagination[:pre-page])
+               total-pages (r/cursor pagination [:total-pages])]
+
+    (fn []
+      [:> antd/Row
+       [:h3.pb-3.mb-4.font-italic.border-bottom
+        "文章"]
+       (for [{:keys [id title create_time author content] :as post} @posts]
+         ^{:key post} [:div.blog-post
+                       [:h2.blog-post-title
+                        [:a.text-muted
+                         {:href   (str "/posts/" id)
+                          :target "_blank"}
+                         title]]
+                       [:p.blog-post-meta (str (.toDateString (js/Date. create_time)) " by " author)]
+                       [:hr]
+                       [:div [c/markdown-preview content]]])
+       [:nav.blog-pagination
+        [:a.btn.btn-outline-primary
+         {:on-click #(dispatch [:load-posts {:page     @next-page
+                                             :pre-page @pre-page}])
+          :class    (if (>= @page @total-pages) "disabled")}
+         "Older"]
+        [:a.btn.btn-outline-secondary
+         {:on-click #(dispatch [:load-posts {:page     @prev-page
+                                             :pre-page @pre-page}])
+          :class    (if (zero? @offset) "disabled")}
+         "Newer"]]])))
 
 (defn posts-list []
   (r/with-let [posts (subscribe [:admin/posts])

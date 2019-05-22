@@ -1,7 +1,6 @@
-(ns soul-talk.app
+(ns ^:figwheel-hooks soul-talk.app
   (:require [soul-talk.core :as core]
             [react]
-            [antd]
             [devtools.core :as devtools]))
 
 (def api-url "http://localhost:3001")
@@ -9,8 +8,6 @@
 (enable-console-print!)
 
 (js/console.log react)
-(js/console.log antd/button)
-(js/console.log antd/date-picker)
 
 (prn "hello world!")
 
@@ -18,3 +15,9 @@
 (devtools/install!)
 
 (core/init!)
+
+(defn ^:before-load my-before-reload-callback []
+  (prn "Before reload!!"))
+
+(defn ^:after-load my-after-reload-callback []
+  (prn "After reload!!"))

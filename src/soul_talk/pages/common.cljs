@@ -2,7 +2,7 @@
   (:require [re-frame.core :refer [dispatch subscribe]]
             [reagent.core :as r]
             [reagent-modals.modals :as rm]
-            [antd]
+            [antd :as antd]
             [showdown]
             [hljs]))
 

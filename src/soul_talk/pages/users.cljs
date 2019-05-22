@@ -5,6 +5,23 @@
             [taoensso.timbre :as log]
             [re-frame.core :refer [subscribe dispatch]]))
 
+(defn where-component []
+  (fn []
+    [:div.p-3
+     [:h4.font-italic "联系我"]
+     [:ol.list-unsty
+      [:li [:a {:href "https://github.com/jiesoul"
+                :target "_blank"}
+            [:i.fa.fa-github]
+            " GitHub"]]
+      [:li [:a {:href "https://weibo.com/jiesoul"
+                :target "_blank"}
+            [:i.fa.fa-weibo] " Weibo"]]
+      [:li [:a {:href "https://twitter.com/jiesoul1982"
+                :target "_blank"}
+            [:i.fa.fa-twitter]
+            " Twitter"]]]]))
+
 (defn users-page []
   (fn []
     [:div
