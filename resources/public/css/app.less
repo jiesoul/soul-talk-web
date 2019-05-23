@@ -6,6 +6,12 @@
 @header-height: 64px;
 @carousel-height: 100vh - @header-height;
 
+.brand {
+  text-align: center;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  color: @white;
+}
+
 .logo {
   width: 120px;
   height: 31px;
@@ -29,14 +35,20 @@
 //  border-bottom: 0px;
 //}
 //
-//.ant-carousel .slick-slide {
-//  text-align: center;
-//  min-height: 100vh;
-//  background: #364D79;
-//  vertical-align: middle;
-//  overflow: hidden;
-//}
-//
-//.ant-carousel .slick-slide h3 {
-//  color: #FFF;
-//}
+.ant-carousel .slick-slide {
+  background-image: url('./images/IMAG0561.jpg');
+  min-height: 180px;
+  text-align: center;
+  background: #364D79;
+  vertical-align: middle;
+  overflow: hidden;
+}
+
+.ant-carousel .slick-slide h3 {
+  color: #FFF;
+}
+
+.post-preview {
+  max-height: 280px;
+  overflow: hidden;
+}

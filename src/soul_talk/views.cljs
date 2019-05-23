@@ -10,38 +10,9 @@
             [soul-talk.pages.post :refer [posts-page post-view-page edit-post-page post-archives-page add-post-page]]
             [soul-talk.pages.category :as category]
             [soul-talk.pages.tag :as tag]
-            [clojure.string :as str]))
-
-(defn admin-user-menu [user]
-  (if @user
-    [:ul.nav.navbar-nav
-     [:li.nav-item.text-nowrap.dropdown
-      [:a.nav-link.dropdown-toggle
-       {:href          "#"
-        :id            "usermenu"
-        :data-toggle   "dropdown"
-        :role          "button"
-        :aria-haspopup true
-        :aria-expanded false}
-       [:i.fa.fa-user-circle]
-       " " (if (str/blank? (:name @user)) (:email @user) (:name @user))]
-      [:div.dropdown-menu.dropdown-menu-right
-       {:aria-labelledby "usermenu"}
-       [:a.dropdown-item {:href "/user-profile"} "Your Profile"]
-       [:a.dropdown-item
-        {:href "/change-pass"}
-        "密码修改"]
-       [:div.dropdown-divider]
-       [:a.dropdown-item.btn
-        {:on-click #(dispatch [:logout])}
-        "退出"]]]]))
-
-(defn admin-navbar [user]
-  (fn []
-    [:nav.navbar.navbar-dark.fixed-top.bg-dark.flex-md-nowrap.p-0.shadow.mr-md-2
-     [:a.navbar-brand.mr-0.mr-md-2
-      {:href "/" :target "_blank"} "Soul Talk"]
-     [admin-user-menu user]]))
+            [clojure.string :as str]
+            [antd :as antd]
+            [soul-talk.pages.header :refer [header-component admin-menu-component]]))
 
 
 (defn admin-sidebar-link [url title page & icon]
@@ -59,13 +30,24 @@
   (fn []
     (r/with-let [user (subscribe [:user])]
       (when @user
-        [:nav.col-md-2.d-none.d-md-block.bg-light.sidebar
-         [:div.sidebar-sticky
-          [:ul.nav.flex-column
-           (admin-sidebar-link "/admin" "面板" :admin "fa fa-home")
-           (admin-sidebar-link "/categories" "分类" :categories "fa fa-reorder")
-           (admin-sidebar-link "/posts" "文章" :posts "fa fa-archive")
-           (admin-sidebar-link "/users" "用户" :users "fa fa-users")]]]))))
+        [:> antd/Menu {:mode "inline"
+                       :default-select-keys ["1"]
+                       :default-open-keys ["blog"]
+                       :style {:height "100%"
+                               :border-right 0}}
+         [:> antd/Menu.Item {:key "1"} "面板"]
+         [:> antd/Menu.SubMenu {:key   "blog"
+                                :title "博客管理"}
+          [:> antd/Menu.Item {:key "category"
+                              :on-click (dispatch [:categories])}
+           "分类"]
+          [:> antd/Menu.Item {:key "post"} "文章"]]
+
+         [:> antd/Menu.SubMenu {:key "1"
+                                :title "用户"}
+          [:> antd/Menu.Item {:key "profile"} "个人信息"]
+          [:> antd/Menu.Item {:key "password"} "密码修改"]
+          ]]))))
 
 
 
@@ -84,12 +66,20 @@
 (defn admin-page [page]
   (r/with-let [user (subscribe [:user])]
     (if @user
-      [:div.container-fluid
-       [admin-navbar user]
-       [:div.container-fluid
-        [:div.row
-         [admin-sidebar]
-         [:main#main.col-md-9.ml-sm-auto.col-lg-10.px-4 {:role "main"}
+      [:> antd/Layout
+       [header-component admin-menu-component]
+       [:> antd/Layout
+        [:> antd/Layout.Sider {:style {:background "#fff"}}
+         [admin-sidebar]]
+        [:> antd/Layout {:style {:padding "0 24px 24px"}}
+         [:> antd/Breadcrumb
+          {:style {:margin "16px 0"}}
+          [:> antd/Breadcrumb.Item "Home"]]
+         [:> antd/Layout.Content
+          {:style {:background "#fff"
+                   :padding 24
+                   :margin 0
+                   :min-height 280}}
           [page]]]]]
       (pages :login nil))))
 

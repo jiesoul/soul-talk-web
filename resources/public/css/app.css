@@ -1,8 +1,28 @@
+.brand {
+  text-align: center;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  color: #FFFFFF;
+}
 .logo {
   width: 120px;
   height: 31px;
   background: rgba(255, 255, 255, 0.2);
   margin: 16px 24px 16px 0;
   float: left;
+}
+.ant-carousel .slick-slide {
+  background-image: url('./images/IMAG0561.jpg');
+  min-height: 180px;
+  text-align: center;
+  background: #364D79;
+  vertical-align: middle;
+  overflow: hidden;
+}
+.ant-carousel .slick-slide h3 {
+  color: #FFF;
+}
+.post-preview {
+  max-height: 280px;
+  overflow: hidden;
 }
 /*# sourceMappingURL=app.css.map */

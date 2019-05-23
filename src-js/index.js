@@ -21,7 +21,7 @@ window.hljs = hljs;
 import showdown from 'showdown';
 window.showdown = showdown;
 
-import './default.less'
+// import './default.less'
 // import './header.less'
 // import './home.less'
 // import './footer.less'
