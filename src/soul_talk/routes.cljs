@@ -38,20 +38,22 @@
                  [:load-tags]
                  [:set-active-page :home]]
                 events)))
+
+
 (secretary/set-config! :prefix "#")
 
 ;; 首页
-(secretary/defroute "/" []
+(defroute "/" []
   (let [pagination {:page     1
                     :pre-page 3}]
     (home-page-events
       [[:load-posts pagination]
        [:load-posts-archives]])))
 
-(secretary/defroute "/login" []
+(defroute "/login" []
   (run-events [[:set-active-page :login]]))
 
-(secretary/defroute "/register" []
+(defroute "/register" []
   (run-events [[:set-active-page :register]]))
 
 ;; 无登录下把事件加入登录事件
@@ -65,13 +67,13 @@
 (secretary/defroute "/admin" []
   (run-events [[:set-active-page :admin]]))
 
-(secretary/defroute "/change-pass" []
+(defroute "/change-pass" []
   (run-events [[:set-active-page :change-pass]]))
 
-(secretary/defroute "/user-profile" []
+(defroute "/user-profile" []
   (run-events [[:set-active-page :user-profile]]))
 
-(secretary/defroute "/users" []
+(defroute "/users" []
   (run-events [[:admin/load-users]
                      [:set-active-page :users]]))
 

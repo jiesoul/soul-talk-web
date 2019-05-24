@@ -1,14 +1,12 @@
 (ns soul-talk.pages.auth
   (:require [reagent.core :as r]
-            [soul-talk.pages.common :as c]
             [soul-talk.auth-validate :refer [login-errors]]
-            [taoensso.timbre :as log]
             [antd :as antd]
             [re-frame.core :refer [dispatch subscribe]])
   (:import goog.History))
 
 (defn login-page []
-  (let  [login-data (r/atom {:email ""
+  (r/with-let  [login-data (r/atom {:email ""
                              :password ""})
          error     (subscribe [:error])
          email (r/cursor login-data [:email])
@@ -43,7 +41,7 @@
             :required    true
             :on-change   #(reset! password (-> % .-target .-value))}]
           (when @error
-            [:div.alert.alert-danger @error])
+            [:div @error])
           [:> antd/Button
            {:type     "submit"
             :on-click #(dispatch [:login @login-data])}

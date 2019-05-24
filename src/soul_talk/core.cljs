@@ -18,7 +18,7 @@
 ;; 初始化方法
 (defn init! []
   (dispatch-sync [:initialize-db])
-  (if (logged-in?) (dispatch [:run-login-events]))
+  ;(if (logged-in?) (dispatch [:run-login-events]))
   (dispatch [:load-posts])
   (load-interceptors!)
   (hook-browser-navigation!)

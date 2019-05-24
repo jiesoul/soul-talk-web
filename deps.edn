@@ -10,13 +10,11 @@
                                                          cljsjs/react-dom
                                                          cljsjs/react-transition-group]}
            re-frame                        {:mvn/version "0.10.6"}
-           org.webjars/bootstrap {:mvn/version "4.1.3"}
-           org.clojars.frozenlock/reagent-modals {:mvn/version "0.2.8"}
            venantius/accountant {:mvn/version "0.2.4"}
+           re-frisk {:mvn/version "0.5.4.1"}
            cljs-ajax {:mvn/version "0.8.0"}
            clj-commons/secretary {:mvn/version "1.2.4"}
            bouncer {:mvn/version "1.0.1"}
-           re-com {:mvn/version "2.5.0"}
            com.taoensso/timbre {:mvn/version "4.10.0"}}
 
  :paths   ["src" "src-cljc" "target" "resources" "env/dev" "env/prod"]

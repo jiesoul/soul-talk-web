@@ -12,45 +12,7 @@
             [soul-talk.pages.tag :as tag]
             [clojure.string :as str]
             [antd :as antd]
-            [soul-talk.pages.header :refer [header-component admin-menu-component]]))
-
-
-(defn admin-sidebar-link [url title page & icon]
-  (let [active-page (subscribe [:active-page])]
-    [:li.nav-item
-     [:a.nav-link
-      {:href  url
-       :class (when (= page @active-page)
-                "active")}
-      (if icon
-        [:i {:class icon}])
-      " " title]]))
-
-(defn admin-sidebar []
-  (fn []
-    (r/with-let [user (subscribe [:user])]
-      (when @user
-        [:> antd/Menu {:mode "inline"
-                       :default-select-keys ["1"]
-                       :default-open-keys ["blog"]
-                       :style {:height "100%"
-                               :border-right 0}}
-         [:> antd/Menu.Item {:key "1"} "面板"]
-         [:> antd/Menu.SubMenu {:key   "blog"
-                                :title "博客管理"}
-          [:> antd/Menu.Item {:key "category"
-                              :on-click (dispatch [:categories])}
-           "分类"]
-          [:> antd/Menu.Item {:key "post"} "文章"]]
-
-         [:> antd/Menu.SubMenu {:key "1"
-                                :title "用户"}
-          [:> antd/Menu.Item {:key "profile"} "个人信息"]
-          [:> antd/Menu.Item {:key "password"} "密码修改"]
-          ]]))))
-
-
-
+            [soul-talk.pages.admin :refer [admin-page-component main-component]]))
 
 ;;多重方法  响应对应的页面
 (defmulti pages (fn [page _] page))
@@ -62,25 +24,10 @@
 (defmethod pages :posts/archives [_ _] [post-archives-page])
 (defmethod pages :posts/view [_ _] [post-view-page])
 
-
-(defn admin-page [page]
+(defn admin-page [page-component]
   (r/with-let [user (subscribe [:user])]
     (if @user
-      [:> antd/Layout
-       [header-component admin-menu-component]
-       [:> antd/Layout
-        [:> antd/Layout.Sider {:style {:background "#fff"}}
-         [admin-sidebar]]
-        [:> antd/Layout {:style {:padding "0 24px 24px"}}
-         [:> antd/Breadcrumb
-          {:style {:margin "16px 0"}}
-          [:> antd/Breadcrumb.Item "Home"]]
-         [:> antd/Layout.Content
-          {:style {:background "#fff"
-                   :padding 24
-                   :margin 0
-                   :min-height 280}}
-          [page]]]]]
+      [admin-page-component page-component]
       (pages :login nil))))
 
 ;;后台页面
@@ -116,10 +63,9 @@
 
 (defmethod pages :posts/edit [_ _]
   (r/with-let [user (subscribe [:user])]
-    (js/console.log "posts edit")
-              (if @user
-                [edit-post-page]
-                (pages :login nil))))
+    (if @user
+      [edit-post-page]
+      (pages :login nil))))
 
 (defmethod pages :tags/add [_ _]
   (admin-page tag/add-page))
@@ -128,10 +74,9 @@
 
 ;; 根据配置加载不同页面
 (defn main-page []
-  (r/with-let [active-page (subscribe [:active-page])
-               user (subscribe [:user])]
+  (r/with-let [active-page (subscribe [:active-page])]
     [:div
      [loading-throber]
      [success-modal]
-     ;[error-modal]
-     (pages @active-page @user)]))
+     [error-modal]
+     (pages @active-page nil)]))

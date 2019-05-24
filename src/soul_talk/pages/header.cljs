@@ -19,16 +19,17 @@
 
 (defn admin-menu-component []
   (r/with-let [user (subscribe [:user])]
-    (if @user
-      (fn []
-        [:> antd/Menu {:id "admin-nav"
-                       :key "admin-nav"
-                       :theme "dark"
-                       :mode "horizontal"
-                       :style {:line-height "64px"}}
-         [:> antd/Menu.Item {:key "cancel"}
-          [:> antd/Button {:type "link"}
-           "退出"]]]))))
+    (when @user
+      [:> antd/Menu {:id    "admin-nav"
+                     :key   "admin-nav"
+                     :theme "dark"
+                     :mode  "horizontal"
+                     :style {:line-height "64px"}}
+       [:> antd/Menu.Item {:key "user-name"}
+        (str "欢迎你 " (:name @user))]
+       [:> antd/Menu.Item {:key      "cancel"
+                           :on-click (dispatch [:logout])}
+        "退出"]])))
 
 (defn header-component [menu-component]
   (fn []

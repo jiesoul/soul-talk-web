@@ -1,13 +1,10 @@
 (ns ^:figwheel-hooks soul-talk.app
   (:require [soul-talk.core :as core]
-            [react]
             [devtools.core :as devtools]))
 
 (def api-url "http://localhost:3001")
 
 (enable-console-print!)
-
-(js/console.log react)
 
 (prn "hello world!")
 

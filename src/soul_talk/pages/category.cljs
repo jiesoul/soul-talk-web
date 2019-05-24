@@ -1,8 +1,8 @@
 (ns soul-talk.pages.category
   (:require [soul-talk.pages.common :as c]
-            [re-com.core :refer [input-text]]
             [re-frame.core :refer [dispatch subscribe]]
-            [reagent.core :as r]))
+            [reagent.core :as r]
+            [antd :as antd]))
 
 (defn categories-list []
   (r/with-let [categories (subscribe [:categories])
@@ -55,8 +55,6 @@
                           r/atom)
                error (subscribe [:error])
                name (r/cursor category [:name])]
-    (js/console.log @category)
-    (js/console.log @ori-category)
     [:div.container-fluid
      [:nav {:aria-label "breadcrumb"}
       [:ol.breadcrumb
@@ -64,11 +62,10 @@
         {:aria-current "page"}
         (if @ori-category "分类修改" "分类添加")]]]
      [:div.form-group
-      [input-text
-       :model name
-       :width "100%"
-       :class "form-control"
-       :on-change #(reset! name %)]
+      [:> antd/Input
+       {:width     "100%"
+        :class     "form-control"
+        :on-change #(reset! name %)}]
       (when @error
         [:div.alert.alert-danger.smaller @error])]
      [:div
@@ -96,7 +93,7 @@
             {:aria-current "page"}
             (if @ori-category "分类修改" "分类添加")]]]
          [:div.form-group
-          [input-text
+          [:> antd/Input
            :model name
            :width "100%"
            :class "form-control"

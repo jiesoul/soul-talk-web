@@ -3,7 +3,6 @@
             [re-frame.core :refer [subscribe dispatch]]
             [soul-talk.pages.common :as c]
             [soul-talk.widgets.md-editor :refer [editor]]
-            [re-com.core :refer [input-text single-dropdown]]
             [antd :as antd]))
 
 (defn archives-component []
@@ -155,9 +154,6 @@
              :placeholder "请输入标题"
              :value       @title
              :on-change   #(reset! title (-> % .-target .-value))}]]
-          [:div.form-inline
-           [:div.form-row.col-auto.my-1
-            [c/upload-md-modal]]]
           [:div.form-group
            [c/editor content]]
           (when @error
@@ -214,15 +210,12 @@
           [:main#main.col-md-12.ml-sm-auto.col-lg-12.px-4
            [:div
             [:div.form-group
-             [input-text
+             [:> antd/Input
               :model title
               :on-change #(reset! title %)
               :placeholder "标题"
               :width "100%"
               :class "form-control input-lg"]]
-            [:div.form-inline
-             [:div.form-row.col-auto.my-1
-              [c/upload-md-modal]]]
             [:div.form-group
              [editor content title]]
             (when @error

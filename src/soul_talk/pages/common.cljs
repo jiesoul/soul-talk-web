@@ -1,7 +1,6 @@
 (ns soul-talk.pages.common
   (:require [re-frame.core :refer [dispatch subscribe]]
             [reagent.core :as r]
-            [reagent-modals.modals :as rm]
             [antd :as antd]
             [showdown]
             [hljs]))
@@ -9,22 +8,15 @@
 (defn loading-throber []
   (let [loading? (subscribe [:loading?])]
     (when @loading?
-      [:> antd/Modal {:is-open true}
-       [:> antd/ModalBody
-        [:div.spinner
-         [:div.bounce1]
-         [:div.bounce2]
-         [:div.bounce3]]]])))
+      [:> antd/Spin {:tip "加载中。。。。"}
+       [:> antd/Alert
+        {:message "加载中"
+         :description "明细"
+         :type "info"}]])))
 
 (defn success-modal []
   (when-let [success @(subscribe [:success])]
-    [:> antd/Modal {:is-open (boolean success)}
-     [:> antd/ModalBody
-      [:p success]]
-     [:> antd/ModalFooter
-      [:> antd/Button {:color "primary"
-                  :on-click #(dispatch [:set-success nil])}
-       "Ok"]]]))
+    ))
 
 (defn error-modal []
   (when-let [error @(subscribe [:error])]
