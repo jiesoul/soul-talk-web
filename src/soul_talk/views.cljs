@@ -26,6 +26,7 @@
 
 (defn admin-page [page-component]
   (r/with-let [user (subscribe [:user])]
+    (js/console.log "login user: " @user)
     (if @user
       [admin-page-component page-component]
       (pages :login nil))))
@@ -70,7 +71,7 @@
 (defmethod pages :tags/add [_ _]
   (admin-page tag/add-page))
 
-(defmethod pages :default [_ _] [:div])
+(defmethod pages :default [_ _] [:div "页面未找到"])
 
 ;; 根据配置加载不同页面
 (defn main-page []

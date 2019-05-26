@@ -1,4 +1,4 @@
-(ns ^:figwheel-hooks soul-talk.core
+(ns soul-talk.core
   (:require [reagent.core :as r]
             [goog.dom :as gdom]
             [soul-talk.ajax :refer [load-interceptors!]]
@@ -12,17 +12,15 @@
 
 ;; 挂载页面组件
 (defn mount-component []
+  (js/console.log "render main")
   (r/render [#'main-page]
             (gdom/getElement "app")))
 
 ;; 初始化方法
 (defn init! []
+  (js/console.log "init.....")
   (dispatch-sync [:initialize-db])
-  ;(if (logged-in?) (dispatch [:run-login-events]))
-  (dispatch [:load-posts])
+  (if (logged-in?) (dispatch [:run-login-events]))
   (load-interceptors!)
   (hook-browser-navigation!)
-  (mount-component))
-
-(defn ^:after-load re-render []
   (mount-component))

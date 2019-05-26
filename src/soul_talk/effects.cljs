@@ -1,6 +1,7 @@
 (ns soul-talk.effects
   (:require [re-frame.core :refer [dispatch reg-fx reg-event-fx]]
-            [accountant.core :as accountant]))
+            [accountant.core :as accountant]
+            [soul-talk.local-storage :as storage]))
 (def api-url "http://localhost:3001")
 
 (reg-fx
@@ -16,6 +17,7 @@
     (dispatch [:set-loading])
     (method (str api-url url) (merge
                   {:handler       (fn [response]
+                                    (js/console.log "server response message: " response)
                                     (when success-event
                                       (dispatch (if ignore-response-body
                                                   success-event
@@ -30,6 +32,7 @@
 (reg-fx
   :navigate
   (fn [url]
+    (js/console.log url)
     (accountant/navigate! url)))
 
 (reg-fx
@@ -40,4 +43,4 @@
 (reg-fx
   :set-user!
   (fn [user-identity]
-    (set! js/user (clj->js user-identity))))
+    (storage/set-item! "soul-talk-login-user" user-identity)))

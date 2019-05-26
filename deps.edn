@@ -10,6 +10,7 @@
                                                          cljsjs/react-dom
                                                          cljsjs/react-transition-group]}
            re-frame                        {:mvn/version "0.10.6"}
+           re-frame-cookie-fx {:mvn/version "1.0.0-alpha"}
            venantius/accountant {:mvn/version "0.2.4"}
            re-frisk {:mvn/version "0.5.4.1"}
            cljs-ajax {:mvn/version "0.8.0"}

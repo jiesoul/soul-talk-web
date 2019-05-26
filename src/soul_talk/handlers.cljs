@@ -1,6 +1,7 @@
 (ns soul-talk.handlers
-  (:require [re-frame.core :refer [dispatch dispatch-sync reg-event-db reg-event-fx subscribe]]
-            [soul-talk.db :as db]
+  (:require [re-frame.core :refer [inject-cofx dispatch dispatch-sync reg-event-db reg-event-fx subscribe]]
+            [soul-talk.db :refer [default-db]]
+            [soul-talk.local-storage :as storage]
             soul-talk.handler.posts
             soul-talk.handler.errors
             soul-talk.handler.auth
@@ -14,7 +15,8 @@
 (reg-event-db
   :initialize-db
   (fn [_ _]
-    db/default-db))
+    (let [val (storage/get-item "soul-talk-login-user")]
+      (assoc default-db :user val))))
 
 ;; 设置当前页
 (reg-event-db
@@ -26,7 +28,6 @@
   :navigate-to
   (fn [_ [_ url]]
     {:navigate url}))
-
 
 (reg-event-db
   :set-success
@@ -43,7 +44,6 @@
 (reg-event-db
   :set-loading-for-real-this-time
   (fn [{:keys [should-be-loading?] :as db} _]
-    (js/console.log db)
     (if should-be-loading?
       (assoc db :loading? true)
       db)))

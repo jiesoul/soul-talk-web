@@ -1,4 +1,4 @@
-(ns ^:figwheel-hooks soul-talk.app
+(ns ^:figwheel-no-load soul-talk.app
   (:require [soul-talk.core :as core]
             [devtools.core :as devtools]))
 

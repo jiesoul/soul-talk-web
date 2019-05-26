@@ -24,19 +24,19 @@
                      :key   "admin-nav"
                      :theme "dark"
                      :mode  "horizontal"
-                     :style {:line-height "64px"}}
+                     :style {:line-height "64px"}
+                     :default-select-keys ["user-name"]}
        [:> antd/Menu.Item {:key "user-name"}
         (str "欢迎你 " (:name @user))]
        [:> antd/Menu.Item {:key      "cancel"
-                           :on-click (dispatch [:logout])}
+                           :on-click (fn [] (dispatch [:logout]))}
         "退出"]])))
 
 (defn header-component [menu-component]
-  (fn []
+  (fn [menu-component]
     [:> antd/Layout.Header
      [:> antd/Row
       [:> antd/Col {:span 2}
        [:h1 {:className "brand"} "Soul Talk"]]
       [:> antd/Col {:span 22}
        [menu-component]]]]))
-

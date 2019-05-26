@@ -6,6 +6,7 @@
 (reg-event-db
   :set-categories
   (fn [db [_ {:keys [categories]}]]
+    (js/console.log categories)
     (assoc db :categories categories)))
 
 (reg-event-fx

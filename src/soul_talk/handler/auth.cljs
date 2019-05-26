@@ -1,7 +1,7 @@
 (ns soul-talk.handler.auth
   (:require [soul-talk.db :as db]
             [soul-talk.auth-validate :refer [login-errors reg-errors]]
-            [re-frame.core :refer [reg-event-fx reg-event-db]]
+            [re-frame.core :refer [reg-event-fx reg-event-db dispatch]]
             [ajax.core :refer [POST GET DELETE PUT]]))
 
 
@@ -30,7 +30,9 @@
     {:db         (assoc db :user user)
      :dispatch-n (list
                    [:run-login-events]
-                   [:navigate-to "/#/admin"])}))
+                   [:set-active-page :admin]
+                   [:navigate-to "/#/admin"])
+     :set-user! user}))
 
 ;; login
 (reg-event-fx
@@ -70,7 +72,9 @@
 (reg-event-fx
   :handle-logout
   (fn [_ _]
-    {:reload-page true}))
+    {:dispatch-n (list
+                   [:set-active-page :login]
+                   [:navigate-to "/#/login"])}))
 
 (reg-event-fx
   :logout
@@ -80,5 +84,5 @@
                  :ignore-response-body true
                  :success-event        [:handle-logout]
                  :error-event          [:handle-logout]}
-     :db        db/default-db
+     :db db/default-db
      :set-user! nil}))

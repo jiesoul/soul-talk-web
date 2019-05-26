@@ -6,6 +6,8 @@
             [re-frame.core :refer [dispatch dispatch-sync subscribe]])
   (:import goog.History))
 
+
+
 ;; 判断是否登录
 (defn logged-in? []
   @(subscribe [:user]))
@@ -64,38 +66,38 @@
                       events)))
 
 ;; 后台管理
-(secretary/defroute "/admin" []
+(defroute admin "/admin" []
   (run-events [[:set-active-page :admin]]))
 
-(defroute "/change-pass" []
+(defroute change-pass "/change-pass" []
   (run-events [[:set-active-page :change-pass]]))
 
-(defroute "/user-profile" []
+(defroute user-profile "/user-profile" []
   (run-events [[:set-active-page :user-profile]]))
 
-(defroute "/users" []
+(defroute users "/users" []
   (run-events [[:admin/load-users]
                      [:set-active-page :users]]))
 
-(secretary/defroute "/categories" []
+(defroute categories "/categories" []
   (run-events [[:load-categories]
-                     [:set-active-page :categories]]))
+               [:set-active-page :categories]]))
 
-(secretary/defroute "/categories/add" []
+(defroute categroies-add "/categories/add" []
   (dispatch [:close-category])
   (run-events
     [[:set-active-page :categories/add]]))
 
-(secretary/defroute "/categories/:id/edit" [id]
+(defroute categories-edit "/categories/:id/edit" [id]
   (run-events [[:load-category id]
                      [:set-active-page :categories/edit]]))
 
-(secretary/defroute "/categories/:id" [id]
+(defroute category "/categories/:id" [id]
   (run-events [[:load-category id]
                      [:set-active-page :categories/view]]))
 
 
-(secretary/defroute "/posts" []
+(defroute posts "/posts" []
   (run-events [[:admin/load-posts]
                      [:set-active-page :posts]]))
 
@@ -120,6 +122,12 @@
   (run-events [[:load-categories]
                      [:load-post id]
                      [:set-active-page :posts/view]]))
+
+(accountant/configure-navigation!
+  {:nav-handler (fn [path]
+                  (secretary/dispatch! path))
+   :path-exists? (fn [path]
+                   (dispatch "not-found"))})
 
 ;; 使用浏览器可以使用前进后退 历史操作
 (defn hook-browser-navigation! []
