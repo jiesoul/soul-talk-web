@@ -1,18 +1,20 @@
 (ns soul-talk.pages.common
-  (:require [re-frame.core :refer [dispatch subscribe]]
+  (:require [re-frame.core :as rf :refer [dispatch subscribe]]
             [reagent.core :as r]
             [antd :as antd]
             [showdown]
             [hljs]))
 
-(defn loading-throber []
+(defn loading-modal []
   (let [loading? (subscribe [:loading?])]
     (when @loading?
-      [:> antd/Spin {:tip "加载中。。。。"}
-       [:> antd/Alert
-        {:message "加载中"
-         :description "明细"
-         :type "info"}]])))
+      [:> antd/Spin {:tip "加载中。。。。"}])))
+
+(defn spin-loading [component]
+  (r/with-let [loading? (subscribe [:loading?])]
+    [:div
+     [:> antd/Spin {:spinning @loading?}]
+     [complement]]))
 
 (defn success-modal []
   (when-let [success @(subscribe [:success])]
@@ -28,6 +30,14 @@
       [:> antd/Button {:color    "primary"
                   :on-click #(dispatch [:set-error nil])}
        "Ok"]]]))
+
+(defn breadcrumb-component []
+  (r/with-let [breadcrumbs (rf/subscribe [:breadcrumb])]
+    (fn []
+      [:> antd/Breadcrumb {:style {:margin "10px 0"}}
+       (for [item @breadcrumbs]
+         ^{:key item}
+         [:> antd/Breadcrumb.Item item])])))
 
 (defn validation-modal [title errors]
   [:> antd/Modal {:is-open (boolean @errors)}

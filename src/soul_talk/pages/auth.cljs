@@ -14,13 +14,12 @@
     (fn []
       [:> antd/Layout {:style {:min-height "100vh"}
                        :align "middle"}
-       [:> antd/Row
+       [:> antd/Row {:align "middle"
+                     :justify "space-around"}
         [:> antd/Col {:span 4 :offset 10}
          [:> antd/Form {:align "middle"
                         :className "login-form"}
           [:h1.h3.mb-3.font-weight-normal.text-center "Login"]
-          [:label.sr-only
-           {:for "email"}]
           [:> antd/Input
            {:id          "email"
             :prefix      (r/as-element [:> antd/Icon {:type "user"}])
@@ -30,8 +29,6 @@
             :required    true
             :auto-focus  true
             :on-change   #(reset! email (-> % .-target .-value))}]
-          [:label.sr-only
-           {:for "password"}]
           [:> antd/Input.Password
            {:id          "password"
             :type        :password

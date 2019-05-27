@@ -18,6 +18,8 @@
 ;; 当前页配置
 (reg-sub :active-page query)
 
+(reg-sub :breadcrumb query)
+
 (reg-sub :user query)
 
 (reg-sub :error query)

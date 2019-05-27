@@ -6,19 +6,18 @@
             [soul-talk.views :refer [main-page]]
             [re-frame.core :refer [dispatch-sync dispatch]]
     ;;初始化处理器和订阅器
+            soul-talk.routes
             soul-talk.effects
             soul-talk.handlers
             soul-talk.subs))
 
 ;; 挂载页面组件
 (defn mount-component []
-  (js/console.log "render main")
   (r/render [#'main-page]
             (gdom/getElement "app")))
 
 ;; 初始化方法
 (defn init! []
-  (js/console.log "init.....")
   (dispatch-sync [:initialize-db])
   (if (logged-in?) (dispatch [:run-login-events]))
   (load-interceptors!)

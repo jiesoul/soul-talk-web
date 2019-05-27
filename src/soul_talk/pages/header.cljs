@@ -29,7 +29,7 @@
        [:> antd/Menu.Item {:key "user-name"}
         (str "欢迎你 " (:name @user))]
        [:> antd/Menu.Item {:key      "cancel"
-                           :on-click (fn [] (dispatch [:logout]))}
+                           :on-click #(dispatch [:logout])}
         "退出"]])))
 
 (defn header-component [menu-component]

@@ -2,7 +2,7 @@
   (:require [reagent.core :as r]
             [re-frame.core :refer [subscribe dispatch]]
             [soul-talk.routes :refer [logged-in? navigate!]]
-            [soul-talk.pages.common :refer [loading-throber error-modal success-modal]]
+            [soul-talk.pages.common :refer [loading-modal error-modal success-modal spin-loading]]
             [soul-talk.pages.home :refer [home-page]]
             [soul-talk.pages.admin :refer [main-component]]
             [soul-talk.pages.auth :refer [login-page register-page]]
@@ -26,7 +26,6 @@
 
 (defn admin-page [page-component]
   (r/with-let [user (subscribe [:user])]
-    (js/console.log "login user: " @user)
     (if @user
       [admin-page-component page-component]
       (pages :login nil))))
@@ -47,10 +46,11 @@
 (defmethod pages :categories [_ _]
   (admin-page category/categories-page))
 
-(defmethod pages :categories/add [_ _]
+(defmethod pages :categories-add [_ _]
+  (js/console.log "views: load categories add page")
   (admin-page category/edit-page))
 
-(defmethod pages :categories/edit [_ _]
+(defmethod pages :categories-edit [_ _]
   (admin-page category/edit-page))
 
 (defmethod pages :posts [_ _]
@@ -77,7 +77,8 @@
 (defn main-page []
   (r/with-let [active-page (subscribe [:active-page])]
     [:div
-     [loading-throber]
+     ;[loading-modal]
      [success-modal]
      [error-modal]
-     (pages @active-page nil)]))
+     [:div
+      (pages @active-page nil)]]))

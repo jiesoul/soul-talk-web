@@ -24,6 +24,11 @@
   (fn [db [_ page]]
     (assoc db :active-page page)))
 
+(reg-event-db
+  :set-breadcrumb
+  (fn [db [_ breadcrumb]]
+    (assoc db :breadcrumb breadcrumb)))
+
 (reg-event-fx
   :navigate-to
   (fn [_ [_ url]]

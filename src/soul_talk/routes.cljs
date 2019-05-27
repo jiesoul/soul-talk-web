@@ -1,10 +1,10 @@
 (ns soul-talk.routes
   (:require [goog.events :as events]
-            [goog.history.EventType :as HistoryEventType]
             [secretary.core :as secretary :refer-macros [defroute]]
             [accountant.core :as accountant]
             [re-frame.core :refer [dispatch dispatch-sync subscribe]])
-  (:import goog.History))
+  (:import [goog History]
+           [goog.History EventType]))
 
 
 
@@ -77,66 +77,63 @@
 
 (defroute users "/users" []
   (run-events [[:admin/load-users]
-                     [:set-active-page :users]]))
+               [:set-active-page :users]]))
 
 (defroute categories "/categories" []
-  (run-events [[:load-categories]
+  (js/console.log "load category list page")
+  (run-events [[:set-breadcrumb ["Blog" "Category" "List"]]
+               [:load-categories]
                [:set-active-page :categories]]))
 
-(defroute categroies-add "/categories/add" []
-  (dispatch [:close-category])
+(defroute categroies-add "/categories-add" []
   (run-events
-    [[:set-active-page :categories/add]]))
+    [[:set-breadcrumb ["Blog" "Category" "Add"]]
+     [:set-active-page :categories-add]]))
 
 (defroute categories-edit "/categories/:id/edit" [id]
-  (run-events [[:load-category id]
-                     [:set-active-page :categories/edit]]))
+  (run-events [[:set-breadcrumb ["Blog" "Category" "Edit"]]
+               [:load-category id]
+               [:set-active-page :categories-edit]]))
 
 (defroute category "/categories/:id" [id]
   (run-events [[:load-category id]
-                     [:set-active-page :categories/view]]))
+               [:set-active-page :category-view]]))
 
 
 (defroute posts "/posts" []
   (run-events [[:admin/load-posts]
-                     [:set-active-page :posts]]))
+               [:set-active-page :posts]]))
 
-(secretary/defroute "/posts/archives/:year/:month" [year month]
+(defroute "/posts/archives/:year/:month" [year month]
   (run-events [[:load-posts-archives-year-month year month]
                      [:set-active-page :posts/archives]]))
 
-(secretary/defroute "/posts/add" []
+(defroute "/posts/add" []
   (run-events [[:load-categories]
                      [:load-tags]
                      [:set-active-page :posts/add]]))
 
-(secretary/defroute "/posts/:id/edit" [id]
+(defroute "/posts/:id/edit" [id]
   (if-not (or (logged-in?)
             (nil? @(subscribe [:post])))
     (navigate! "/login")
     (run-events [[:load-post id]
-                       [:load-categories]
-                       [:set-active-page :posts/edit]])))
+                 [:load-categories]
+                 [:set-active-page :posts/edit]])))
 
-(secretary/defroute "/posts/:id" [id]
+(defroute "/posts/:id" [id]
   (run-events [[:load-categories]
-                     [:load-post id]
-                     [:set-active-page :posts/view]]))
+               [:load-post id]
+               [:set-active-page :posts/view]]))
 
-(accountant/configure-navigation!
-  {:nav-handler (fn [path]
-                  (secretary/dispatch! path))
-   :path-exists? (fn [path]
-                   (dispatch "not-found"))})
+(defroute "*" []
+  )
 
 ;; 使用浏览器可以使用前进后退 历史操作
 (defn hook-browser-navigation! []
   (doto
     (History.)
-    (events/listen
-      HistoryEventType/NAVIGATE
-      (fn [event]
-        (secretary/dispatch! (.-token event))))
+    (events/listen EventType.NAVIGATE #(secretary/dispatch! (.-token %)))
     (.setEnabled true))
   (accountant/configure-navigation!
     {:nav-handler

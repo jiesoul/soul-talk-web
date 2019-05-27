@@ -1,10 +1,10 @@
 (ns soul-talk.pages.admin
   (:require [reagent.core :as r]
             [re-frame.core :refer [subscribe dispatch]]
-            [secretary.core :refer [dispatch!]]
             [antd :as antd]
             [soul-talk.routes :refer [categories]]
-            [soul-talk.pages.header :refer [header-component admin-menu-component]]))
+            [soul-talk.pages.header :refer [header-component admin-menu-component]]
+            [soul-talk.pages.common :as c]))
 
 
 (defn admin-sidebar []
@@ -20,10 +20,11 @@
          [:> antd/Menu.SubMenu {:key   "blog"
                                 :title "博客管理"}
           [:> antd/Menu.Item {:key      "category"
-                              :on-click (fn []
-                                          (dispatch [:navigate-to "#/categories"]))}
+                              :on-click #(dispatch [:navigate-to "#/categories"])}
            "分类"]
-          [:> antd/Menu.Item {:key "post"} "文章"]]
+          [:> antd/Menu.Item {:key      "post"
+                              :on-click #(dispatch [:navigate-to "#/posts"])}
+           "文章"]]
 
          [:> antd/Menu.SubMenu {:key   "1"
                                 :title "用户"}
@@ -36,23 +37,20 @@
    [:h1 "欢迎"]])
 
 (defn admin-page-component [page-component]
-  (js/console.log "load admin-page-component: " page-component)
-  (fn [page-component]
-    [:> antd/Layout
-     [header-component admin-menu-component]
-     [:> antd/Layout
-      [:> antd/Layout.Sider {:style {:background "#fff"}}
-       [admin-sidebar]]
-      [:> antd/Layout {:style {:padding "0 24px 24px"}}
-       [:> antd/Breadcrumb
-        {:style {:margin "16px 0"}}
-        [:> antd/Breadcrumb.Item "Home"]]
-       [:> antd/Layout.Content
-        {:style {:background "#fff"
-                 :padding    24
-                 :margin     0
-                 :min-height 280}}
-        (js/console.log "load admin header....")
-        [page-component]]]]]))
+  (r/with-let []
+    (fn [page-component]
+      [:> antd/Layout
+       [header-component admin-menu-component]
+       [:> antd/Layout
+        [:> antd/Layout.Sider {:style {:background "#fff"}}
+         [admin-sidebar]]
+        [:> antd/Layout {:style {:padding "0 24px 24px"}}
+         [c/breadcrumb-component]
+         [:> antd/Layout.Content
+          {:style {:background "#fff"
+                   :padding    24
+                   :margin     0
+                   :min-height 280}}
+          [page-component]]]]])))
 
 

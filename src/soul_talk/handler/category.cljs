@@ -6,7 +6,6 @@
 (reg-event-db
   :set-categories
   (fn [db [_ {:keys [categories]}]]
-    (js/console.log categories)
     (assoc db :categories categories)))
 
 (reg-event-fx
@@ -29,6 +28,7 @@
 (reg-event-fx
   :categories/add
   (fn [_ [_ {:keys [name] :as category}]]
+    (js/console.log "event: categories add" category)
     (if (str/blank? name)
       {:dispatch [:set-error "名称不能为空"]}
       {:http {:method POST
