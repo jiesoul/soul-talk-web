@@ -42,6 +42,11 @@
   (fn [db [_ {:keys [category]}]]
     (assoc db :category category)))
 
+(reg-event-db
+  :update-category
+  (fn [db [_ key value]]
+    (assoc-in db [:category key] value)))
+
 (reg-event-fx
   :load-category
   (fn [_ [_ id]]

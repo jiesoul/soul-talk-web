@@ -12,8 +12,13 @@
                 [:> antd/Button {:icon     "delete"
                                  :type     "danger"
                                  :on-click (fn []
-                                             (let [id ()]
-                                               (dispatch [:categories/delete])))}]
+                                             (let [category (js->clj %2 :keywordize-keys true)]
+                                               (js/console.log category)
+                                               (c/show-confirm
+                                                 "分类删除"
+                                                 (str "你确认要删除分类 " (:name category) " 吗？")
+                                                 (dispatch [:categories/delete (:id category)])
+                                                 (fn [] (js/console.log "cancel")))))}]
                 [:> antd/Divider {:type "vertical"}]
                 [:> antd/Button {:icon     "edit"
                                  :on-click (fn []
@@ -24,8 +29,7 @@
 
 (defn categories-list []
   (r/with-let [categories (subscribe [:categories])
-               user (subscribe [:user])
-               confirm-open? (r/atom false)]
+               user (subscribe [:user])]
     (when @user
       (js/console.log "load ok categories: " (clj->js @categories))
       [:div
@@ -49,30 +53,30 @@
          [categories-list]]))))
 
 (defn edit-page []
-  (r/with-let [ori-category (subscribe [:category])
-               error    (subscribe [:error])]
+  (r/with-let [category (subscribe [:category])
+               error    (subscribe [:error])
+               name (r/cursor category [:name])]
     (fn []
-      (let [category (-> @ori-category
-                       (update :name #(or % ""))
-                       r/atom)
-            name     (r/cursor category [:name])]
-        [:> antd/Row
-         [:> antd/Form
-          [:> antd/Input
-           {:defaultValue @name
-            :on-change #(reset! name (-> % .-target .-value))}]
-          (when @error
-            [:div.alert.alert-danger.smaller @error])]
-         [:> antd/Row {:style {:margin-top "10px"}}
+      [:> antd/Row
+       [:> antd/Form
+        [:> antd/Input
+         {:value     @name
+          :on-change #(let [new-value (.-target.value %)]
+                        (dispatch [:clean-error])
+                        (dispatch [:update-category :name new-value]))}]
+        (when @error
           [:div
-           [:> antd/Button
-            {:type     "cancel"
-             :on-click #(dispatch [:navigate-to "#/categories"])}
-            "返回"]
-           [:> antd/Button
-            {:type     "primary"
-             :on-click #(if @ori-category
-                          (dispatch [:categories/edit @category])
-                          (dispatch [:categories/add @category]))}
-            "保存"]]]]))))
+           [:> antd/Alert {:message @error :type "error"}]])]
+       [:> antd/Row {:style {:margin-top "10px"}}
+        [:div
+         [:> antd/Button
+          {:type     "cancel"
+           :on-click #(dispatch [:navigate-to "#/categories"])}
+          "返回"]
+         [:> antd/Button
+          {:type     "primary"
+           :on-click #(if @category
+                        (dispatch [:categories/edit @category])
+                        (dispatch [:categories/add @category]))}
+          "保存"]]]])))
 

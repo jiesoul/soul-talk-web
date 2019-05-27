@@ -87,11 +87,13 @@
 
 (defroute categroies-add "/categories-add" []
   (run-events
-    [[:set-breadcrumb ["Blog" "Category" "Add"]]
+    [[:close-category]
+     [:set-breadcrumb ["Blog" "Category" "Add"]]
      [:set-active-page :categories-add]]))
 
 (defroute categories-edit "/categories/:id/edit" [id]
-  (run-events [[:set-breadcrumb ["Blog" "Category" "Edit"]]
+  (run-events [[:close-category]
+               [:set-breadcrumb ["Blog" "Category" "Edit"]]
                [:load-category id]
                [:set-active-page :categories-edit]]))
 

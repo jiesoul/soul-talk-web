@@ -6,19 +6,31 @@
             [hljs]))
 
 (defn loading-modal []
-  (let [loading? (subscribe [:loading?])]
-    (when @loading?
-      [:> antd/Spin {:tip "加载中。。。。"}])))
+  (r/with-let [loading? (subscribe [:loading?])]
+    (fn []
+      (when @loading?
+        [:> antd/Spin {:tip "加载中。。。。"}]))))
 
 (defn spin-loading [component]
   (r/with-let [loading? (subscribe [:loading?])]
-    [:div
-     [:> antd/Spin {:spinning @loading?}]
-     [complement]]))
+    (fn [component]
+      [:div
+       [:> antd/Spin {:spinning @loading?}]
+       [complement]])))
 
 (defn success-modal []
   (when-let [success @(subscribe [:success])]
     ))
+
+(defn show-confirm
+  [title content ok-fun cancel-fun]
+  (js/console.log title)
+  (antd/Modal.confirm
+    {:centered  true
+     :title     title
+     :content   content
+     :on-ok     ok-fun
+     :on-cancel cancel-fun}))
 
 (defn error-modal []
   (when-let [error @(subscribe [:error])]
