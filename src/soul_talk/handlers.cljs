@@ -12,11 +12,16 @@
             soul-talk.handler.files))
 
 ;; 初始化
-(reg-event-db
+(reg-event-fx
   :initialize-db
-  (fn [_ _]
-    (let [val (storage/get-item "soul-talk-login-user")]
-      (assoc default-db :user val))))
+  [(inject-cofx :local-store "soul-talk-login-user")]
+  (fn [cofx _]
+    (let [val (:local-store cofx)
+          db (:db cofx)]
+      (js/console.log val)
+      (js/console.log db)
+      (js/console.log default-db)
+      {:db (merge db (assoc default-db :user (js->clj val :keywordize-keys true)))})))
 
 ;; 设置当前页
 (reg-event-db

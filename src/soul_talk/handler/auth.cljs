@@ -26,8 +26,8 @@
 ;; 处理login ok
 (reg-event-fx
   :handle-login-ok
-  (fn [{:keys [db]} [_ {:keys [user]}]]
-    {:db         (assoc db :user user)
+  (fn [{:keys [db]} [_ {:keys [user token]}]]
+    {:db         (assoc db :user user :auth-token token)
      :dispatch-n (list
                    [:run-login-events]
                    [:set-active-page :admin]

@@ -7,6 +7,7 @@
             [re-frame.core :refer [dispatch-sync dispatch]]
     ;;初始化处理器和订阅器
             soul-talk.routes
+            soul-talk.coeffects
             soul-talk.effects
             soul-talk.handlers
             soul-talk.subs))

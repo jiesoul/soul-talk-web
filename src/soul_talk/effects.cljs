@@ -1,5 +1,5 @@
 (ns soul-talk.effects
-  (:require [re-frame.core :refer [dispatch reg-fx reg-event-fx]]
+  (:require [re-frame.core :as rf :refer [dispatch reg-fx reg-event-fx]]
             [accountant.core :as accountant]
             [soul-talk.local-storage :as storage]))
 (def api-url "http://localhost:3001")

@@ -1,17 +1,21 @@
 (ns soul-talk.ajax
-  (:require [ajax.core :as ajax]))
+  (:require [ajax.core :as ajax]
+            [re-frame.core :as rf]))
 
-(defn default-headers [request]
-  (-> request
+(defn request-headers [request]
+  (let [token (rf/subscribe [:auth-token])]
+    (js/console.log @token)
+    (-> request
       (update
         :headers
         #(merge
            %
-           {"Accept" "application/transit+json"
-            "X-CSRF-Token" "ssss"}))))
+           {:Accept        "application/transit+json"
+            :Authorization (:id @token)
+            :X-CSRF-Token  @(rf/subscribe [:csrf-token])})))))
 
 (defn load-interceptors! []
   (swap! ajax/default-interceptors
          conj
          (ajax/to-interceptor {:name    "defaults headers"
-                               :request default-headers})))
+                               :request request-headers})))

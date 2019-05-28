@@ -20,4 +20,5 @@
 
  :paths   ["src" "src-cljc" "target" "resources" "env/dev" "env/prod"]
 
- :aliases {:dev {:main-opts ["-m" "figwheel.main" "-b" "dev" "-r"]}}}
+ :aliases {:dev {:main-opts ["-m" "figwheel.main" "-b" "dev" "-r"]}
+           :test {:extra-paths ["test"]}}}

@@ -16,6 +16,10 @@
   query)
 
 ;; 当前页配置
+(reg-sub :auth-token query)
+
+(reg-sub :csrf-token query)
+
 (reg-sub :active-page query)
 
 (reg-sub :breadcrumb query)
