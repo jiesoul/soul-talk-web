@@ -3,7 +3,11 @@
             [re-frame.core :refer [subscribe dispatch]]
             [soul-talk.pages.common :as c]
             [soul-talk.widgets.md-editor :refer [editor]]
+            [cljs-time.format :as ft :refer [parse formatter]]
+            [cljs-time.local :as local]
             [antd :as antd]))
+
+(def custom-formatter (formatter "yyyy-MM-dd HH:mm"))
 
 (defn archives-component []
   (r/with-let [posts-archives (subscribe [:posts-archives])]
@@ -65,65 +69,60 @@
             :class    (if (zero? @offset) "disabled")}
            "Newer"]]]]])))
 
+(defn list-columns []
+  [{:title "标题" :dataIndex "title", :key "title", :align "center"}
+   {:title "创建时间" :dataIndex "create-time" :key "create-time" :align "center"}
+   {:title "更新时间" :dataIndex "modify-time" :key "modify-time" :align "center"}
+   {:title "发布状态" :dataIndex "publish" :key "publish" :align "center"}
+   {:title "作者" :dataIndex "author" :key "author" :align "center"}
+   {:title "浏览量" :dataIndex "counter" :key "counter" :align "center"}
+   {:title  "操作" :dataIndex "actions" :key "actions" :align "center"
+    :render (fn [_ post]
+              (r/as-element
+                (let [{:keys [id publish]} (js->clj post :keywordize-keys true)]
+                  [:div
+                   [:> antd/Button {:type "link"
+                                    :href (str "#/posts/" id)}
+                    "查看"]
+                   (when (zero? publish)
+                     [:> antd/Divider {:type "vertical"}]
+                     [:> antd/Button {:type     "link"
+                                      :on-click #(dispatch [:posts/publish id])}])
+                   [:> antd/Divider {:type "vertical"}]
+                   [:> antd/Button {:type     "link"
+                                    :on-click #(dispatch [:navigate-to (str "#/posts/" id "/edit")])}
+                    "修改"]
+                   [:> antd/Divider {:type "vertical"}]
+                   [:> antd/Button {:type     "link"
+                                    :on-click #(dispatch [:posts/delete id])}
+                    "删除"]])))}])
+
 (defn posts-list []
-  (r/with-let [posts (subscribe [:admin/posts])
-               confirm-open? (r/atom false)]
-    (fn []
-      [:table.table.table-striped.text-center.table-hover.table-sm
-       [:thead
-        [:tr
-         [:th "title"]
-         [:th "create_time"]
-         [:th "modify_time"]
-         [:th "publish"]
-         [:th "author"]
-         [:th "counter"]
-         [:th "action"]]]
-       [:tbody
-        (doall
-          (for [{:keys [id title create_time modify_time publish author counter] :as post} @posts]
-            ^{:key post}
-            [:tr
-             [:td title]
-             [:td (.toDateString (js/Date. create_time))]
-             [:td (.toDateString (js/Date. modify_time))]
-             [:td (if (= publish 1) "已发布" "未发布")]
-             [:td author]
-             [:td (or counter 0)]
-             [:td
-              [:a.btn.btn-outline-primary.btn-sm.mr-2
-               {:target "_blank"
-                :href   (str "/posts/" id)}
-               "查看"]
-              (if (= publish 0)
-                [:a.btn.btn-outline-primary.btn-sm.mr-2
-                 {:on-click #(dispatch [:posts/publish id])}
-                 "发布"])
-              [:a.btn.btn-outline-primary.btn-sm.mr-2
-               {:target "_blank"
-                :href   (str "/posts/" id "/edit")}
-               "修改"]
-              [:a.btn.btn-outline-primary.btn-sm.mr-2
-               {:on-click #(reset! confirm-open? true)}
-               "删除"
-               [c/confirm-modal
-                "Are you sure wish to delete the post?"
-                confirm-open?
-                #(dispatch [:posts/delete id])
-                "Delete"]]]]))]])))
+  (r/with-let [posts (subscribe [:admin/posts])]
+    (js/console.log (map #(update % :create_time (comp str (fn [date] (ft/parse custom-formatter date)))) @posts))
+    [:div
+     [:> antd/Table {:columns    (clj->js (list-columns))
+                     :dataSource (clj->js @posts)
+                     :row-key "id"
+                     :bordered true
+                     :size "small"}]]))
 
 (defn posts-page []
   (fn []
-    [:div.container-fluid
-     [:h3 "文章管理"]
-     [:hr]
-     [:div.p-1
-      [:a.btn.btn-outline-primary.btn-sm
+    [:div
+     [c/breadcrumb-component ["Home" "Post" "list"]]
+     [:> antd/Layout.Content
+      {:style {:background "#fff"
+               :padding    24
+               :margin     0
+               :min-height 280}}
+      [:> antd/Button
        {:target "_blank"
-        :href   "/posts/add"}
-       "写文章"]]
-     [posts-list]
-     [c/page-nav :admin/load-posts]]))
+        :href   "/posts/add"
+        :size "small"}
+       "写文章"]
+      [:> antd/Divider]
+      [posts-list]]]))
 
 (defn add-post-page []
   (r/with-let
@@ -194,9 +193,6 @@
                               @categories)]
     (fn []
       (let []
-        (js/console.log @categories)
-        (js/console.log @original-post)
-        (js/console.log @edited-post)
         [:div.container-fluid
          [:nav.navbar.navbar-expand-lg.navbar-light.bg-light
           [:a.navbar-brand

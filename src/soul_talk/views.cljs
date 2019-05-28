@@ -77,8 +77,6 @@
 (defn main-page []
   (r/with-let [active-page (subscribe [:active-page])]
     [:div
-     ;[loading-modal]
      [success-modal]
      [error-modal]
-     [:div
-      (pages @active-page nil)]]))
+     (pages @active-page nil)]))

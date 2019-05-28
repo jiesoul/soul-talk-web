@@ -14,14 +14,14 @@
 ;; 初始化
 (reg-event-fx
   :initialize-db
-  [(inject-cofx :local-store "soul-talk-login-user")]
+  [(inject-cofx :local-store storage/login-user-key)
+   (inject-cofx :local-store storage/auth-token-key)]
   (fn [cofx _]
-    (let [val (:local-store cofx)
+    (let [user (get-in cofx [:local-store storage/login-user-key])
+          auth-token (get-in cofx [:local-store storage/auth-token-key])
           db (:db cofx)]
-      (js/console.log val)
-      (js/console.log db)
-      (js/console.log default-db)
-      {:db (merge db (assoc default-db :user (js->clj val :keywordize-keys true)))})))
+      {:db (merge db (assoc default-db :user (js->clj user :keywordize-keys true)
+                                       :auth-token auth-token))})))
 
 ;; 设置当前页
 (reg-event-db
@@ -43,6 +43,11 @@
   :set-success
   (fn [db [_ message]]
     (assoc db :success message)))
+
+(reg-event-db
+  :clean-success
+  (fn [db _]
+    (dissoc db :success)))
 
 ;; 取消加载
 (reg-event-db

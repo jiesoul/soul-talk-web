@@ -43,4 +43,9 @@
 (reg-fx
   :set-user!
   (fn [user-identity]
-    (storage/set-item! "soul-talk-login-user" user-identity)))
+    (storage/set-item! storage/login-user-key user-identity)))
+
+(reg-fx
+  :set-auth-token!
+  (fn [auth-token]
+    (storage/set-item! storage/auth-token-key auth-token)))

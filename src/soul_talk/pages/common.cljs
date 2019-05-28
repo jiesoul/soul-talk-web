@@ -1,9 +1,13 @@
 (ns soul-talk.pages.common
   (:require [re-frame.core :as rf :refer [dispatch subscribe]]
             [reagent.core :as r]
+            [cljs-time.local :as local]
             [antd :as antd]
             [showdown]
             [hljs]))
+
+(defn to-time [date]
+  (str (.toDateString (js/Date. date))))
 
 (defn loading-modal []
   (r/with-let [loading? (subscribe [:loading?])]
@@ -15,41 +19,36 @@
   (r/with-let [loading? (subscribe [:loading?])]
     (fn [component]
       [:div
-       [:> antd/Spin {:spinning @loading?}]
-       [complement]])))
+       [:> antd/Spin {:spinning @loading?}
+        [complement]]])))
 
 (defn success-modal []
-  (when-let [success @(subscribe [:success])]
-    ))
+  (r/with-let [success (subscribe [:success])]
+    (when @success
+      (antd/message.success @success)
+      (dispatch [:clean-success]))))
 
 (defn show-confirm
   [title content ok-fun cancel-fun]
-  (js/console.log title)
   (antd/Modal.confirm
-    {:centered  true
-     :title     title
-     :content   content
-     :on-ok     ok-fun
-     :on-cancel cancel-fun}))
+    (clj->js {:centered true
+              :title    title
+              :content  content
+              :onOk     ok-fun
+              :onCancel cancel-fun})))
 
 (defn error-modal []
-  (when-let [error @(subscribe [:error])]
-    [:> antd/Modal {:is-open (boolean error)}
-     [:> antd/ModalHeader "An error has occured"]
-     [:> antd/ModalBody
-      [:p error]]
-     [:> antd/ModalFooter
-      [:> antd/Button {:color    "primary"
-                  :on-click #(dispatch [:set-error nil])}
-       "Ok"]]]))
+  (r/with-let [error (subscribe [:error])]
+    (when @error
+      (antd/message.error @error)
+      (dispatch [:clean-error]))))
 
-(defn breadcrumb-component []
-  (r/with-let [breadcrumbs (rf/subscribe [:breadcrumb])]
-    (fn []
-      [:> antd/Breadcrumb {:style {:margin "10px 0"}}
-       (for [item @breadcrumbs]
-         ^{:key item}
-         [:> antd/Breadcrumb.Item item])])))
+(defn breadcrumb-component [items]
+  (fn [items]
+    [:> antd/Breadcrumb {:style {:margin "10px 0"}}
+     (for [item items]
+       ^{:key item}
+       [:> antd/Breadcrumb.Item item])]))
 
 (defn validation-modal [title errors]
   [:> antd/Modal {:is-open (boolean @errors)}
@@ -64,21 +63,6 @@
     [:button.btn.btn-sm.btn-danger
      {:on-click #(reset! errors nil)}
      "Close"]]])
-
-(defn confirm-modal
-  [title confirm-open? action action-label]
-  [:> antd/Modal {:is-open @confirm-open?}
-   [:> antd/ModalHeader title]
-   [:> antd/ModalFooter
-    [:div.btn-toolbar
-     [:button.btn.btn-sm.btn-danger
-      {:on-click #(reset! confirm-open? false)}
-      "Cancel"]
-     [:button.btn.btn-sm.btn-success
-      {:on-click #(do
-                    (reset! confirm-open? false)
-                    (action))}
-      action-label]]]])
 
 (defn input [type id placeholder fields]
   (fn []

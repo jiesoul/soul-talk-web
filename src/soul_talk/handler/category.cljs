@@ -28,7 +28,6 @@
 (reg-event-fx
   :categories/add
   (fn [_ [_ {:keys [name] :as category}]]
-    (js/console.log "event: categories add" category)
     (if (str/blank? name)
       {:dispatch [:set-error "名称不能为空"]}
       {:http {:method POST
@@ -54,12 +53,11 @@
             :url           (str "/api/categories/" id)
             :success-event [:set-category]}}))
 
-(reg-event-fx
+(reg-event-db
   :categories/edit-ok
-  (fn [{:keys [db]} [_ {:keys [category]}]]
-    (let [categories (:categories db)]
-      (js/alert "update successful")
-      {:reload-page true})))
+  (fn [db [_ _]]
+    (-> db
+      (assoc :success "update successful"))))
 
 (reg-event-fx
   :categories/edit
@@ -71,21 +69,19 @@
               :ajax-map      {:params category}
               :success-event [:categories/edit-ok]}})))
 
-(reg-event-fx
+(reg-event-db
   :categories/delete-ok
-  (fn [{db :db} _]
-    {:db (assoc db :success "delete successful!")
-     :reload-page true}))
+  (fn [db _]
+    (assoc db :success "delete successful!")))
 
-(reg-event-fx
+(reg-event-db
   :categories/delete-error
-  (fn [_ [_ {:keys [response]}]]
-    (js/alert (:message response))))
+  (fn [db [_ {:keys [response]}]]
+    (assoc db :error (:message response))))
 
 (reg-event-fx
   :categories/delete
-  (fn [_ [_ {:keys [id]}]]
+  (fn [_ [_ id]]
     {:http {:method        DELETE
             :url           (str "/api/admin/categories/" id)
-            :success-event [:categories/delete-ok]
-            :error-event   [:categories/delete-error]}}))
+            :success-event [:categories/delete-ok]}}))

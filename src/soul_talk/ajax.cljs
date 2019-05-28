@@ -4,14 +4,13 @@
 
 (defn request-headers [request]
   (let [token (rf/subscribe [:auth-token])]
-    (js/console.log @token)
     (-> request
       (update
         :headers
         #(merge
            %
            {:Accept        "application/transit+json"
-            :Authorization (:id @token)
+            :Authorization (str "Token " @token)
             :X-CSRF-Token  @(rf/subscribe [:csrf-token])})))))
 
 (defn load-interceptors! []

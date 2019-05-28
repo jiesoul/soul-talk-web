@@ -1,5 +1,8 @@
 (ns soul-talk.local-storage)
 
+(defonce login-user-key "login-user")
+(defonce auth-token-key "auth-token")
+
 (defn set-item!
   [key val]
   (->> val

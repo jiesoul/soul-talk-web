@@ -8,29 +8,30 @@
 
 
 (defn admin-sidebar []
-  (r/with-let [user (subscribe [:user])]
+  (r/with-let [user (subscribe [:user])
+               active-page (subscribe [:active-page])]
     (when @user
-      (fn []
-        [:> antd/Menu {:mode                "inline"
-                       :default-select-keys ["1"]
-                       :default-open-keys   ["blog"]
-                       :style               {:height       "100%"
-                                             :border-right 0}}
-         [:> antd/Menu.Item {:key "1"} "面板"]
-         [:> antd/Menu.SubMenu {:key   "blog"
-                                :title "博客管理"}
-          [:> antd/Menu.Item {:key      "category"
-                              :on-click #(dispatch [:navigate-to "#/categories"])}
-           "分类"]
-          [:> antd/Menu.Item {:key      "post"
-                              :on-click #(dispatch [:navigate-to "#/posts"])}
-           "文章"]]
+      [:> antd/Menu {:mode                "inline"
+                     :default-select-keys ["dash"]
+                     :default-open-keys   ["blog"]
+                     :selected-keys [(key->js @active-page)]
+                     :style               {:height       "100%"
+                                           :border-right 0}}
+       [:> antd/Menu.Item {:key "dash"} "面板"]
+       [:> antd/Menu.SubMenu {:key   "blog"
+                              :title "博客管理"}
+        [:> antd/Menu.Item {:key      "categories"
+                            :on-click #(dispatch [:navigate-to "#/categories"])}
+         "分类"]
+        [:> antd/Menu.Item {:key      "posts"
+                            :on-click #(dispatch [:navigate-to "#/posts"])}
+         "文章"]]
 
-         [:> antd/Menu.SubMenu {:key   "1"
-                                :title "用户"}
-          [:> antd/Menu.Item {:key "profile"} "个人信息"]
-          [:> antd/Menu.Item {:key "password"} "密码修改"]
-          ]]))))
+       [:> antd/Menu.SubMenu {:key   "1"
+                              :title "用户"}
+        [:> antd/Menu.Item {:key "profile"} "个人信息"]
+        [:> antd/Menu.Item {:key "password"} "密码修改"]
+        ]])))
 
 (defn main-component []
   [:div
@@ -45,12 +46,6 @@
         [:> antd/Layout.Sider {:style {:background "#fff"}}
          [admin-sidebar]]
         [:> antd/Layout {:style {:padding "0 24px 24px"}}
-         [c/breadcrumb-component]
-         [:> antd/Layout.Content
-          {:style {:background "#fff"
-                   :padding    24
-                   :margin     0
-                   :min-height 280}}
-          [page-component]]]]])))
+         [page-component]]]])))
 
 

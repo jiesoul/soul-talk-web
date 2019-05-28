@@ -10,4 +10,4 @@
 (rf/reg-cofx
   :local-store
   (fn [cofx local-store-key]
-    (assoc cofx :local-store (local-store/get-item local-store-key))))
+    (assoc-in cofx [:local-store local-store-key] (local-store/get-item local-store-key))))

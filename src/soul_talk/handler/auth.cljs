@@ -29,10 +29,12 @@
   (fn [{:keys [db]} [_ {:keys [user token]}]]
     {:db         (assoc db :user user :auth-token token)
      :dispatch-n (list
+                   [:set-breadcrumb ["Home" "Post" "List"]]
                    [:run-login-events]
                    [:set-active-page :admin]
                    [:navigate-to "/#/admin"])
-     :set-user! user}))
+     :set-user! user
+     :set-auth-token! token}))
 
 ;; login
 (reg-event-fx
