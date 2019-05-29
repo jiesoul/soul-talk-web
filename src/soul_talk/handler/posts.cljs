@@ -42,10 +42,11 @@
   (fn [db _]
     (dissoc db :admin/posts)))
 
-(reg-event-db
+(reg-event-fx
   :posts/add-ok
-  (fn [db [_ {:keys [post]}]]
-    (assoc db :admin/posts conj post)))
+  (fn [{:keys [db]} [_ {:keys [post]}]]
+    {:db (assoc db :admin/posts conj post)
+     :dispatch-n (list [:set-success "保存成功"])}))
 
 (reg-event-fx
   :posts/add
@@ -56,13 +57,14 @@
       {:http {:method        POST
               :url           "/api/admin/posts"
               :ajax-map      {:params post}
-              :success-event [:set-success "保存成功"]}})))
+              :success-event [:posts/add-ok post]}})))
 
 (reg-event-fx
   :posts/upload-ok
-  (fn [_ [_ {:keys [id]}]]
-    (let [url (str "/posts/" id "/edit")]
-      {:navigate url})))
+  (fn [{:keys [db]} [_ {:keys [id] :as post}]]
+    {:db (-> db
+           )
+     :dispatch-n (list [:set-success "保存成功"])}))
 
 (reg-event-db
   :posts/upload-error
@@ -85,8 +87,8 @@
 (reg-event-fx
   :posts/edit-ok
   (fn [_ _]
-    (js/alert "edit successful!!")
-    {:reload-page true}))
+    {:dispatch-n (list [:set-success "保存成功"]
+                      [:admin/load-posts])}))
 
 (reg-event-fx
   :posts/edit-error
@@ -133,9 +135,11 @@
 
 (reg-event-fx
   :posts/delete-ok
-  (fn [_ _]
-    (js/alert "delete successful")
-    {:reload-page true}))
+  (fn [{:keys [db]} [_ id]]
+    (let [posts (get db :admin/posts)
+          posts (remove #(= id (:id %)) posts)]
+      {:dispatch [:set-success "删除成功"]
+       :db       (assoc db :admin/posts posts)})))
 
 (reg-event-db
   :posts/delete-error
@@ -147,14 +151,14 @@
   (fn [_ [_ id]]
     {:http {:method        DELETE
             :url           (str "/api/admin/posts/" id)
-            :success-event [:posts/delete-ok]
+            :success-event [:posts/delete-ok id]
             :error-event   [:posts/delete-error]}}))
 
 (reg-event-fx
   :posts/publish-ok
   (fn [_ _]
-    (js/alert "publish successful")
-    {:reload-page true}))
+    {:dispatch-n (list [:set-success "发布成功"]
+                        [:admin/load-posts])}))
 
 (reg-event-fx
   :posts/publish-error

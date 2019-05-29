@@ -82,21 +82,32 @@
               (r/as-element
                 (let [{:keys [id publish]} (js->clj post :keywordize-keys true)]
                   [:div
-                   [:> antd/Button {:type "link"
+                   [:> antd/Button {
+                                    :size "small"
+                                    :target "_blank"
                                     :href (str "#/posts/" id)}
                     "查看"]
+                   [:> antd/Divider {:type "vertical"}]
+                   [:> antd/Button {:icon "edit"
+                                    :size "small"
+                                    :target "_blank"
+                                    :href   (str "#/posts/" id "/edit")}]
+                   [:> antd/Divider {:type "vertical"}]
+                   [:> antd/Button {:type     "danger"
+                                    :icon "delete"
+                                    :size "small"
+                                    :on-click (fn []
+                                                (c/show-confirm
+                                                  "文章删除"
+                                                  (str "你确认要删除这篇文章吗？")
+                                                  #(dispatch [:posts/delete id])
+                                                  #(js/console.log "cancel")))}]
+                   [:> antd/Divider {:type "vertical"}]
                    (when (zero? publish)
-                     [:> antd/Divider {:type "vertical"}]
-                     [:> antd/Button {:type     "link"
-                                      :on-click #(dispatch [:posts/publish id])}])
-                   [:> antd/Divider {:type "vertical"}]
-                   [:> antd/Button {:type     "link"
-                                    :on-click #(dispatch [:navigate-to (str "#/posts/" id "/edit")])}
-                    "修改"]
-                   [:> antd/Divider {:type "vertical"}]
-                   [:> antd/Button {:type     "link"
-                                    :on-click #(dispatch [:posts/delete id])}
-                    "删除"]])))}])
+                     [:> antd/Button {:type     "primary"
+                                      :size "small"
+                                      :on-click #(dispatch [:posts/publish id])}
+                      "发布"])])))}])
 
 (defn posts-list []
   (r/with-let [posts (subscribe [:admin/posts])]
@@ -128,47 +139,55 @@
 (defn edit-menu []
   (r/with-let [post (subscribe [:post])
                categories (subscribe [:categories])
-               author (r/cursor post [:author])
-               user (subscribe [:user])
-               post-id (r/cursor post [:id])]
-    [:div {:style {:color "#FFF"}}
-     [:> antd/Col {:span 2 :offset 2}
-      (if @post-id "修改文章" "写文章")]
-     [:> antd/Col {:span 4 :offset 6}
-      [:> antd/Select {:defaultValue ""
-                       :labelInValue true
-                       :style        {:width 120}
-                       :on-change    #(let [val (:key (js->clj % :keywordize-keys true))]
-                                        (dispatch [:update-post :category val]))}
-       [:> antd/Select.Option {:value ""} "选择分类"]
-       (doall
-         (for [{:keys [id name]} @categories]
-           ^{:key id} [:> antd/Select.Option {:value id} name]))]]
-     [:> antd/Col {:span 2}
-      [:> antd/Button {:type     "primary"
-                       :on-click #(if (nil? @post-id)
-                                    (dispatch [:posts/add @post])
-                                    (dispatch [:posts/edit @post]))}
-       "保存"]]]))
+               post-id (r/cursor post [:id])
+               category-id (r/cursor post [:category])]
+    (fn []
+      (js/console.log "category id: " @category-id)
+      [:div {:style {:color "#FFF"}}
+       [:> antd/Col {:span 2 :offset 2}
+        (if @post-id "修改文章" "写文章")]
+       [:> antd/Col {:span 4 :offset 6}
+        [:> antd/Select {:value {:key @category-id}
+                         :labelInValue true
+                         :style        {:width 120}
+                         :on-change    #(let [val (:key (js->clj % :keywordize-keys true))]
+                                          (dispatch [:update-post :category val]))}
+         [:> antd/Select.Option {:value ""} "选择分类"]
+         (doall
+           (for [{:keys [id name]} @categories]
+             ^{:key id} [:> antd/Select.Option {:value id} name]))]]
+       [:> antd/Col {:span 2}
+        [:> antd/Button {:type     "primary"
+                         :on-click #(if (nil? @post-id)
+                                      (dispatch [:posts/add @post])
+                                      (dispatch [:posts/edit @post]))}
+         "保存"]]])))
 
 (defn edit-post-page []
-  (r/with-let [post (subscribe [:post])
-               title       (r/cursor post [:title])
+  (r/with-let [post       (subscribe [:post])
+               title      (r/cursor post [:title])
                content     (r/cursor post [:content])
-               user (subscribe [:user])
-               author (r/cursor post [:author])]
-    [:> antd/Layout
-     [header/header-component edit-menu]
-     [:> antd/Layout.Content {:style {:backdrop-color "#fff"}}
-      [:> antd/Col {:span 16 :offset 4 :style {:padding-top "10px"}}
-       [:> antd/Form
-        [:> antd/Input
-         {:on-change   #(let [val (.-target.value %)]
-                          (dispatch [:update-post :title val]))
-          :placeholder "标题"
-          :width       "100%"}]]
-       [:> antd/Row
-        [editor content title]]]]]))
+               user (subscribe [:user])]
+    (fn []
+      (let [edited-post (-> @post
+                          (update :title #(or % ""))
+                          (update :content #(or % ""))
+                          (update :publish #(or % 0))
+                          (update :author #(or % (:name @user)))
+                          (update :counter #(or % 0))
+                          r/atom)]
+        [:> antd/Layout
+         [header/header-component edit-menu]
+         [:> antd/Layout.Content {:style {:backdrop-color "#fff"}}
+          [:> antd/Col {:span 16 :offset 4 :style {:padding-top "10px"}}
+           [:> antd/Form
+            [:> antd/Input
+             {:on-change   #(let [val (.-target.value %)]
+                              (reset! title val))
+              :placeholder "请输入标题"
+              :value       @title}]]
+           [:> antd/Row
+            [editor content]]]]]))))
 
 
 (defn post-view-page []
@@ -179,15 +198,10 @@
         [:> antd/Layout.Content {:style {:padding "50px"}}
          [:> antd/Typography.Title {:style {:text-align "center"}}
           (:title @post)]
-         [:hr]
+         [:> antd/Divider]
          [:div.container
           [c/markdown-preview (:content @post)]]
-         [:hr]
-         (if @user
-           [:div.text-center
-            [:a.btn.btn-outline-primary.btn-sm.mr-2
-             {:href (str "/posts/" (:id @post) "/edit")}
-             "修改文章"]])]))))
+         [:> antd/Divider ]]))))
 
 (defn post-archives-page []
   (r/with-let [posts (subscribe [:posts])]

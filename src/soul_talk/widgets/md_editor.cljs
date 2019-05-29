@@ -1,6 +1,7 @@
 (ns soul-talk.widgets.md-editor
   (:require [reagent.core :as r]
-            [re-frame.core :refer [dispatch subscribe]]))
+            [re-frame.core :refer [dispatch subscribe]]
+            [antd :as antd]))
 
 (def ^{:private true} hint-limit 10)
 
@@ -109,55 +110,48 @@
                       .-childNodes
                       (nth 3)))))
 
-(defn editor [text hints]
-  (r/create-class
-    {:component-did-mount
-     #(let [editor      (js/SimpleMDE.
-                          (clj->js
-                            {:display-name    "md-editor"
-                             :auto-focus      true
-                             :spell-check     false
-                             :status          true
-                             :placeholder     "正文"
-                             :toolbar         ["bold"
-                                               "italic"
-                                               "strikethrough"
-                                               "|"
-                                               "heading"
-                                               "code"
-                                               "quote"
-                                               "|"
-                                               "unordered-list"
-                                               "ordered-list"
-                                               "|"
-                                               "link"
-                                               "image"
-                                               "|"
-                                               "side-by-side"
-                                               "preview"
-                                               "fullscreen"
-                                               "guide"
-                                               "|"
-                                               {:name      "upload"
-                                                :action    (fn [] (.modal (js/$ "#uploadMdModal") "show"))
-                                                :className "fa fa-file"
-                                                :title     "upload md file"}]
-                             :renderingConfig {:codeSyntaxHighlighting true}
-                             :element         (r/dom-node %)
-                             :force-sync      true
-                             :initialValue    @text
-                             :value           @text}))
-            hints-shown (atom false)]
-        (do
-          ;(inject-editor-implementation editor)
-          ;(editor-set-shortcut (-> editor .codemirror))
-          ;(add-watch hints :watch-hints (show-hint (-> editor .-codemirror)))
-          (-> editor .-codemirror (.on "change" (fn [] (dispatch [:update-post :content (.value editor)]))))
-          (-> editor .-codemirror (.on "change" (fn [] (when @hints-shown (sent-hint-request (-> editor .-codemirror))))))
-          (-> editor .-codemirror (.on "startCompletion" (fn [] (reset! hints-shown true))))
-          (-> editor .-codemirror (.on "endCompletion" (fn [] (reset! hints-shown false))))))
-     :reagent-render
-     (fn [text hints]
-       (do
-         @hints
-         [:textarea]))}))
+(defn editor [text]
+  (fn []
+    (let [dom-node (r/atom nil)]
+      (r/create-class
+        {:component-did-update
+         (fn [this olg-argv]
+           (let [editor      (js/SimpleMDE.
+                               (clj->js
+                                 {:display-name    "md-editor"
+                                  :status          true
+                                  :placeholder     "正文"
+                                  :toolbar         ["bold" "italic" "strikethrough" "|"
+                                                    "heading" "code" "quote" "|"
+                                                    "unordered-list" "ordered-list" "|"
+                                                    "link" "image" "|"
+                                                    "preview" "guide" "|"
+                                                    {:name      "upload"
+                                                     :action    (fn [] (.modal (js/$ "#uploadMdModal") "show"))
+                                                     :className "fa fa-file"
+                                                     :title     "upload md file"}]
+                                  :renderingConfig {:codeSyntaxHighlighting true}
+                                  :element         @dom-node
+                                  :force-sync      true
+                                  ;:initialValue    @text
+                                  :value           @text}))
+                 hints-shown (atom false)]
+             (do
+               ;(inject-editor-implementation editor)
+               ;(editor-set-shortcut (-> editor .codemirror))
+               ;(add-watch hints :watch-hints (show-hint (-> editor .-codemirror)))
+               (-> editor .-codemirror (.on "change" #(reset! text (.value editor))))
+               ;(-> editor .-codemirror (.on "change" (fn [] (when @hints-shown (sent-hint-request (-> editor .-codemirror))))))
+               ;(-> editor .-codemirror (.on "startCompletion" (fn [] (reset! hints-shown true))))
+               ;(-> editor .-codemirror (.on "endCompletion" (fn [] (reset! hints-shown false))))
+               )))
+
+         :component-did-mount
+         (fn [this]
+           (let [node (r/dom-node this)]
+             (reset! dom-node node)))
+         :reagent-render
+         (fn []
+           @dom-node
+           [:textarea
+            {:value @text}])}))))

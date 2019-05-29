@@ -14,7 +14,6 @@
                    [:> antd/Button {:icon     "delete"
                                     :type     "danger"
                                     :on-click (fn []
-                                                (js/console.log id name)
                                                 (c/show-confirm
                                                   "分类删除"
                                                   (str "你确认要删除分类 " name " 吗？")
