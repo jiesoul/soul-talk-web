@@ -152,7 +152,7 @@
           ;(inject-editor-implementation editor)
           ;(editor-set-shortcut (-> editor .codemirror))
           ;(add-watch hints :watch-hints (show-hint (-> editor .-codemirror)))
-          (-> editor .-codemirror (.on "change" (fn [] (reset! text (.value editor)))))
+          (-> editor .-codemirror (.on "change" (fn [] (dispatch [:update-post :content (.value editor)]))))
           (-> editor .-codemirror (.on "change" (fn [] (when @hints-shown (sent-hint-request (-> editor .-codemirror))))))
           (-> editor .-codemirror (.on "startCompletion" (fn [] (reset! hints-shown true))))
           (-> editor .-codemirror (.on "endCompletion" (fn [] (reset! hints-shown false))))))

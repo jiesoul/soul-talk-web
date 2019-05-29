@@ -23,7 +23,7 @@
 (reg-event-db
   :categories/add-ok
   (fn [db [_ {:keys [category]}]]
-    (assoc db :success (str "Add " (:name category) " successful!"))))
+    (assoc db :success (str "添加 " (:name category) " successful!"))))
 
 (reg-event-fx
   :categories/add
@@ -33,8 +33,7 @@
       {:http {:method POST
               :url    "/api/admin/categories/"
                       :ajax-map {:params category}
-                      :success-event [:categories/add-ok]
-                      :error-event #(js/alert "发生错误请重试")}})))
+                      :success-event [:categories/add-ok]}})))
 
 (reg-event-db
   :set-category

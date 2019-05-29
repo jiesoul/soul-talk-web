@@ -42,28 +42,21 @@
   (fn [db _]
     (dissoc db :admin/posts)))
 
-(reg-event-fx
+(reg-event-db
   :posts/add-ok
-  (fn [{:keys [db]} [_ {:keys [post]}]]
-    (js/alert "add successful!!")
-    {:db (assoc db :admin/posts conj post)
-     :reload-page true}))
-
-(reg-event-fx
-  :posts/add-error
-  (fn [_ [_ {:keys [response]}]]
-    {:dispatch [:set-error (:message response)]}))
+  (fn [db [_ {:keys [post]}]]
+    (assoc db :admin/posts conj post)))
 
 (reg-event-fx
   :posts/add
-  (fn [_ [_ {:keys [category] :as post}]]
+  (fn [_ [_ post]]
+    (js/console.log "post: " post)
     (if-let [error (post-errors post)]
       {:dispatch [:set-error (str (map second error))]}
       {:http {:method        POST
               :url           "/api/admin/posts"
-              :ajax-map      {:params (assoc post :category (js/parseInt category))}
-              :success-event [:posts/add-ok]
-              :error-event [:posts/add-error]}})))
+              :ajax-map      {:params post}
+              :success-event [:set-success "保存成功"]}})))
 
 (reg-event-fx
   :posts/upload-ok
@@ -112,6 +105,11 @@
               :error-event   [:posts/edit-error]}})))
 
 (reg-event-db
+  :init-post
+  (fn [db [_ post]]
+    (assoc db :post post)))
+
+(reg-event-db
   :set-post
   (fn [db [_ {post :post}]]
     (assoc db :post post)))
@@ -119,14 +117,19 @@
 (reg-event-fx
   :load-post
   (fn [_ [_ id]]
-    {:http {:method GET
-            :url    (str "/api/posts/" id)
+    {:http {:method        GET
+            :url           (str "/api/posts/" id)
             :success-event [:set-post]}}))
 
 (reg-event-db
   :close-post
   (fn [db _]
     (dissoc db :post)))
+
+(reg-event-db
+  :update-post
+  (fn [db [_ key value]]
+    (assoc-in db [:post key] value)))
 
 (reg-event-fx
   :posts/delete-ok

@@ -7,7 +7,7 @@
             [soul-talk.pages.admin :refer [main-component]]
             [soul-talk.pages.auth :refer [login-page register-page]]
             [soul-talk.pages.users :refer [users-page change-pass-page user-profile-page]]
-            [soul-talk.pages.post :refer [posts-page post-view-page edit-post-page post-archives-page add-post-page]]
+            [soul-talk.pages.post :refer [posts-page post-view-page edit-post-page post-archives-page]]
             [soul-talk.pages.category :as category]
             [soul-talk.pages.tag :as tag]
             [clojure.string :as str]

@@ -2,6 +2,7 @@
   (:require [goog.events :as events]
             [secretary.core :as secretary :refer-macros [defroute]]
             [accountant.core :as accountant]
+            [reagent.core :as r]
             [re-frame.core :refer [dispatch dispatch-sync subscribe]])
   (:import [goog History]
            [goog.History EventType]))
@@ -108,12 +109,16 @@
 
 (defroute "/posts/archives/:year/:month" [year month]
   (run-events [[:load-posts-archives-year-month year month]
-                     [:set-active-page :posts/archives]]))
+               [:set-active-page :posts/archives]]))
 
 (defroute "/posts/add" []
-  (run-events [[:load-categories]
-                     [:load-tags]
-                     [:set-active-page :posts/add]]))
+  (r/with-let [user (subscribe [:user])
+               post {:publish 0
+                     :author  (:name @user)}]
+    (run-events [[:load-categories]
+                 [:load-tags]
+                 [:init-post post]
+                 [:set-active-page :posts/add]])))
 
 (defroute "/posts/:id/edit" [id]
   (if-not (or (logged-in?)

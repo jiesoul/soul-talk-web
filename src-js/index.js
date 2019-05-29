@@ -9,9 +9,14 @@ window.moment = moment;
 //     TimePicker, Tooltip, Transfer, TreeSelect, Typography, Upload, version} from 'antd';
 import * as antd from 'antd';
 window.antd = antd;
+
 import hljs from 'highlight.js';
 window.hljs = hljs;
+
 import showdown from 'showdown';
 window.showdown = showdown;
+
+import SimpleMDE from 'simplemde';
+window.SimpleMDE = SimpleMDE;
 
 import './default.less'

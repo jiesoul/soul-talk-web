@@ -27,13 +27,12 @@
 
 (defn categories-list []
   (r/with-let [categories (subscribe [:categories])]
-    (fn []
-      [:div
-       [:> antd/Table {:bordered   true
-                       :columns    (clj->js (columns))
-                       :dataSource (clj->js @categories)
-                       :row-key    "id"
-                       :size       "small"}]])))
+    [:div
+     [:> antd/Table {:bordered   true
+                     :columns    (clj->js (columns))
+                     :dataSource (clj->js @categories)
+                     :row-key    "id"
+                     :size       "small"}]]))
 
 (defn categories-page []
   (fn []
@@ -56,35 +55,36 @@
 (defn edit-page []
   (r/with-let [category (subscribe [:category])
                error    (subscribe [:error])
-               name (r/cursor category [:name])]
-    (fn []
-      [:div
-       [c/breadcrumb-component ["Home" "Categories" "Edit"]]
-       [:> antd/Layout.Content
-        {:style {:background "#fff"
-                 :padding    24
-                 :margin     0
-                 :min-height 280}}
+               name (r/cursor category [:name])
+               id (r/cursor category [:id])]
+    (js/console.log @category)
+    [:div
+     [c/breadcrumb-component ["Home" "Categories" "Edit"]]
+     [:> antd/Layout.Content
+      {:style {:background "#fff"
+               :padding    24
+               :margin     0
+               :min-height 280}}
 
-        [:> antd/Form
-         [:> antd/Input
-          {:value     @name
-           :on-change #(let [new-value (.-target.value %)]
-                         (dispatch [:clean-error])
-                         (dispatch [:update-category :name new-value]))}]
-         (when @error
-           [:div
-            [:> antd/Alert {:message @error :type "error"}]])]
-        [:> antd/Row {:style {:margin-top "10px"}}
+      [:> antd/Form
+       [:> antd/Input
+        {:value     @name
+         :on-change #(let [new-value (.-target.value %)]
+                       (dispatch [:clean-error])
+                       (dispatch [:update-category :name new-value]))}]
+       (when @error
          [:div
-          [:> antd/Button
-           {:type     "cancel"
-            :on-click #(dispatch [:navigate-to "#/categories"])}
-           "返回"]
-          [:> antd/Button
-           {:type     "primary"
-            :on-click #(if @category
-                         (dispatch [:categories/edit @category])
-                         (dispatch [:categories/add @category]))}
-           "保存"]]]]])))
+          [:> antd/Alert {:message @error :type "error"}]])]
+      [:> antd/Row {:style {:margin-top "10px"}}
+       [:div
+        [:> antd/Button
+         {:type     "cancel"
+          :on-click #(dispatch [:navigate-to "#/categories"])}
+         "返回"]
+        [:> antd/Button
+         {:type     "primary"
+          :on-click #(if (nil? @id)
+                       (dispatch [:categories/add @category])
+                       (dispatch [:categories/edit @category]))}
+         "保存"]]]]]))
 

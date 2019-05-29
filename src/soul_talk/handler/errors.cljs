@@ -1,11 +1,13 @@
 (ns soul-talk.handler.errors
   (:require [re-frame.core :refer [dispatch dispatch-sync reg-event-db reg-event-fx]]))
 
-(reg-event-fx
+(reg-event-db
   :ajax-error
-  (fn [_ [_ {:keys [response status] :as resp}]]
-    (js/console.log resp)
-    {:dispatch [:set-error (:message response)]}))
+  (fn [db [_ {:keys [response status] :as resp}]]
+    (assoc db :error (condp = status
+                       403 (:message response)
+                       500 "内部错误"
+                       "未知错误"))))
 
 
 (reg-event-db

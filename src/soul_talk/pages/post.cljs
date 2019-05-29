@@ -2,6 +2,7 @@
   (:require [reagent.core :as r]
             [re-frame.core :refer [subscribe dispatch]]
             [soul-talk.pages.common :as c]
+            [soul-talk.pages.header :as header]
             [soul-talk.widgets.md-editor :refer [editor]]
             [cljs-time.format :as ft :refer [parse formatter]]
             [cljs-time.local :as local]
@@ -110,130 +111,64 @@
 (defn posts-page []
   (fn []
     [:div
-     [c/breadcrumb-component ["Home" "Post" "list"]]
+     [c/breadcrumb-component ["Home" "Post" "List"]]
      [:> antd/Layout.Content
       {:style {:background "#fff"
-               :padding    24
+               :padding    12
                :margin     0
-               :min-height 280}}
+               :min-height 480}}
       [:> antd/Button
        {:target "_blank"
-        :href   "/posts/add"
+        :href   "#/posts/add"
         :size "small"}
        "写文章"]
       [:> antd/Divider]
       [posts-list]]]))
 
-(defn add-post-page []
-  (r/with-let
-    [user (subscribe [:user])
-     categories (subscribe [:categories])
-     error (subscribe [:error])]
-    (let [edited-post (-> {:author  (:name @user)
-                           :publish 0}
-                        r/atom)
-          title       (r/cursor edited-post [:title])
-          content     (r/cursor edited-post [:content])
-          category    (r/cursor edited-post [:category])]
-      [:div.container-fluid
-       [:nav.navbar.navbar-expand-lg.navbar-light.bg-light
-        [:a.navbar-brand
-         {:href "#"} "Soul Talk"]
-        [:div.container
-         [:ul.navbar-nav
-          [:li.nav-item.active
-           [:h6.title
-            (if @edited-post "修改文章" "写文章")]]]]]
-       [:div.container
-        [:main#main.col-md-12.ml-sm-auto.col-lg-12.px-4
-         [:div
-          [:div.form-group
-           [:input.form-control.input-lg
-            {:type        :text
-             :placeholder "请输入标题"
-             :value       @title
-             :on-change   #(reset! title (-> % .-target .-value))}]]
-          [:div.form-group
-           [c/editor content]]
-          (when @error
-            [:div.alert.alert-danger @error])
-          [:div.form-inline
-           [:div.form-group
-            [:select#category.mr-2.form-control.form-control-sm
-             {:on-change    #(reset! category (-> % .-target .-value))
-              :defaultValue @category}
-             [:option "请选择一个分类"]
-             (for [{:keys [id name]} @categories]
-               ^{:key id}
-               [:option
-                {:value id}
-                name])]
-            [:a.btn.btn-outline-primary.btn-sm.mr-2
-             {:on-click
-              #(dispatch [:posts/add @edited-post])}
-             "保存"]]]]]]])))
+(defn edit-menu []
+  (r/with-let [post (subscribe [:post])
+               categories (subscribe [:categories])
+               author (r/cursor post [:author])
+               user (subscribe [:user])
+               post-id (r/cursor post [:id])]
+    [:div {:style {:color "#FFF"}}
+     [:> antd/Col {:span 2 :offset 2}
+      (if @post-id "修改文章" "写文章")]
+     [:> antd/Col {:span 4 :offset 6}
+      [:> antd/Select {:defaultValue ""
+                       :labelInValue true
+                       :style        {:width 120}
+                       :on-change    #(let [val (:key (js->clj % :keywordize-keys true))]
+                                        (dispatch [:update-post :category val]))}
+       [:> antd/Select.Option {:value ""} "选择分类"]
+       (doall
+         (for [{:keys [id name]} @categories]
+           ^{:key id} [:> antd/Select.Option {:value id} name]))]]
+     [:> antd/Col {:span 2}
+      [:> antd/Button {:type     "primary"
+                       :on-click #(if (nil? @post-id)
+                                    (dispatch [:posts/add @post])
+                                    (dispatch [:posts/edit @post]))}
+       "保存"]]]))
 
 (defn edit-post-page []
-  (r/with-let [user (subscribe [:user])
-               original-post (subscribe [:post])
-               error (subscribe [:error])
-               categories  (subscribe [:categories])
-               edited-post (-> @original-post
-                             (update :title #(or % ""))
-                             (update :content #(or % ""))
-                             (update :category #(or % ""))
-                             (update :author #(or % (:name @user)))
-                             (update :publish #(or % 0))
-                             r/atom)
-               title       (r/cursor edited-post [:title])
-               content     (r/cursor edited-post [:content])
-               category    (r/cursor edited-post [:category])
-               c-list      #(mapv
-                              (fn [{:keys [id name]}] {:id id :label name})
-                              @categories)]
-    (fn []
-      (let []
-        [:div.container-fluid
-         [:nav.navbar.navbar-expand-lg.navbar-light.bg-light
-          [:a.navbar-brand
-           {:href "#"} "Soul Talk"]
-          [:div.container
-           [:ul.navbar-nav
-            [:li.nav-item.active
-             [:h6.title
-              (if @original-post "修改文章" "写文章")]]]]]
-         [:div.container
-          [:main#main.col-md-12.ml-sm-auto.col-lg-12.px-4
-           [:div
-            [:div.form-group
-             [:> antd/Input
-              :model title
-              :on-change #(reset! title %)
-              :placeholder "标题"
-              :width "100%"
-              :class "form-control input-lg"]]
-            [:div.form-group
-             [editor content title]]
-            (when @error
-              [:div.alert.alert-danger @error])
-            [:div.form-inline
-             [:div.form-group
-              [:select#category.mr-2.form-control.form-control-sm
-               {:on-change #(reset! category (-> % .-target .-value))
-                :value     @category}
-               [:option "请选择一个分类"]
-               (doall
-                 (for [{:keys [id name]} @categories]
-                   ^{:key id}
-                   [:option
-                    {:value id}
-                    name]))]
-              [:a.btn.btn-outline-primary.btn-sm.mr-2
-               {:on-click
-                (if @original-post
-                  #(dispatch [:posts/edit @edited-post])
-                  #(dispatch [:posts/add @edited-post]))}
-               "保存"]]]]]]]))))
+  (r/with-let [post (subscribe [:post])
+               title       (r/cursor post [:title])
+               content     (r/cursor post [:content])
+               user (subscribe [:user])
+               author (r/cursor post [:author])]
+    [:> antd/Layout
+     [header/header-component edit-menu]
+     [:> antd/Layout.Content {:style {:backdrop-color "#fff"}}
+      [:> antd/Col {:span 16 :offset 4 :style {:padding-top "10px"}}
+       [:> antd/Form
+        [:> antd/Input
+         {:on-change   #(let [val (.-target.value %)]
+                          (dispatch [:update-post :title val]))
+          :placeholder "标题"
+          :width       "100%"}]]
+       [:> antd/Row
+        [editor content title]]]]]))
 
 
 (defn post-view-page []
