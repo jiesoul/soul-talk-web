@@ -111,47 +111,57 @@
                       (nth 3)))))
 
 (defn editor [text keys]
-  (let [dom-node (r/atom nil)]
-    (r/create-class
-      {:display-name "me-editor"
-       :component-did-update
-                     (fn [this olg-argv]
-                       (let [editor      (js/SimpleMDE.
-                                           (clj->js
-                                             {:display-name    "md-editor"
-                                              :status          true
-                                              :placeholder     "正文"
-                                              :toolbar         ["bold" "italic" "strikethrough" "|"
-                                                                "heading" "code" "quote" "|"
-                                                                "unordered-list" "ordered-list" "|"
-                                                                "link" "image" "|"
-                                                                "preview" "guide" "|"
-                                                                {:name      "upload"
-                                                                 :action    (fn [] (.modal (js/$ "#uploadMdModal") "show"))
-                                                                 :className "fa fa-file"
-                                                                 :title     "upload md file"}]
-                                              :renderingConfig {:codeSyntaxHighlighting true}
-                                              :element        @dom-node
-                                              :force-sync      true
-                                              :initialValue    @text}))
-                             hints-shown (atom false)]
-                         (do
-                           ;(inject-editor-implementation editor)
-                           ;(editor-set-shortcut (-> editor .codemirror))
-                           ;(add-watch hints :watch-hints (show-hint (-> editor .-codemirror)))
-                           (-> editor
-                             .-codemirror
-                             (.on "change" #(dispatch [:update-value keys (.value editor)])))
-                           ;(-> editor .-codemirror (.on "change" (fn [] (when @hints-shown (sent-hint-request (-> editor .-codemirror))))))
-                           ;(-> editor .-codemirror (.on "startCompletion" (fn [] (reset! hints-shown true))))
-                           ;(-> editor .-codemirror (.on "endCompletion" (fn [] (reset! hints-shown false))))
-                           )))
+  (r/create-class
+    {:display-name "me-editor"
+     :component-did-mount
+                   (fn [this olg-argv]
+                     (let [editor      (js/SimpleMDE.
+                                         (clj->js
+                                           {:display-name    "md-editor"
+                                            :status          true
+                                            :placeholder     "正文"
+                                            :toolbar         ["bold" "italic" "strikethrough" "|"
+                                                              "heading" "code" "quote" "|"
+                                                              "unordered-list" "ordered-list" "|"
+                                                              "link" "image" "|"
+                                                              "preview" "guide" "|"
+                                                              {:name      "upload"
+                                                               :action    (fn [] (.modal (js/$ "#uploadMdModal") "show"))
+                                                               :className "fa fa-file"
+                                                               :title     "upload md file"}]
+                                            :renderingConfig {:codeSyntaxHighlighting true}
+                                            :element         (r/dom-node this)
+                                            :force-sync      true
+                                            :initialValue    @text
+                                            :value @text}))
+                           hints-shown (atom false)]
+                       (do
+                         (js/console.log (.value editor))
+                         ;(inject-editor-implementation editor)
+                         ;(editor-set-shortcut (-> editor .codemirror))
+                         ;(add-watch hints :watch-hints (show-hint (-> editor .-codemirror)))
+                         (-> editor
+                           .-codemirror
+                           (.on "change" #(let [value (.value editor)]
+                                            (js/console.log value)
+                                            (reset! text value))))
+                         ;(-> editor .-codemirror (.on "change" (fn [] (when @hints-shown (sent-hint-request (-> editor .-codemirror))))))
+                         ;(-> editor .-codemirror (.on "startCompletion" (fn [] (reset! hints-shown true))))
+                         ;(-> editor .-codemirror (.on "endCompletion" (fn [] (reset! hints-shown false))))
+                         )))
 
-       :component-did-mount
-                     (fn [this]
-                       (let [node (r/dom-node this)]
-                         (reset! dom-node node)))
-       :reagent-render
-                     (fn []
-                       @dom-node
-                       [:textarea])})))
+     ;:component-did-update
+     ;              (fn [this]
+     ;                (let [node (r/dom-node this)]
+     ;                  (reset! dom-node node)))
+     :reagent-render
+                   (fn [text keys]
+                     (js/console.log "editor content: " @text)
+                     [:textarea {:default-value @text
+                                 :value @text}])}))
+
+(defn editor-1 [text keys]
+  [:div
+   [:> js/SimpleMDE
+    {:value @text
+     :on-change #(dispatch [:update-value keys (.-value %)])}]])

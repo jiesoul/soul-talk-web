@@ -114,7 +114,6 @@
                      :author  (:name @user)}]
     (run-events [[:load-categories]
                  [:load-tags]
-                 [:init-post post]
                  [:set-active-page :posts/add]])))
 
 (defroute "/posts/:id/edit" [id]

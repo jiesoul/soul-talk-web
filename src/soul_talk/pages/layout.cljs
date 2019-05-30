@@ -6,20 +6,19 @@
 
 (defn admin-nav []
   (r/with-let [user (subscribe [:user])]
-    (when @user
-      (fn []
-        [:div
-         [:> antd/Menu {:id                  "admin-nav"
-                        :key                 "admin-nav"
-                        :theme               "dark"
-                        :mode                "horizontal"
-                        :style               {:line-height "64px"}
-                        :default-select-keys ["user-name"]}
-          [:> antd/Menu.Item {:key "user-name"}
-           (str "欢迎你 " (:name @user))]
-          [:> antd/Menu.Item {:key      "cancel"
-                              :on-click #(dispatch [:logout])}
-           "退出"]]]))))
+    (fn []
+      [:div
+       [:> antd/Menu {:id                  "admin-nav"
+                      :key                 "admin-nav"
+                      :theme               "dark"
+                      :mode                "horizontal"
+                      :style               {:line-height "64px"}
+                      :default-select-keys ["user-name"]}
+        [:> antd/Menu.Item {:key "user-name"}
+         (str "欢迎你 " (:name @user))]
+        [:> antd/Menu.Item {:key      "cancel"
+                            :on-click #(dispatch [:logout])}
+         "退出"]]])))
 
 (defn admin-sidebar []
   (r/with-let [user (subscribe [:user])

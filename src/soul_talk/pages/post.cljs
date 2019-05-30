@@ -141,54 +141,86 @@
   [admin-default
    posts-main])
 
-(defn edit-menu []
+(defn edit-menu [edited-post]
   (r/with-let [post (subscribe [:post])
-               categories (subscribe [:categories])
-               post-id (r/cursor post [:id])
-               category-id (r/cursor post [:category])]
-    (fn []
-      [:div {:style {:color "#FFF"}}
-       [:> antd/Col {:span 2 :offset 2}
-        (if @post-id "修改文章" "写文章")]
-       [:> antd/Col {:span 4 :offset 6}
-        [:> antd/Select {:value {:key @category-id}
-                         :labelInValue true
-                         :style        {:width 120}
-                         :on-change    #(let [val (:key (js->clj % :keywordize-keys true))]
-                                          (dispatch [:update-post :category val]))}
-         [:> antd/Select.Option {:value ""} "选择分类"]
-         (doall
-           (for [{:keys [id name]} @categories]
-             ^{:key id} [:> antd/Select.Option {:value id} name]))]]
-       [:> antd/Col {:span 2}
-        [:> antd/Button {:type     "primary"
-                         :on-click #(if (nil? @post-id)
-                                      (dispatch [:posts/add @post])
-                                      (dispatch [:posts/edit @post]))}
-         "保存"]]])))
+               categories (subscribe [:categories])]
+    (fn [edited-post]
+      (let [category (r/cursor edited-post [:category])]
+        [:div {:style {:color "#FFF"}}
+         [:> antd/Col {:span 2 :offset 2}
+          (if @post "修改文章" "写文章")]
+         [:> antd/Col {:span 4 :offset 10}
+          [:> antd/Select {:value        {:key @category}
+                           :labelInValue true
+                           :style        {:width 120}
+                           :on-change    #(let [val (:key (js->clj % :keywordize-keys true))]
+                                            (reset! category val))}
+           [:> antd/Select.Option {:value ""} "选择分类"]
+           (doall
+             (for [{:keys [id name]} @categories]
+               ^{:key id} [:> antd/Select.Option {:value id} name]))]]
+         [:> antd/Col {:span 2}
+          [:> antd/Button {:type     "primary"
+                           :on-click #(if @post
+                                        (dispatch [:posts/edit @edited-post])
+                                        (dispatch [:posts/add @edited-post]))}
+           "保存"]]]))))
 
-(defn edit-post-main []
-  (r/with-let [post       (subscribe [:post])
-               title      (r/cursor post [:title])
-               content     (r/cursor post [:content])
-               user (subscribe [:user])]
-    (fn []
-      [:> antd/Layout.Content {:style {:backdrop-color "#fff"}}
-       [:> antd/Col {:span 16 :offset 4 :style {:padding-top "10px"}}
-        [:> antd/Form
-         [:> antd/Input
-          {:on-change   #(let [val (-> % .-target .-value)]
-                           (dispatch [:update-value [:post :title] val]))
-           :placeholder "请输入标题"
-           :value       @title}]]
-        [:> antd/Row
-         [editor content [:post :content]]]]])))
+(defn add-post-page []
+  (r/with-let [user (subscribe [:user])]
+    (let [edited-post (-> {:author (:name @user)
+                           :publish 0
+                           :counter 0}
+                        r/atom)
+          content     (r/cursor edited-post [:content])
+          title       (r/cursor edited-post [:title])]
+
+      [admin-header-main
+       [header-common
+        [edit-menu edited-post]]
+       [:> antd/Layout.Content {:style {:backdrop-color "#fff"}}
+        [:> antd/Col {:span 16 :offset 4 :style {:padding-top "10px"}}
+         [:> antd/Form
+          [:> antd/Input
+           {:on-change   #(let [val (-> % .-target .-value)]
+                            (reset! title val))
+            :placeholder "请输入标题"}]]
+         [:> antd/Row
+          [editor content]
+          ]]]])))
 
 (defn edit-post-page []
-  [admin-header-main
-   [header-common
-    [edit-menu]]
-   [edit-post-main]])
+  (r/with-let [post (subscribe [:post])
+               user (subscribe [:user])]
+    (let [edited-post (-> @post
+                        (update :id #(or % nil))
+                        (update :title #(or % nil))
+                        (update :content #(or % nil))
+                        (update :category #(or % nil))
+                        (update :author #(or % (:name @user)))
+                        (update :publish #(or % 0))
+                        (update :counter #(or % 0))
+                        (update :create_time #(or % nil))
+                        r/atom)
+          content     (r/cursor edited-post [:content])
+          title       (r/cursor edited-post [:title])]
+      (when @post
+        (fn []
+          [admin-header-main
+           [header-common
+            [edit-menu edited-post]]
+           [:> antd/Layout.Content {:style {:backdrop-color "#fff"}}
+            [:> antd/Col {:span 16 :offset 4 :style {:padding-top "10px"}}
+             [:> antd/Form
+              [:> antd/Input
+               {:on-change   #(let [val (-> % .-target .-value)]
+                                (js/console.log val)
+                                (reset! title val))
+                :placeholder "请输入标题"
+                :size "large"
+                :defaultValue       @title}]]
+             [:> antd/Row
+              [editor content]]]]])))))
 
 
 (defn post-view-page []

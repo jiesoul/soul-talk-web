@@ -13,7 +13,8 @@
   (r/with-let [loading? (subscribe [:loading?])]
     (fn []
       (when @loading?
-        [:> antd/Spin {:tip "加载中。。。。"}]))))
+        [:> antd/Spin {:tip  "加载中。。。。"
+                       :size "large"}]))))
 
 (defn spin-loading [component]
   (r/with-let [loading? (subscribe [:loading?])]

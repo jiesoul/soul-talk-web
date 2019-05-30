@@ -54,7 +54,7 @@
   (admin post/posts-page))
 
 (defmethod pages :posts/add [_ _]
-  (admin post/edit-post-page))
+  (admin post/add-post-page))
 
 (defmethod pages :posts/edit [_ _]
   (admin post/edit-post-page))

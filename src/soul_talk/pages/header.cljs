@@ -4,11 +4,10 @@
             [re-frame.core :refer [subscribe dispatch]]))
 
 (defn header-common [menu]
-  (fn [menu]
-    [:div
-     [:> antd/Layout.Header
-      [:> antd/Row
-       [:> antd/Col {:span 2}
-        [:h1 {:className "brand"} "Soul Talk"]]
-       [:> antd/Col {:span 22}
-        [:div menu]]]]]))
+  [:div
+   [:> antd/Layout.Header
+    [:> antd/Row
+     [:> antd/Col {:span 2}
+      [:h1 {:className "brand"} "Soul Talk"]]
+     [:> antd/Col {:span 22}
+      [:div menu]]]]])

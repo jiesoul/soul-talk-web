@@ -45,8 +45,8 @@
 (reg-event-fx
   :posts/add-ok
   (fn [{:keys [db]} [_ {:keys [post]}]]
-    {:db (assoc db :admin/posts conj post)
-     :dispatch-n (list [:set-success "保存成功"])}))
+    {:dispatch-n (list [:set-success "保存成功"]
+                   [:admin/load-posts])}))
 
 (reg-event-fx
   :posts/add
@@ -88,7 +88,7 @@
   :posts/edit-ok
   (fn [_ _]
     {:dispatch-n (list [:set-success "保存成功"]
-                      [:admin/load-posts])}))
+                   [:admin/load-posts])}))
 
 (reg-event-fx
   :posts/edit-error
