@@ -1,8 +1,9 @@
 (ns soul-talk.pages.post
   (:require [reagent.core :as r]
             [re-frame.core :refer [subscribe dispatch]]
+            [soul-talk.pages.layout :refer [admin-default admin-header-main]]
             [soul-talk.pages.common :as c]
-            [soul-talk.pages.header :as header]
+            [soul-talk.pages.header :refer [header-common]]
             [soul-talk.widgets.md-editor :refer [editor]]
             [cljs-time.format :as ft :refer [parse formatter]]
             [cljs-time.local :as local]
@@ -111,7 +112,7 @@
 
 (defn posts-list []
   (r/with-let [posts (subscribe [:admin/posts])]
-    (js/console.log (map #(update % :create_time (comp str (fn [date] (ft/parse custom-formatter date)))) @posts))
+    ;(js/console.log (map #(update % :create_time (comp str (fn [date] (ft/parse custom-formatter date)))) @posts))
     [:div
      [:> antd/Table {:columns    (clj->js (list-columns))
                      :dataSource (clj->js @posts)
@@ -119,7 +120,7 @@
                      :bordered true
                      :size "small"}]]))
 
-(defn posts-page []
+(defn posts-main []
   (fn []
     [:div
      [c/breadcrumb-component ["Home" "Post" "List"]]
@@ -136,13 +137,16 @@
       [:> antd/Divider]
       [posts-list]]]))
 
+(defn posts-page []
+  [admin-default
+   posts-main])
+
 (defn edit-menu []
   (r/with-let [post (subscribe [:post])
                categories (subscribe [:categories])
                post-id (r/cursor post [:id])
                category-id (r/cursor post [:category])]
     (fn []
-      (js/console.log "category id: " @category-id)
       [:div {:style {:color "#FFF"}}
        [:> antd/Col {:span 2 :offset 2}
         (if @post-id "修改文章" "写文章")]
@@ -163,31 +167,28 @@
                                       (dispatch [:posts/edit @post]))}
          "保存"]]])))
 
-(defn edit-post-page []
+(defn edit-post-main []
   (r/with-let [post       (subscribe [:post])
                title      (r/cursor post [:title])
                content     (r/cursor post [:content])
                user (subscribe [:user])]
     (fn []
-      (let [edited-post (-> @post
-                          (update :title #(or % ""))
-                          (update :content #(or % ""))
-                          (update :publish #(or % 0))
-                          (update :author #(or % (:name @user)))
-                          (update :counter #(or % 0))
-                          r/atom)]
-        [:> antd/Layout
-         [header/header-component edit-menu]
-         [:> antd/Layout.Content {:style {:backdrop-color "#fff"}}
-          [:> antd/Col {:span 16 :offset 4 :style {:padding-top "10px"}}
-           [:> antd/Form
-            [:> antd/Input
-             {:on-change   #(let [val (.-target.value %)]
-                              (reset! title val))
-              :placeholder "请输入标题"
-              :value       @title}]]
-           [:> antd/Row
-            [editor content]]]]]))))
+      [:> antd/Layout.Content {:style {:backdrop-color "#fff"}}
+       [:> antd/Col {:span 16 :offset 4 :style {:padding-top "10px"}}
+        [:> antd/Form
+         [:> antd/Input
+          {:on-change   #(let [val (-> % .-target .-value)]
+                           (dispatch [:update-value [:post :title] val]))
+           :placeholder "请输入标题"
+           :value       @title}]]
+        [:> antd/Row
+         [editor content [:post :content]]]]])))
+
+(defn edit-post-page []
+  [admin-header-main
+   [header-common
+    [edit-menu]]
+   [edit-post-main]])
 
 
 (defn post-view-page []

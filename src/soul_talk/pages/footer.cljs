@@ -1,7 +1,7 @@
 (ns soul-talk.pages.footer
   (:require [antd :as antd]))
 
-(defn home-footer-component []
+(defn footer-common []
   (fn []
     [:> antd/Layout.Footer {:style {:text-align "center"}}
      [:h4 "Made with By"

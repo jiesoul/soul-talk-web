@@ -20,10 +20,11 @@
   (fn [db _]
     (dissoc db :category)))
 
-(reg-event-db
+(reg-event-fx
   :categories/add-ok
-  (fn [db [_ {:keys [category]}]]
-    (assoc db :success (str "添加 " (:name category) " successful!"))))
+  (fn [{:keys [db]} [_ {:keys [category]}]]
+    {:db         (assoc db [:categories] conj category)
+     :dispatch-n (list [:set-success "保存成功"])}))
 
 (reg-event-fx
   :categories/add
@@ -52,11 +53,11 @@
             :url           (str "/api/categories/" id)
             :success-event [:set-category]}}))
 
-(reg-event-db
+(reg-event-fx
   :categories/edit-ok
-  (fn [db [_ _]]
-    (-> db
-      (assoc :success "update successful"))))
+  (fn [_ _]
+    {:dispatch-n (list [:set-success "保存成功"]
+                   [:load-categories])}))
 
 (reg-event-fx
   :categories/edit
@@ -68,10 +69,11 @@
               :ajax-map      {:params category}
               :success-event [:categories/edit-ok]}})))
 
-(reg-event-db
+(reg-event-fx
   :categories/delete-ok
   (fn [db _]
-    (assoc db :success "delete successful!")))
+    {:dispatch-n (list [:set-success "删除成功"]
+                   [:load-categories])}))
 
 (reg-event-db
   :categories/delete-error

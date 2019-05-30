@@ -49,6 +49,11 @@
   (fn [db _]
     (dissoc db :success)))
 
+(reg-event-db
+  :update-value
+  (fn [db [_ keys val]]
+    (assoc-in db keys val)))
+
 ;; 取消加载
 (reg-event-db
   :unset-loading

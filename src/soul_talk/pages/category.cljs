@@ -2,7 +2,8 @@
   (:require [soul-talk.pages.common :as c]
             [re-frame.core :refer [dispatch subscribe]]
             [reagent.core :as r]
-            [antd :as antd]))
+            [antd :as antd]
+            [soul-talk.pages.layout :refer [admin-default]]))
 
 (defn columns []
   [{:title "name" :dataIndex "name", :key "name", :align "center"}
@@ -33,25 +34,27 @@
                      :row-key    "id"
                      :size       "small"}]]))
 
-(defn categories-page []
-  (fn []
-    [:div
-     [c/breadcrumb-component ["Home" "Categories" "List"]]
-     [c/loading-modal]
-     [:> antd/Layout.Content
-      {:style {:background "#fff"
-               :padding    24
-               :margin     0
-               :min-height 280}}
-      [:> antd/Button
-       {:type     "primary"
-        :icon     "plus"
-        :on-click #(dispatch [:navigate-to "#/categories-add"])}
-       "添加"]
-      [:> antd/Divider]
-      [categories-list]]]))
+(defn categories-main []
+  [:div
+   [c/breadcrumb-component ["Home" "Categories" "List"]]
+   [c/loading-modal]
+   [:> antd/Layout.Content
+    {:style {:background "#fff"
+             :padding    24
+             :margin     0
+             :min-height 280}}
+    [:> antd/Button
+     {:type     "primary"
+      :icon     "plus"
+      :on-click #(dispatch [:navigate-to "#/categories-add"])}
+     "添加"]
+    [:> antd/Divider]
+    [categories-list]]])
 
-(defn edit-page []
+(defn categories-page []
+  [admin-default categories-main])
+
+(defn edit-main []
   (r/with-let [category (subscribe [:category])
                error    (subscribe [:error])
                name (r/cursor category [:name])
@@ -86,4 +89,7 @@
                        (dispatch [:categories/add @category])
                        (dispatch [:categories/edit @category]))}
          "保存"]]]]]))
+
+(defn edit-page []
+  [admin-default edit-main])
 

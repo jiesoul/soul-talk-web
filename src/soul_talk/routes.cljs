@@ -82,19 +82,16 @@
 
 (defroute categories "/categories" []
   (js/console.log "load category list page")
-  (run-events [[:set-breadcrumb ["Blog" "Category" "List"]]
-               [:load-categories]
+  (run-events [[:load-categories]
                [:set-active-page :categories]]))
 
 (defroute categroies-add "/categories-add" []
   (run-events
     [[:close-category]
-     [:set-breadcrumb ["Blog" "Category" "Add"]]
      [:set-active-page :categories-add]]))
 
 (defroute categories-edit "/categories/:id/edit" [id]
   (run-events [[:close-category]
-               [:set-breadcrumb ["Blog" "Category" "Edit"]]
                [:load-category id]
                [:set-active-page :categories-edit]]))
 

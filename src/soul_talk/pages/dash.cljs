@@ -1,5 +1,7 @@
-(ns soul-talk.pages.chart
-  (:require [reagent.core :as r]))
+(ns soul-talk.pages.dash
+  (:require [reagent.core :as r]
+            [soul-talk.pages.layout :refer [admin-default]]
+            [soul-talk.pages.header :refer [header-common]]))
 
 (defn show-revenue-chart
   []
@@ -22,7 +24,21 @@
      :reagent-render      (fn []
                             [:canvas {:id "rev-chartjs" :width "900" :height "300"}])}))
 
-(defn dashboard-component []
+(defn complex-component [a b c]
+  (let [state (r/atom {})]
+    (r/create-class
+      {:component-did-mount
+       (fn [comp]
+         (js/console.log comp))
+
+       :display-name "complex-component"
+
+       :reagent-render
+       (fn [a b c]
+         [:div {:class c}
+          [:i a] " " b])})))
+
+(defn dash-main []
   (fn []
     [:div.d-flex.justify-content-between.flex-wrap.flex-md-nowrap.align-items-center.pt-3.pb-2.mb-3.border-bottom
      [:h1.h2 "Dashboard"]
@@ -30,4 +46,8 @@
       [:div.btn-group.mr-2
        [:button.btn.btn-sm.btn-outline-secondary "Share"]
        [:button.btn.btn-sm.btn-outline-secondary "Export"]
-       ]]]))
+       [complex-component "a" "b" "c"]]]]))
+
+(defn dash-page []
+  [admin-default
+   dash-main])
