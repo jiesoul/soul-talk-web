@@ -1,11 +1,11 @@
 .brand {
   text-align: center;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  color: #FFFFFF;
+  color: #fff;
 }
 .brand-content {
   font-family: "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  color: #FFFFFF;
+  color: #fff;
 }
 .logo {
   width: 120px;
@@ -13,6 +13,11 @@
   background: rgba(255, 255, 255, 0.2);
   margin: 16px 24px 16px 0;
   float: left;
+}
+.main {
+  background-color: #fff;
+  padding: 10px;
+  margin: 0px;
 }
 .ant-carousel .slick-slide {
   background-image: url('./images/IMAG0561.jpg');

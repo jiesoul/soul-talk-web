@@ -113,33 +113,27 @@
 (defn posts-list []
   (r/with-let [posts (subscribe [:admin/posts])]
     ;(js/console.log (map #(update % :create_time (comp str (fn [date] (ft/parse custom-formatter date)))) @posts))
-    [:div
-     [:> antd/Table {:columns    (clj->js (list-columns))
-                     :dataSource (clj->js @posts)
-                     :row-key "id"
-                     :bordered true
-                     :size "small"}]]))
-
-(defn posts-main []
-  (fn []
-    [:div
-     [c/breadcrumb-component ["Home" "Post" "List"]]
-     [:> antd/Layout.Content
-      {:style {:background "#fff"
-               :padding    12
-               :margin     0
-               :min-height 480}}
-      [:> antd/Button
-       {:target "_blank"
-        :href   "#/posts/add"
-        :size "small"}
-       "写文章"]
-      [:> antd/Divider]
-      [posts-list]]]))
+    (fn []
+      [:div
+       [:> antd/Table {:columns    (clj->js (list-columns))
+                       :dataSource (clj->js @posts)
+                       :row-key    "id"
+                       :bordered   true
+                       :size       "small"}]])))
 
 (defn posts-page []
-  [admin-default
-   posts-main])
+  (fn []
+    [admin-default
+     [:div
+      [c/breadcrumb-component ["文章" "列表"]]
+      [:> antd/Layout.Content {:className "main"}
+       [:> antd/Button
+        {:target "_blank"
+         :href   "#/posts/add"
+         :size   "small"}
+        "写文章"]
+       [:> antd/Divider]
+       [posts-list]]]]))
 
 (defn edit-menu [edited-post]
   (r/with-let [post (subscribe [:post])
@@ -147,9 +141,9 @@
     (fn [edited-post]
       (let [category (r/cursor edited-post [:category])]
         [:div {:style {:color "#FFF"}}
-         [:> antd/Col {:span 2 :offset 2}
+         [:> antd/Col {:span 2}
           (if @post "修改文章" "写文章")]
-         [:> antd/Col {:span 4 :offset 10}
+         [:> antd/Col {:span 4 :offset 16}
           [:> antd/Select {:value        {:key @category}
                            :labelInValue true
                            :style        {:width 120}
@@ -175,9 +169,10 @@
           content     (r/cursor edited-post [:content])
           title       (r/cursor edited-post [:title])]
 
-      [admin-header-main
-       [header-common
-        [edit-menu edited-post]]
+      [:> antd/Layout
+       [:> antd/Layout.Header
+        [:> antd/Col {:span 16 :offset 4}
+         [edit-menu edited-post]]]
        [:> antd/Layout.Content {:style {:backdrop-color "#fff"}}
         [:> antd/Col {:span 16 :offset 4 :style {:padding-top "10px"}}
          [:> antd/Form
@@ -204,21 +199,23 @@
                         r/atom)
           content     (r/cursor edited-post [:content])
           title       (r/cursor edited-post [:title])]
-      (when @post
-        (fn []
-          [admin-header-main
-           [header-common
-            [edit-menu edited-post]]
+      (fn []
+        (if-not @post
+          [:div [:> antd/Spin {:tip "loading"}]]
+          [:> antd/Layout
+           [:> antd/Layout.Header
+            [:> antd/Col {:span 16 :offset 4}
+             [edit-menu edited-post]]]
            [:> antd/Layout.Content {:style {:backdrop-color "#fff"}}
             [:> antd/Col {:span 16 :offset 4 :style {:padding-top "10px"}}
              [:> antd/Form
               [:> antd/Input
-               {:on-change   #(let [val (-> % .-target .-value)]
-                                (js/console.log val)
-                                (reset! title val))
-                :placeholder "请输入标题"
-                :size "large"
-                :defaultValue       @title}]]
+               {:on-change    #(let [val (-> % .-target .-value)]
+                                 (js/console.log val)
+                                 (reset! title val))
+                :placeholder  "请输入标题"
+                :size         "large"
+                :defaultValue @title}]]
              [:> antd/Row
               [editor content]]]]])))))
 

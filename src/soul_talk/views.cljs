@@ -10,7 +10,8 @@
             [soul-talk.pages.post :as post]
             [soul-talk.pages.category :as category]
             [soul-talk.pages.tag :as tag]
-            [clojure.string :as str]))
+            [clojure.string :as str]
+            [antd :as antd]))
 
 ;;多重方法  响应对应的页面
 (defmulti pages (fn [page _] page))
@@ -66,8 +67,11 @@
 
 ;; 根据配置加载不同页面
 (defn main-page []
-  (r/with-let [active-page (subscribe [:active-page])]
-    [:div
-     [c/success-modal]
-     [c/error-modal]
-     (pages @active-page nil)]))
+  (r/with-let [ready? (subscribe [:initialised?])
+               active-page (subscribe [:active-page])]
+    (if-not @ready?
+      [:> antd/Spin {:tip "loading"}]
+      [:div
+       [c/success-modal]
+       [c/error-modal]
+       (pages @active-page nil)])))

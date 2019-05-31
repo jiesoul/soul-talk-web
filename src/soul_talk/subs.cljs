@@ -7,6 +7,11 @@
   (fn [db _]
     db))
 
+(reg-sub
+  :initialised?
+  (fn [db _]
+    (not (empty? db))))
+
 ;; 响应事件
 (defn query [db [event-id]]
   (event-id db))

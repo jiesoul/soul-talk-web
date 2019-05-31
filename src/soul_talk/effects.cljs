@@ -32,7 +32,6 @@
 (reg-fx
   :navigate
   (fn [url]
-    (js/console.log "navigate to " url)
     (accountant/navigate! url)))
 
 (reg-fx

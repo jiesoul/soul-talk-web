@@ -3,7 +3,9 @@
             [reagent.core :as r]
             [soul-talk.auth-validate :refer [change-pass-errors]]
             [taoensso.timbre :as log]
-            [re-frame.core :refer [subscribe dispatch]]))
+            [soul-talk.pages.layout :refer [admin-default]]
+            [re-frame.core :refer [subscribe dispatch]]
+            [antd :as antd]))
 
 (defn where-component []
   (fn []
@@ -48,56 +50,73 @@
 (defn change-pass-page []
   (r/with-let [user (subscribe [:user])
                 pass-data (r/atom {:email  (:email @user)})
+                pass-old (r/cursor pass-data [:pass-old])
+                pass-new (r/cursor pass-data [:pass-new])
+                pass-confirm (r/cursor pass-data [:pass-confirm])
                 error (subscribe [:error])]
     (fn []
       (if @user
-        [:div.container-fluid
-         [:div.form-signin
-          [:h1.h3.mb-3.font-weight-normal.text-center "修改密码"]
-          [:div
-           [:div.well.well-sm "* 为必填项"]
-           [c/password-input "旧密码" :pass-old "输入密码最少8位" pass-data]
-           [c/password-input "新密码" :pass-new "输入密码最少8位" pass-data]
-           [c/password-input "确认密码" :pass-confirm "确认密码和上面一样" pass-data]
-           (when @error
-             [:div.alert.alert-danger @error])
-           [:div
-            [:input.btn.btn-primary.btn-block
-             {:type     :submit
-              :value    "保存"
-              :on-click #(dispatch [:change-pass @pass-data])}]]]]]))))
+        [admin-default
+         [:div
+          [c/breadcrumb-component ["个人信息" "修改密码"]]
+          [:> antd/Layout.Content {:className "main" :align "center"}
+           [:> antd/Row
+            [:> antd/Col {:span 8 :offset 8}
+             [:> antd/Input.Password {:id "old-pass"
+                                      :name "old-pass"
+                                      :placeholder "请输入旧密码"
+                                      :addon-before "旧密码："
+                                      :on-change #(reset! pass-old (.-target.value %))}]
+             [:> antd/Input.Password {:id "pass-new"
+                                      :name "pass-new"
+                                      :placeholder "请输入新密码"
+                                      :addon-before "新密码："
+                                      :on-change #(reset! pass-new (.-target.value %))}]
+             [:> antd/Input.Password {:id "pass-confirm"
+                                      :name "pass-confirm"
+                                      :placeholder "重复新密码"
+                                      :addon-before "新密码："
+                                      :on-change #(reset! pass-confirm (.-target.value %))}]
+             (when @error
+               [:div.alert.alert-danger @error])
+             [:div
+              [:> antd/Button {:type     "primary"
+                               :on-click #(dispatch [:change-pass @pass-data])}
+               "保存"]]]]]]]))))
 
 
 (defn user-profile-page []
   (r/with-let [user (subscribe [:user])
-                user-data (r/atom @user)
+               edited-user (r/atom @user)
+               name (r/cursor edited-user [:name])
                error (subscribe [:error])]
     (fn []
       (if @user
-        [:div.container
-         [:div.form-group
-          [:h1.h3.mb-3.font-weight-normal.text-center "User Profile"]
-          [:div.form-signin
-           [:div.form-group
-            [:label {:for "email"} "Email"]
-            [:input.form-control
-             {:id        "email"
-              :type      :text
-              :value     (:email @user-data)
-              :read-only true}
-             ]]
-           [:div.form-group
-            [:label {:for "name"} "Name"]
-            [:input.form-control
-             {:id        "name"
-              :type      :text
-              :value     (:name @user-data)
-              :on-change #(swap! user-data assoc :name (-> % .-target .-value))}]]
-           (when @error
-             [:div.alert.alert-message @error])
-           [:div.form-group
-            [:input.btn.btn-primary.btn-block
-             {:type     :submit
-              :value    "Save"
-              :on-click #(dispatch [:save-user-profile @user-data])}]]]]]))))
+        [admin-default
+         [:div
+          [c/breadcrumb-component ["User" "profile"]]
+          [:> antd/Layout.Content {:className "main"}
+           [:> antd/Row
+            [:> antd/Col {:span 8 :offset 8}
+             [:> antd/Input
+              {:id           "email"
+               :type         :text
+               :addon-before "邮箱："
+               :disabled     true
+               :value        (:email @edited-user)
+               :read-only    true}
+              ]
+             [:> antd/Input
+              {:id        "name"
+               :type      :text
+               :addon-before "名字："
+               :value     @name
+               :on-change #(reset! name (-> % .-target .-value))}]
+             (when @error
+               [:div.alert.alert-message @error])
+             [:div {:style {:text-align "center"}}
+              [:> antd/Button
+               {:type     :submit
+                :on-click #(dispatch [:save-user-profile @edited-user])}
+               "保存"]]]]]]]))))
 

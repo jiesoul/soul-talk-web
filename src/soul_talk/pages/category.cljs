@@ -27,68 +27,62 @@
 
 (defn categories-list []
   (r/with-let [categories (subscribe [:categories])]
-    [:div
-     [:> antd/Table {:bordered   true
-                     :columns    (clj->js (columns))
-                     :dataSource (clj->js @categories)
-                     :row-key    "id"
-                     :size       "small"}]]))
-
-(defn categories-main []
-  [:div
-   [c/breadcrumb-component ["Home" "Categories" "List"]]
-   [c/loading-modal]
-   [:> antd/Layout.Content
-    {:style {:background "#fff"
-             :padding    24
-             :margin     0
-             :min-height 280}}
-    [:> antd/Button
-     {:type     "primary"
-      :icon     "plus"
-      :on-click #(dispatch [:navigate-to "#/categories-add"])}
-     "添加"]
-    [:> antd/Divider]
-    [categories-list]]])
+    (fn []
+      [:div
+       [:> antd/Table {:bordered   true
+                       :columns    (clj->js (columns))
+                       :dataSource (clj->js @categories)
+                       :row-key    "id"
+                       :size       "small"}]])))
 
 (defn categories-page []
-  [admin-default categories-main])
+  [admin-default
+   [:div
+    [c/breadcrumb-component ["分类" "列表"]]
+    [:> antd/Layout.Content {:className "main"}
+     [:> antd/Button
+      {:type     "primary"
+       :icon     "plus"
+       :size     "small"
+       :on-click #(dispatch [:navigate-to "#/categories-add"])}
+      "添加"]
+     [:> antd/Divider]
+     [categories-list]]]])
 
 (defn edit-main []
   (r/with-let [category (subscribe [:category])
                error    (subscribe [:error])
                name (r/cursor category [:name])
                id (r/cursor category [:id])]
-    (js/console.log @category)
-    [:div
-     [c/breadcrumb-component ["Home" "Categories" "Edit"]]
-     [:> antd/Layout.Content
-      {:style {:background "#fff"
-               :padding    24
-               :margin     0
-               :min-height 280}}
+    (fn []
+      [:div
+       [c/breadcrumb-component ["分类" "编辑"]]
+       [:> antd/Layout.Content
+        {:style {:background "#fff"
+                 :padding    24
+                 :margin     0
+                 :min-height 280}}
 
-      [:> antd/Form
-       [:> antd/Input
-        {:value     @name
-         :on-change #(let [new-value (.-target.value %)]
-                       (dispatch [:clean-error])
-                       (dispatch [:update-category :name new-value]))}]
-       (when @error
+        [:> antd/Form
+         [:> antd/Input
+          {:value     @name
+           :on-change #(let [new-value (.-target.value %)]
+                         (dispatch [:update-value [:category :name] new-value]))}]
+         (when @error
+           [:div
+            [:> antd/Alert {:message @error :type "error"}]])]
+        [:> antd/Row {:style {:margin-top "10px"}}
          [:div
-          [:> antd/Alert {:message @error :type "error"}]])]
-      [:> antd/Row {:style {:margin-top "10px"}}
-       [:div
-        [:> antd/Button
-         {:type     "cancel"
-          :on-click #(dispatch [:navigate-to "#/categories"])}
-         "返回"]
-        [:> antd/Button
-         {:type     "primary"
-          :on-click #(if (nil? @id)
-                       (dispatch [:categories/add @category])
-                       (dispatch [:categories/edit @category]))}
-         "保存"]]]]]))
+          [:> antd/Button
+           {:type     "cancel"
+            :on-click #(dispatch [:navigate-to "#/categories"])}
+           "返回"]
+          [:> antd/Button
+           {:type     "primary"
+            :on-click #(if (nil? @id)
+                         (dispatch [:categories/add @category])
+                         (dispatch [:categories/edit @category]))}
+           "保存"]]]]])))
 
 (defn edit-page []
   [admin-default edit-main])

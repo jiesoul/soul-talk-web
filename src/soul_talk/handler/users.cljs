@@ -19,8 +19,7 @@
 (reg-event-fx
   :change-pass-ok
   (fn [{:keys [db]} [_ {:keys [user]}]]
-    (js/alert "Change Password successful!!")
-    {:db (assoc db :user user)}))
+    {:dispatch-n (list [:set-success "修改密码成功"])}))
 
 (reg-event-fx
   :change-pass-error
@@ -30,8 +29,9 @@
 (reg-event-fx
   :change-pass
   (fn [_ [_ {:keys [email pass-old pass-new pass-confirm] :as params}]]
+    (js/console.log params)
     (if-let [error (change-pass-errors params)]
-      {:dispatch [:set-error (first error)]}
+      {:dispatch-n (list [:set-error (first error)])}
       {:http {:method POST
               :url "/api/admin/change-pass"
               :ajax-map {:params {:email email
@@ -44,7 +44,7 @@
 (reg-event-fx
   :save-user-profile-ok
   (fn [_ _]
-    (js/alert "Save User Profile Successful")))
+    {:dispatch-n (list [:set-success "Save User Profile Successful"])}))
 
 (reg-event-fx
   :save-user-profile-error

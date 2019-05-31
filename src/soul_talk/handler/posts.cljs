@@ -1,8 +1,17 @@
 (ns soul-talk.handler.posts
   (:require [re-frame.core :refer [reg-event-fx reg-event-db subscribe]]
             [ajax.core :refer [POST GET DELETE PUT]]
-            [soul-talk.validate :refer [post-errors]]
-            [taoensso.timbre :as log]))
+            [taoensso.timbre :as log]
+            [bouncer.core :as b]))
+
+(defn post-errors [post]
+  (first
+    (b/validate
+      post
+      :title [[v/required :message "标题不能为空"]]
+      :category [[v/required :message "请选择一个分类"]]
+      :content [[v/required :message "内容不能为空"]])))
+
 
 (reg-event-db
   :set-posts
@@ -45,8 +54,7 @@
 (reg-event-fx
   :posts/add-ok
   (fn [{:keys [db]} [_ {:keys [post]}]]
-    {:dispatch-n (list [:set-success "保存成功"]
-                   [:admin/load-posts])}))
+    {:dispatch-n (list [:set-success "保存成功"])}))
 
 (reg-event-fx
   :posts/add
@@ -107,11 +115,6 @@
               :error-event   [:posts/edit-error]}})))
 
 (reg-event-db
-  :init-post
-  (fn [db [_ post]]
-    (assoc db :post post)))
-
-(reg-event-db
   :set-post
   (fn [db [_ {post :post}]]
     (assoc db :post post)))
@@ -127,11 +130,6 @@
   :close-post
   (fn [db _]
     (dissoc db :post)))
-
-(reg-event-db
-  :update-post
-  (fn [db [_ key value]]
-    (assoc-in db [:post key] value)))
 
 (reg-event-fx
   :posts/delete-ok

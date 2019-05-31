@@ -1,7 +1,9 @@
 (ns soul-talk.pages.dash
   (:require [reagent.core :as r]
             [soul-talk.pages.layout :refer [admin-default]]
-            [soul-talk.pages.header :refer [header-common]]))
+            [soul-talk.pages.header :refer [header-common]]
+            [soul-talk.pages.common :as c]
+            [antd :as antd]))
 
 (defn show-revenue-chart
   []
@@ -38,16 +40,15 @@
          [:div {:class c}
           [:i a] " " b])})))
 
-(defn dash-main []
-  (fn []
-    [:div.d-flex.justify-content-between.flex-wrap.flex-md-nowrap.align-items-center.pt-3.pb-2.mb-3.border-bottom
-     [:h1.h2 "Dashboard"]
-     [:div.btn-toolbar.mb-2.mb-md-0
-      [:div.btn-group.mr-2
-       [:button.btn.btn-sm.btn-outline-secondary "Share"]
-       [:button.btn.btn-sm.btn-outline-secondary "Export"]
-       [complex-component "a" "b" "c"]]]]))
-
 (defn dash-page []
-  [admin-default
-   dash-main])
+  (fn []
+    [admin-default
+     [:div
+      [c/breadcrumb-component ["Dash"]]
+      [:> antd/Layout.Content {:className "main"}
+       [:h1.h2 "Dashboard"]
+       [:div.btn-toolbar.mb-2.mb-md-0
+        [:div.btn-group.mr-2
+         [:button.btn.btn-sm.btn-outline-secondary "Share"]
+         [:button.btn.btn-sm.btn-outline-secondary "Export"]
+         [complex-component "a" "b" "c"]]]]]]))

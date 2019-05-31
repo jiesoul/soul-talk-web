@@ -10,4 +10,4 @@
      [:> antd/Col {:span 2}
       [:h1 {:className "brand"} "Soul Talk"]]
      [:> antd/Col {:span 22}
-      [:div menu]]]]])
+      [menu]]]]])

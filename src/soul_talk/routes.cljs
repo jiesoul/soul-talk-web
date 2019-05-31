@@ -7,17 +7,18 @@
   (:import [goog History]
            [goog.History EventType]))
 
-
-
 ;; 判断是否登录
 (defn logged-in? []
   @(subscribe [:user]))
+
+(defn context-url [url]
+  (str url))
 
 (defn href [url]
   {:href (str url)})
 
 (defn navigate! [url]
-  (accountant/navigate! url))
+  (accountant/navigate! (context-url url)))
 
 ;; 加载多个事件
 (defn run-events
@@ -81,7 +82,7 @@
                [:set-active-page :users]]))
 
 (defroute categories "/categories" []
-  (js/console.log "load category list page")
+  (js/console.log "------------------------- load category list page")
   (run-events [[:load-categories]
                [:set-active-page :categories]]))
 
@@ -109,9 +110,7 @@
                [:set-active-page :posts/archives]]))
 
 (defroute "/posts/add" []
-  (r/with-let [user (subscribe [:user])
-               post {:publish 0
-                     :author  (:name @user)}]
+  (r/with-let [user (subscribe [:user])]
     (run-events [[:load-categories]
                  [:load-tags]
                  [:set-active-page :posts/add]])))
