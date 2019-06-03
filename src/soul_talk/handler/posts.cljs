@@ -4,15 +4,6 @@
             [taoensso.timbre :as log]
             [bouncer.core :as b]))
 
-(defn post-errors [post]
-  (first
-    (b/validate
-      post
-      :title [[v/required :message "标题不能为空"]]
-      :category [[v/required :message "请选择一个分类"]]
-      :content [[v/required :message "内容不能为空"]])))
-
-
 (reg-event-db
   :set-posts
   (fn [db [_ {:keys [posts pagination]}]]
@@ -59,13 +50,10 @@
 (reg-event-fx
   :posts/add
   (fn [_ [_ post]]
-    (js/console.log "post: " post)
-    (if-let [error (post-errors post)]
-      {:dispatch [:set-error (str (map second error))]}
-      {:http {:method        POST
-              :url           "/api/admin/posts"
-              :ajax-map      {:params post}
-              :success-event [:posts/add-ok post]}})))
+    {:http {:method        POST
+            :url           "/api/admin/posts"
+            :ajax-map      {:params post}
+            :success-event [:posts/add-ok post]}}))
 
 (reg-event-fx
   :posts/upload-ok
@@ -106,13 +94,11 @@
 (reg-event-fx
   :posts/edit
   (fn [_ [_ {:keys [id counter] :as post}]]
-    (if-let [error (post-errors post)]
-      {:dispatch [:set-error (str (map second error))]}
-      {:http {:method        PUT
-              :url           (str "/api/admin/posts/" id)
-              :ajax-map      {:params post}
-              :success-event [:posts/edit-ok]
-              :error-event   [:posts/edit-error]}})))
+    {:http {:method        PUT
+            :url           (str "/api/admin/posts/" id)
+            :ajax-map      {:params post}
+            :success-event [:posts/edit-ok]
+            :error-event   [:posts/edit-error]}}))
 
 (reg-event-db
   :set-post

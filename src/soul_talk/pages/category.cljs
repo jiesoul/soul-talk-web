@@ -49,41 +49,41 @@
      [:> antd/Divider]
      [categories-list]]]])
 
-(defn edit-main []
+(defn edit-page []
   (r/with-let [category (subscribe [:category])
                error    (subscribe [:error])
                name (r/cursor category [:name])
                id (r/cursor category [:id])]
     (fn []
-      [:div
-       [c/breadcrumb-component ["分类" "编辑"]]
-       [:> antd/Layout.Content
-        {:style {:background "#fff"
-                 :padding    24
-                 :margin     0
-                 :min-height 280}}
+      [admin-default
+       [:div
+        [c/breadcrumb-component ["分类" "编辑"]]
+        [:> antd/Layout.Content
+         {:style {:background "#fff"
+                  :padding    24
+                  :margin     0
+                  :min-height 280}}
 
-        [:> antd/Form
-         [:> antd/Input
-          {:value     @name
-           :on-change #(let [new-value (.-target.value %)]
-                         (dispatch [:update-value [:category :name] new-value]))}]
-         (when @error
-           [:div
-            [:> antd/Alert {:message @error :type "error"}]])]
-        [:> antd/Row {:style {:margin-top "10px"}}
-         [:div
-          [:> antd/Button
-           {:type     "cancel"
-            :on-click #(dispatch [:navigate-to "#/categories"])}
-           "返回"]
-          [:> antd/Button
-           {:type     "primary"
-            :on-click #(if (nil? @id)
-                         (dispatch [:categories/add @category])
-                         (dispatch [:categories/edit @category]))}
-           "保存"]]]]])))
-
-(defn edit-page []
-  [admin-default edit-main])
+         [:> antd/Form
+          [:> antd/Input
+           {:value     @name
+            :on-change #(let [new-value (.-target.value %)]
+                          (dispatch [:update-value [:category :name] new-value]))}]
+          (when @error
+            [:div
+             [:> antd/Alert {:message @error :type "error"}]])]
+         [:> antd/Row {:style {:margin-top "10px"}}
+          [:div
+           [:> antd/Button
+            {:type     "cancel"
+             :size  "small"
+             :on-click #(dispatch [:navigate-to "#/categories"])}
+            "返回"]
+           [:> antd/Button
+            {:type     "primary"
+             :size "small"
+             :on-click #(if (nil? @id)
+                          (dispatch [:categories/add @category])
+                          (dispatch [:categories/edit @category]))}
+            "保存"]]]]]])))
 

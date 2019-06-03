@@ -1,5 +1,6 @@
 ^{:watch-dirs ["src" "env/dev"]}
 ^{:npm {:bundles {"dist/index.bundle.js" "src-js/index.js"}}}
+^{:extra-main-files {:testing {:main soul-talk.test-runner}}}
 {:main soul-talk.app
  :npm-deps false
  :infer-externs true

@@ -1,15 +1,24 @@
 (ns soul-talk.pages.post
   (:require [reagent.core :as r]
             [re-frame.core :refer [subscribe dispatch]]
-            [soul-talk.pages.layout :refer [admin-default admin-header-main]]
+            [soul-talk.pages.layout :refer [admin-default admin-header-main header-common logo]]
             [soul-talk.pages.common :as c]
-            [soul-talk.pages.header :refer [header-common]]
             [soul-talk.widgets.md-editor :refer [editor]]
-            [cljs-time.format :as ft :refer [parse formatter]]
-            [cljs-time.local :as local]
-            [antd :as antd]))
+            [soul-talk.date-utils :as du]
+            [antd :as antd]
+            [bouncer.core :as b]
+            [bouncer.validators :as v]
+            [clojure.string :as str]))
 
-(def custom-formatter (formatter "yyyy-MM-dd HH:mm"))
+(defn post-errors [post]
+  (->
+    (b/validate
+      post
+      :title [[v/required :message "标题不能为空\n"]]
+      :category [[v/required :message "请选择一个分类\n"]]
+      :content [[v/required :message "内容不能为空\n"]])
+    first
+    (vals)))
 
 (defn archives-component []
   (r/with-let [posts-archives (subscribe [:posts-archives])]
@@ -73,8 +82,15 @@
 
 (defn list-columns []
   [{:title "标题" :dataIndex "title", :key "title", :align "center"}
-   {:title "创建时间" :dataIndex "create-time" :key "create-time" :align "center"}
-   {:title "更新时间" :dataIndex "modify-time" :key "modify-time" :align "center"}
+   {:title  "创建时间" :dataIndex "create_time" :key "create_time" :align "center"
+    :render (fn [_ post]
+              (let [post (js->clj post :keywordize-keys true)]
+                (du/to-date-time (:create_time post))))}
+   {:title  "更新时间" :dataIndex "modify_time" :key "modify_time" :align "center"
+    :render (fn [_ post]
+              (let [post (js->clj post :keywordize-keys true)]
+                (js/console.log (type (:create_time post)))
+                (du/to-date-time (:modify_time post))))}
    {:title "发布状态" :dataIndex "publish" :key "publish" :align "center"}
    {:title "作者" :dataIndex "author" :key "author" :align "center"}
    {:title "浏览量" :dataIndex "counter" :key "counter" :align "center"}
@@ -124,7 +140,7 @@
 (defn posts-page []
   (fn []
     [admin-default
-     [:div
+     [:<>
       [c/breadcrumb-component ["文章" "列表"]]
       [:> antd/Layout.Content {:className "main"}
        [:> antd/Button
@@ -155,57 +171,67 @@
                ^{:key id} [:> antd/Select.Option {:value id} name]))]]
          [:> antd/Col {:span 2}
           [:> antd/Button {:type     "primary"
-                           :on-click #(if @post
-                                        (dispatch [:posts/edit @edited-post])
-                                        (dispatch [:posts/add @edited-post]))}
+                           :on-click #(if-let [error (r/as-element (post-errors @edited-post))]
+                                        (dispatch [:set-error error])
+                                        (if @post
+                                          (dispatch [:posts/edit @edited-post])
+                                          (dispatch [:posts/add @edited-post])))}
            "保存"]]]))))
+
+
+(defn post-edit-basic [post]
+  (fn []
+   [:> antd/Layout.Header
+    [:> antd/Col {:span 2}
+     [logo]]
+    [:> antd/Col {:span 16 :offset 2}
+     [edit-menu post]]] ))
 
 (defn add-post-page []
   (r/with-let [user (subscribe [:user])]
-    (let [edited-post (-> {:author (:name @user)
-                           :publish 0
-                           :counter 0}
-                        r/atom)
-          content     (r/cursor edited-post [:content])
-          title       (r/cursor edited-post [:title])]
+    (fn []
+      (let [edited-post (-> {:author  (:name @user)
+                             :publish 0
+                             :counter 0
+                             :create_time (js/Date.)
+                             :modify_time (js/Date.)}
+                          r/atom)
+            content     (r/cursor edited-post [:content])
+            title       (r/cursor edited-post [:title])]
 
-      [:> antd/Layout
-       [:> antd/Layout.Header
-        [:> antd/Col {:span 16 :offset 4}
-         [edit-menu edited-post]]]
-       [:> antd/Layout.Content {:style {:backdrop-color "#fff"}}
-        [:> antd/Col {:span 16 :offset 4 :style {:padding-top "10px"}}
-         [:> antd/Form
-          [:> antd/Input
-           {:on-change   #(let [val (-> % .-target .-value)]
-                            (reset! title val))
-            :placeholder "请输入标题"}]]
-         [:> antd/Row
-          [editor content]
-          ]]]])))
+        [:> antd/Layout
+         [post-edit-basic edited-post]
+         [:> antd/Layout.Content {:style {:backdrop-color "#fff"}}
+          [:> antd/Col {:span 16 :offset 4 :style {:padding-top "10px"}}
+           [:> antd/Form
+            [:> antd/Input
+             {:on-change   #(let [val (-> % .-target .-value)]
+                              (reset! title val))
+              :placeholder "请输入标题"}]]
+           [:> antd/Row
+            [editor content]
+            ]]]]))))
 
 (defn edit-post-page []
   (r/with-let [post (subscribe [:post])
                user (subscribe [:user])]
-    (let [edited-post (-> @post
-                        (update :id #(or % nil))
-                        (update :title #(or % nil))
-                        (update :content #(or % nil))
-                        (update :category #(or % nil))
-                        (update :author #(or % (:name @user)))
-                        (update :publish #(or % 0))
-                        (update :counter #(or % 0))
-                        (update :create_time #(or % nil))
-                        r/atom)
-          content     (r/cursor edited-post [:content])
-          title       (r/cursor edited-post [:title])]
-      (fn []
+    (fn []
+      (let [edited-post (-> @post
+                          (update :id #(or % nil))
+                          (update :title #(or % nil))
+                          (update :content #(or % nil))
+                          (update :category #(or % nil))
+                          (update :author #(or % (:name @user)))
+                          (update :publish #(or % 0))
+                          (update :counter #(or % 0))
+                          (update :create_time #(or % (js/Date.)))
+                          r/atom)
+            content     (r/cursor edited-post [:content])
+            title       (r/cursor edited-post [:title])]
         (if-not @post
           [:div [:> antd/Spin {:tip "loading"}]]
           [:> antd/Layout
-           [:> antd/Layout.Header
-            [:> antd/Col {:span 16 :offset 4}
-             [edit-menu edited-post]]]
+           [post-edit-basic edited-post]
            [:> antd/Layout.Content {:style {:backdrop-color "#fff"}}
             [:> antd/Col {:span 16 :offset 4 :style {:padding-top "10px"}}
              [:> antd/Form

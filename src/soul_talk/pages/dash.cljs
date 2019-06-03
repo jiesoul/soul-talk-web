@@ -1,7 +1,6 @@
 (ns soul-talk.pages.dash
   (:require [reagent.core :as r]
-            [soul-talk.pages.layout :refer [admin-default]]
-            [soul-talk.pages.header :refer [header-common]]
+            [soul-talk.pages.layout :refer [admin-default header-common]]
             [soul-talk.pages.common :as c]
             [antd :as antd]))
 

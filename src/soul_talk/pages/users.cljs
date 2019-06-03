@@ -1,11 +1,12 @@
 (ns soul-talk.pages.users
   (:require [soul-talk.pages.common :as c]
             [reagent.core :as r]
-            [soul-talk.auth-validate :refer [change-pass-errors]]
             [taoensso.timbre :as log]
             [soul-talk.pages.layout :refer [admin-default]]
             [re-frame.core :refer [subscribe dispatch]]
-            [antd :as antd]))
+            [antd :as antd]
+            [bouncer.core :as b]
+            [bouncer.validators :as v]))
 
 (defn where-component []
   (fn []
@@ -47,14 +48,28 @@
                             [:td (.toDateString (js/Date. last_login))]
                             [:td "action"]])]]]))]))
 
+
+(defn change-pass-errors [{:keys [pass-old pass-new] :as params}]
+  (first
+    (b/validate params
+      :pass-old [[v/required :message "旧密码不能为空"]
+                 [v/min-count 7 :message "旧密码至少8位"]]
+      :pass-new [[v/required :message "新密码不能为空"]
+                 [v/min-count 7 :message "新密码至少8 位"]
+                 [not= pass-old :message "新密码不能和旧密码一样"]]
+      :pass-confirm [[v/required :message "确认密码不能为空："]
+                     [= pass-new :message "确认密码必须和新密码相同"]])))
+
 (defn change-pass-page []
   (r/with-let [user (subscribe [:user])
-                pass-data (r/atom {:email  (:email @user)})
+                pass-data (r/atom @user)
                 pass-old (r/cursor pass-data [:pass-old])
                 pass-new (r/cursor pass-data [:pass-new])
                 pass-confirm (r/cursor pass-data [:pass-confirm])
                 error (subscribe [:error])]
     (fn []
+      (js/console.log "pass-date: " @pass-data)
+      (js/console.log "error: " @error)
       (if @user
         [admin-default
          [:div
@@ -62,6 +77,10 @@
           [:> antd/Layout.Content {:className "main" :align "center"}
            [:> antd/Row
             [:> antd/Col {:span 8 :offset 8}
+             [:> antd/Input {:id "username"
+                             :disabled true
+                             :addon-before "用户名："
+                             :value (:name @pass-data)}]
              [:> antd/Input.Password {:id "old-pass"
                                       :name "old-pass"
                                       :placeholder "请输入旧密码"
@@ -77,11 +96,11 @@
                                       :placeholder "重复新密码"
                                       :addon-before "新密码："
                                       :on-change #(reset! pass-confirm (.-target.value %))}]
-             (when @error
-               [:div.alert.alert-danger @error])
              [:div
               [:> antd/Button {:type     "primary"
-                               :on-click #(dispatch [:change-pass @pass-data])}
+                               :on-click #(if-let [error (r/as-element (change-pass-errors @pass-data))]
+                                            (dispatch [:set-error error])
+                                            (dispatch [:change-pass @pass-data]))}
                "保存"]]]]]]]))))
 
 

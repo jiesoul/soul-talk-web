@@ -1,10 +1,20 @@
 (ns soul-talk.pages.layout
   (:require [reagent.core :as r]
             [re-frame.core :refer [subscribe dispatch]]
-            [soul-talk.pages.header :refer [header-common]]
-            [soul-talk.pages.footer :refer [footer-common]]
             [soul-talk.routes :refer [navigate!]]
             [antd :as antd]))
+
+(defn logo []
+  [:h1 {:className "brand"} "Soul Talk"])
+
+(defn header-common [menu]
+  [:div
+   [:> antd/Layout.Header
+    [:> antd/Row
+     [:> antd/Col {:span 2}
+      [logo]]
+     [:> antd/Col {:span 22}
+      [menu]]]]])
 
 (defn admin-nav []
   (r/with-let [user (subscribe [:user])]
@@ -62,23 +72,56 @@
                                :on-click #(navigate! "#/change-pass")} "密码修改"]
            ]]]))))
 
+(defn footer-common []
+  (fn []
+    [:> antd/Layout.Footer {:style {:text-align "center"
+                                    :background "#3e3e3e"}}
+     [:h4 {:style {:color "#FFF"}}
+      "Made with By "
+      [:a
+       {:type "link"
+        :href "https://ant.design"
+        :target "_blank"}
+       "Ant Design"]
+      " and JIESOUL "]]))
+
 (defn admin-basic [header sidebar main]
   [:> antd/Layout
-   [:div header]
+   header
    [:> antd/Layout
-    [:div sidebar]
+    sidebar
     [:> antd/Layout {:style {:padding "0 24px 24px"}}
-     [:div main]]]
+     main]]
+   ;[:> antd/Divider]
    [footer-common]])
 
 (defn admin-header-main [header main]
-  (admin-basic header nil main))
+  [admin-basic header nil main])
 
 (defn admin-default [main]
-  (admin-basic
-    (header-common admin-nav)
-    [admin-sidebar]
-    main))
+  [admin-basic
+   [header-common admin-nav]
+   [admin-sidebar]
+   main])
+
+(defn admin-post-edit [menu main]
+  [admin-basic
+   [header-common menu]
+   nil
+   main])
+
+(defn home-nav []
+  (fn []
+    [:> antd/Menu {:id "nav"
+                   :key "nav"
+                   :theme "dark"
+                   :mode "horizontal"
+                   :defaultSelectKeys ["home"]
+                   :style {:line-height "64px"}}
+     [:> antd/Menu.Item {:key "home"} "Home"]
+     ;[:> antd/Menu.Item {:key "blog"} "Blog"]
+     ;[:> antd/Menu.Item {:key "about"} "About"]
+     ]))
 
 (defn home-basic
   ([main] (home-basic nil main nil))

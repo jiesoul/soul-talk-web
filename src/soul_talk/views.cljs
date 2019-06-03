@@ -60,8 +60,8 @@
 (defmethod pages :posts/edit [_ _]
   (admin post/edit-post-page))
 
-(defmethod pages :tags/add [_ _]
-  (admin tag/add-page))
+;(defmethod pages :tags/add [_ _]
+;  (admin tag/add-page))
 
 (defmethod pages :default [_ _] [:div "页面未找到"])
 

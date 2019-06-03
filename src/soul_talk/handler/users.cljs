@@ -28,8 +28,8 @@
 
 (reg-event-fx
   :change-pass
+  [reagent.debug/tracking]
   (fn [_ [_ {:keys [email pass-old pass-new pass-confirm] :as params}]]
-    (js/console.log params)
     (if-let [error (change-pass-errors params)]
       {:dispatch-n (list [:set-error (first error)])}
       {:http {:method POST

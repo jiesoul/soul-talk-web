@@ -2,39 +2,7 @@
   (:require [soul-talk.db :as db]
             [soul-talk.auth-validate :refer [login-errors reg-errors]]
             [re-frame.core :refer [reg-event-fx reg-event-db dispatch]]
-            [ajax.core :refer [POST GET DELETE PUT]]
-            [bouncer.core :as b]))
-
-
-(defn reg-errors [{:keys [password] :as params}]
-  (first
-    (b/validate
-      params
-      :email [[v/required :message "email 不能为空"]
-              [v/email :message "email 不合法"]]
-      :password [[v/required :message "密码不能为空"]
-                 [v/min-count 7 :message "密码最少8位"]]
-      :pass-confirm [[= password :message "两次密码必须一样"]])))
-
-(defn login-errors [params]
-  (first
-    (b/validate
-      params
-      :email [[v/required :message "email 不能为空"]
-              [v/email :message "email 不合法"]]
-      :password [[v/required :message "密码不能为空"]
-                 [v/min-count 7 :message "密码最少8位"]])))
-
-(defn change-pass-errors [{:keys [pass-old pass-new] :as params}]
-  (first
-    (b/validate
-      params
-      :pass-old [[v/required :message "旧密码不能为空"]
-                 [v/min-count 7 :message "旧密码至少8位"]]
-      :pass-new [[v/required :message "新密码不能为空"]
-                 [v/min-count 7 :message "新密码至少8 位"]
-                 [not= pass-old :message "新密码不能和旧密码一样"]]
-      :pass-confirm [[= pass-new :message "确认密码必须和新密码相同"]])))
+            [ajax.core :refer [POST GET DELETE PUT]]))
 
 
 ;; 运行 login
@@ -72,13 +40,11 @@
 (reg-event-fx
   :login
   (fn [_ [_ {:keys [email password] :as user}]]
-    (if-let [error (login-errors user)]
-      {:dispatch [:set-error (first error)]}
-      {:http {:method        POST
-              :url           "/api/login"
-              :ajax-map      {:params {:email    email
-                                       :password password}}
-              :success-event [:handle-login-ok]}})))
+    {:http {:method        POST
+            :url           "/api/login"
+            :ajax-map      {:params {:email    email
+                                     :password password}}
+            :success-event [:handle-login-ok]}}))
 
 
 ;; 处理register ok
@@ -94,14 +60,12 @@
 (reg-event-fx
   :register
   (fn [_ [_ {:keys [email password pass-confirm] :as user}]]
-    (if-let [error (reg-errors user)]
-      {:dispatch [:set-error (first error)]}
-      {:http {:method        POST
-              :url           "/api/register"
-              :ajax-map      {:params {:email        email
-                                       :password     password
-                                       :pass-confirm pass-confirm}}
-              :success-event [:handle-register]}})))
+    {:http {:method        POST
+            :url           "/api/register"
+            :ajax-map      {:params {:email        email
+                                     :password     password
+                                     :pass-confirm pass-confirm}}
+            :success-event [:handle-register]}}))
 
 (reg-event-fx
   :handle-logout
