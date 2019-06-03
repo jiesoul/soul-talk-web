@@ -23,4 +23,5 @@
   (if (logged-in?) (dispatch [:run-login-events]))
   (load-interceptors!)
   (hook-browser-navigation!)
+  (dispatch [:load-posts])
   (mount-component))

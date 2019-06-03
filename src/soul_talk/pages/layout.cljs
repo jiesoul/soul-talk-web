@@ -9,7 +9,7 @@
 
 (defn header-common [menu]
   [:div
-   [:> antd/Layout.Header
+   [:> antd/Layout.Header {:style {:padding "0 10px"}}
     [:> antd/Row
      [:> antd/Col {:span 2}
       [logo]]

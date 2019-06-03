@@ -41,44 +41,44 @@
                total-pages (r/cursor pagination [:total-pages])]
 
     (fn []
-      [:> antd/Typography
-       [:> antd/Row
-        (for [{:keys [id title create_time author content] :as post} @posts]
-          (let [url (str "/#/posts/" id)]
-            ^{:key post} [:div.blog-post
+      [:> antd/Layout.Content
+       (for [{:keys [id title create_time author content] :as post} @posts]
+         (let [url (str "/#/posts/" id)]
+           ^{:key post} [:> antd/Row
+                         [:> antd/Typography
                           [:> antd/Typography.Title
                            [:a.text-muted
                             {:href   url
                              :target "_blank"}
                             title]]
                           [:p.blog-post-meta (str (.toDateString (js/Date. create_time)) " by " author)]
-                          [:> antd/Divider]
+                          ;[:> antd/Divider]
                           [:> antd/Typography.Paragraph
-                           {:ellipsis {:rows 20
+                           {:ellipsis {:rows       20
                                        :expandable false}}
-                           [c/markdown-preview content]]
-                          [:> antd/Col {:span 2 :offset 20}
-                           [:> antd/Button
-                            {:size "small"
-                             :href url
-                             :target "_blank"}
-                            "全部"]]
-                          [:> antd/Divider]]))
-        [:> antd/Row
-         [:> antd/Col {:span 2}
-          [:> antd/Button
-           {:type "link"
-            :on-click #(dispatch [:load-posts {:page     @next-page
-                                               :pre-page @pre-page}])
-            :class    (if (>= @page @total-pages) "disabled")}
-           "Older"]]
-         [:> antd/Col {:span 2 :offset 20}
-          [:> antd/Button
-           {:type "link"
-            :on-click #(dispatch [:load-posts {:page     @prev-page
-                                               :pre-page @pre-page}])
-            :class    (if (zero? @offset) "disabled")}
-           "Newer"]]]]])))
+                           [c/markdown-preview content]
+                           [:> antd/Col {:span 2}
+                            [:> antd/Button
+                             {:size   "small"
+                              :href   url
+                              :target "_blank"}
+                             "全部"]]]
+                          [:> antd/Divider]]]))
+       [:> antd/Row
+        [:> antd/Col {:span 2}
+         [:> antd/Button
+          {:type     "link"
+           :on-click #(dispatch [:load-posts {:page     @next-page
+                                              :pre-page @pre-page}])
+           :class    (if (>= @page @total-pages) "disabled")}
+          "Older"]]
+        [:> antd/Col {:span 2 :offset 20}
+         [:> antd/Button
+          {:type     "link"
+           :on-click #(dispatch [:load-posts {:page     @prev-page
+                                              :pre-page @pre-page}])
+           :class    (if (zero? @offset) "disabled")}
+          "Newer"]]]])))
 
 (defn list-columns []
   [{:title "标题" :dataIndex "title", :key "title", :align "center"}

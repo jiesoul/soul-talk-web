@@ -1,5 +1,6 @@
 (ns soul-talk.pages.home
   (:require [reagent.core :as r]
+            [re-frame.core :as rf]
             [antd :as antd]
             [soul-talk.pages.layout :refer [home-basic header-common footer-common]]
             [soul-talk.pages.post :refer [blog-post-component archives-component]]
@@ -7,23 +8,25 @@
   (:import [goog.history.Html5History]))
 
 (defn home-nav []
-  (fn []
-    [:> antd/Menu {:id "nav"
-                   :key "nav"
-                   :theme "dark"
-                   :mode "horizontal"
-                   :defaultSelectKeys ["home"]
-                   :style {:line-height "64px"}}
-     [:> antd/Menu.Item {:key "home"} "Home"]
-     ;[:> antd/Menu.Item {:key "blog"} "Blog"]
-     ;[:> antd/Menu.Item {:key "about"} "About"]
-     ]))
+  (r/with-let [active-page (rf/subscribe [:active-page])]
+    (fn []
+      [:> antd/Menu {:id                  "nav"
+                     :key                 "nav"
+                     :theme               "dark"
+                     :mode                "horizontal"
+                     :default-select-keys [(key->js @active-page)]
+                     :style               {:line-height "64px"}}
+       [:> antd/Menu.Item {:key "home"} "Home"]
+       ;[:> antd/Menu.Item {:key "blog"} "Blog"]
+       ;[:> antd/Menu.Item {:key "about"} "About"]
+       ])))
 
 (defn main-component []
   (fn []
     [:div
-     [:> antd/Layout.Content {:style {:padding "0 50px"}}
-      [blog-post-component]]]))
+     [:> antd/Row
+      [:> antd/Col {:span 20 :offset 2}
+       [blog-post-component]]]]))
 
 (defn home-page []
   [home-basic
