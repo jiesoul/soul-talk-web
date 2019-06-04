@@ -4,20 +4,14 @@
             [reagent.core :as r]))
 
 (defn copyright []
-  [:> antd/Fragment
+  [:> antd/Layout.Footer
    "Copyright "
    [:> antd/Icon {:type "copyright"}]
    " 2019 "])
 
 (defn user-layout [children]
   [:> antd/Layout {:title ""}
-   [:div.container
-    [:div.content
-     [:div.top
-      [:div.header
-       [:> antd/Link {:to "/"}
-        ;[:img.logo {:alt "logo"
-        ;            :src "logo"}]
-        [:span "Soul Talk"]]]
-      children]
-     [footer]]]])
+   [:> antd/Layout.Content
+    [:<>
+     children
+     copyright]]])

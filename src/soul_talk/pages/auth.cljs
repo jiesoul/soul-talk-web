@@ -35,8 +35,7 @@
          password (r/cursor login-data [:password])]
     (fn []
       [user-layout
-       [:> antd/Layout {:style {:min-height "100vh"}
-                        :align "middle"}
+       [:> antd/Layout.Content {:style {:padding "auto"}}
         [:> antd/Row {:align   "middle"
                       :justify "space-around"}
          [:> antd/Col {:span 4 :offset 10}

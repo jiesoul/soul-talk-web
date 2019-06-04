@@ -43,9 +43,6 @@
                  [:set-active-page :home]]
                 events)))
 
-
-(secretary/set-config! :prefix "#")
-
 ;; 首页
 (defroute "/" []
   (let [pagination {:page     1
