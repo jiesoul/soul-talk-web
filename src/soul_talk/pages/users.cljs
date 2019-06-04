@@ -1,12 +1,12 @@
 (ns soul-talk.pages.users
-  (:require [soul-talk.pages.common :as c]
-            [reagent.core :as r]
+  (:require [reagent.core :as r]
             [taoensso.timbre :as log]
-            [soul-talk.pages.layout :refer [admin-default]]
             [re-frame.core :refer [subscribe dispatch]]
             [antd :as antd]
+            [soul-talk.layouts.basic-layout :refer [basic-layout]]
             [bouncer.core :as b]
-            [bouncer.validators :as v]))
+            [bouncer.validators :as v]
+            [soul-talk.components.common :as c]))
 
 (defn where-component []
   (fn []
@@ -68,10 +68,8 @@
                 pass-confirm (r/cursor pass-data [:pass-confirm])
                 error (subscribe [:error])]
     (fn []
-      (js/console.log "pass-date: " @pass-data)
-      (js/console.log "error: " @error)
       (if @user
-        [admin-default
+        [basic-layout
          [:div
           [c/breadcrumb-component ["个人信息" "修改密码"]]
           [:> antd/Layout.Content {:className "main" :align "center"}
@@ -111,7 +109,7 @@
                error (subscribe [:error])]
     (fn []
       (if @user
-        [admin-default
+        [basic-layout
          [:div
           [c/breadcrumb-component ["User" "profile"]]
           [:> antd/Layout.Content {:className "main"}

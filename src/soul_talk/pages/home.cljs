@@ -1,10 +1,10 @@
 (ns soul-talk.pages.home
   (:require [reagent.core :as r]
             [re-frame.core :as rf]
-            [antd :as antd]
-            [soul-talk.pages.layout :refer [home-basic header-common footer-common]]
+            [soul-talk.components.global-footer :refer [footer]]
             [soul-talk.pages.post :refer [blog-post-component archives-component]]
-            [soul-talk.pages.users :refer [where-component]])
+            [soul-talk.pages.users :refer [where-component]]
+            [antd :as antd])
   (:import [goog.history.Html5History]))
 
 (defn home-nav []
@@ -29,7 +29,6 @@
        [blog-post-component]]]]))
 
 (defn home-page []
-  [home-basic
-   [header-common home-nav]
+  [:div
    [main-component]
-   [footer-common]])
+   [footer]])

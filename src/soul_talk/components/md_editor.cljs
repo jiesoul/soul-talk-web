@@ -1,4 +1,4 @@
-(ns soul-talk.widgets.md-editor
+(ns soul-talk.components.md-editor
   (:require [reagent.core :as r]
             [re-frame.core :refer [dispatch subscribe]]
             [antd :as antd]))

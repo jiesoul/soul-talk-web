@@ -1,8 +1,8 @@
 (ns soul-talk.pages.dash
   (:require [reagent.core :as r]
-            [soul-talk.pages.layout :refer [admin-default header-common]]
-            [soul-talk.pages.common :as c]
-            [antd :as antd]))
+            [soul-talk.layouts.basic-layout :refer [basic-layout]]
+            [antd :as antd]
+            [soul-talk.components.common :as c]))
 
 (defn show-revenue-chart
   []
@@ -41,7 +41,7 @@
 
 (defn dash-page []
   (fn []
-    [admin-default
+    [basic-layout
      [:div
       [c/breadcrumb-component ["Dash"]]
       [:> antd/Layout.Content {:className "main"}

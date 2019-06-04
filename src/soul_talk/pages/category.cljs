@@ -1,9 +1,9 @@
 (ns soul-talk.pages.category
-  (:require [soul-talk.pages.common :as c]
-            [re-frame.core :refer [dispatch subscribe]]
+  (:require [re-frame.core :refer [dispatch subscribe]]
             [reagent.core :as r]
             [antd :as antd]
-            [soul-talk.pages.layout :refer [admin-default]]))
+            [soul-talk.layouts.basic-layout :refer [basic-layout]]
+            [soul-talk.components.common :as c]))
 
 (defn columns []
   [{:title "name" :dataIndex "name", :key "name", :align "center"}
@@ -36,7 +36,7 @@
                        :size       "small"}]])))
 
 (defn categories-page []
-  [admin-default
+  [basic-layout
    [:div
     [c/breadcrumb-component ["分类" "列表"]]
     [:> antd/Layout.Content {:className "main"}
@@ -55,7 +55,7 @@
                name (r/cursor category [:name])
                id (r/cursor category [:id])]
     (fn []
-      [admin-default
+      [basic-layout
        [:div
         [c/breadcrumb-component ["分类" "编辑"]]
         [:> antd/Layout.Content
@@ -86,4 +86,6 @@
                           (dispatch [:categories/add @category])
                           (dispatch [:categories/edit @category]))}
             "保存"]]]]]])))
+
+
 

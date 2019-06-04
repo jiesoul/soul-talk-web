@@ -2,6 +2,7 @@
   (:require [reagent.core :as r]
             [antd :as antd]
             [re-frame.core :refer [dispatch subscribe]]
+            [soul-talk.layouts.user-layout :refer [user-layout]]
             [bouncer.core :as b]
             [bouncer.validators :as v])
   (:import goog.History))
@@ -33,37 +34,38 @@
          email (r/cursor login-data [:email])
          password (r/cursor login-data [:password])]
     (fn []
-      [:> antd/Layout {:style {:min-height "100vh"}
-                       :align "middle"}
-       [:> antd/Row {:align "middle"
-                     :justify "space-around"}
-        [:> antd/Col {:span 4 :offset 10}
-         [:> antd/Form {:align "middle"
-                        :className "login-form"}
-          [:h1.h3.mb-3.font-weight-normal.text-center "Login"]
-          [:> antd/Input
-           {:id          "email"
-            :prefix      (r/as-element [:> antd/Icon {:type "user"}])
-            :type        :text
-            :name        "email"
-            :placeholder "请输入Email"
-            :required    true
-            :auto-focus  true
-            :on-change   #(reset! email (-> % .-target .-value))}]
-          [:> antd/Input.Password
-           {:id          "password"
-            :type        :password
-            :prefix      (r/as-element [:> antd/Icon {:type "lock"}])
-            :name        "password"
-            :placeholder "请输入密码"
-            :required    true
-            :on-change   #(reset! password (-> % .-target .-value))}]
-          (when @error
-            [:div @error])
-          [:> antd/Button
-           {:type     "submit"
-            :on-click #(dispatch [:login @login-data])}
-           "Login"]]]]])))
+      [user-layout
+       [:> antd/Layout {:style {:min-height "100vh"}
+                        :align "middle"}
+        [:> antd/Row {:align   "middle"
+                      :justify "space-around"}
+         [:> antd/Col {:span 4 :offset 10}
+          [:> antd/Form {:align     "middle"
+                         :className "login-form"}
+           [:h1.h3.mb-3.font-weight-normal.text-center "Login"]
+           [:> antd/Input
+            {:id          "email"
+             :prefix      (r/as-element [:> antd/Icon {:type "user"}])
+             :type        :text
+             :name        "email"
+             :placeholder "请输入Email"
+             :required    true
+             :auto-focus  true
+             :on-change   #(reset! email (-> % .-target .-value))}]
+           [:> antd/Input.Password
+            {:id          "password"
+             :type        :password
+             :prefix      (r/as-element [:> antd/Icon {:type "lock"}])
+             :name        "password"
+             :placeholder "请输入密码"
+             :required    true
+             :on-change   #(reset! password (-> % .-target .-value))}]
+           (when @error
+             [:div @error])
+           [:> antd/Button
+            {:type     "submit"
+             :on-click #(dispatch [:login @login-data])}
+            "Login"]]]]]])))
 
 (defn register-page []
   (r/with-let

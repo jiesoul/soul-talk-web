@@ -17,6 +17,7 @@
 .main {
   background-color: #fff;
   padding: 10px;
+  min-height: 36vh;
   margin: 0px;
 }
 .ant-carousel .slick-slide {
