@@ -28,43 +28,44 @@
                  [v/min-count 7 :message "密码最少8位"]])))
 
 (defn login-page []
-  (r/with-let  [login-data (r/atom {:email ""
-                             :password ""})
-         error     (subscribe [:error])
-         email (r/cursor login-data [:email])
-         password (r/cursor login-data [:password])]
+  (r/with-let [login-data (r/atom {:email    ""
+                                   :password ""})
+               error      (subscribe [:error])
+               email      (r/cursor login-data [:email])
+               password   (r/cursor login-data [:password])]
     (fn []
       [user-layout
-       [:> antd/Layout.Content {:style {:padding "auto"}}
-        [:> antd/Row {:align   "middle"
-                      :justify "space-around"}
-         [:> antd/Col {:span 4 :offset 10}
-          [:> antd/Form {:align     "middle"
-                         :className "login-form"}
-           [:h1.h3.mb-3.font-weight-normal.text-center "Login"]
-           [:> antd/Input
-            {:id          "email"
-             :prefix      (r/as-element [:> antd/Icon {:type "user"}])
-             :type        :text
-             :name        "email"
-             :placeholder "请输入Email"
-             :required    true
-             :auto-focus  true
-             :on-change   #(reset! email (-> % .-target .-value))}]
-           [:> antd/Input.Password
-            {:id          "password"
-             :type        :password
-             :prefix      (r/as-element [:> antd/Icon {:type "lock"}])
-             :name        "password"
-             :placeholder "请输入密码"
-             :required    true
-             :on-change   #(reset! password (-> % .-target .-value))}]
-           (when @error
-             [:div @error])
-           [:> antd/Button
-            {:type     "submit"
-             :on-click #(dispatch [:login @login-data])}
-            "Login"]]]]]])))
+       [:> antd/Row {:type "flex"
+                     :align   "middle"
+                     :justify "center"}
+        [:> antd/Col {:span 4}
+         [:> antd/Form {:style {:text-align "center"}}
+          [:h1.h3.mb-3.font-weight-normal.text-center "Soul Talk Login"]
+          [:> antd/Input
+           {:id          "email"
+            :prefix      (r/as-element [:> antd/Icon {:type "user"}])
+            :type        :text
+            :name        "email"
+            :placeholder "请输入Email"
+            :required    true
+            :auto-focus  true
+            :on-change   #(reset! email (-> % .-target .-value))
+            :style {:margin-bottom "10px"}}]
+          [:> antd/Input.Password
+           {:id          "password"
+            :prefix      (r/as-element [:> antd/Icon {:type "lock"}])
+            :name        "password"
+            :placeholder "请输入密码"
+            :required    true
+            :on-change   #(reset! password (-> % .-target .-value))
+            :style {:margin-bottom "10px"}}]
+          (when @error
+            [:div @error])
+          [:> antd/Button
+           {:type     "primary"
+            :block true
+            :on-click #(dispatch [:login @login-data])}
+           "Login"]]]]])))
 
 (defn register-page []
   (r/with-let

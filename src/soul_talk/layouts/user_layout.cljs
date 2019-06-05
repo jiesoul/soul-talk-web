@@ -11,7 +11,7 @@
 
 (defn user-layout [children]
   [:> antd/Layout {:title ""}
-   [:> antd/Layout.Content
-    [:<>
-     children
-     copyright]]])
+   [:> antd/Layout.Content {:style {:min-height "100vh"
+                                    :padding "24px 0 20px 0"}}
+    children
+    copyright]])

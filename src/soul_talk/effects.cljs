@@ -1,7 +1,8 @@
 (ns soul-talk.effects
   (:require [re-frame.core :as rf :refer [dispatch reg-fx reg-event-fx]]
             [accountant.core :as accountant]
-            [soul-talk.local-storage :as storage]))
+            [soul-talk.local-storage :as storage]
+            [taoensso.timbre :as log]))
 (def api-url "http://localhost:3001")
 
 (reg-fx
@@ -42,9 +43,20 @@
 (reg-fx
   :set-user!
   (fn [user-identity]
+    (log/debug "取消" user-identity)
     (storage/set-item! storage/login-user-key user-identity)))
+
+(reg-fx
+  :clean-user!
+  (fn []
+    (storage/remove-item! storage/login-user-key)))
 
 (reg-fx
   :set-auth-token!
   (fn [auth-token]
     (storage/set-item! storage/auth-token-key auth-token)))
+
+(reg-fx
+  :clean-auth-token
+  (fn []
+    (storage/remove-item! storage/auth-token-key)))

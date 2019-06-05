@@ -30,5 +30,7 @@
 
 (defn home-page []
   [:div
+   [:> antd/Layout.Content {:className "main"}
+    [home-nav]]
    [main-component]
    [footer]])

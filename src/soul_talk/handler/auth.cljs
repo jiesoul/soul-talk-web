@@ -1,8 +1,9 @@
 (ns soul-talk.handler.auth
   (:require [soul-talk.db :as db]
             [soul-talk.auth-validate :refer [login-errors reg-errors]]
-            [re-frame.core :refer [reg-event-fx reg-event-db dispatch]]
-            [ajax.core :refer [POST GET DELETE PUT]]))
+            [re-frame.core :refer [reg-event-fx reg-event-db dispatch inject-cofx]]
+            [ajax.core :refer [POST GET DELETE PUT]]
+            [soul-talk.local-storage :refer [login-user-key auth-token-key]]))
 
 
 ;; 运行 login
@@ -51,7 +52,6 @@
 (reg-event-fx
   :handle-register
   (fn [{:keys [db]} [_ {:keys [user]}]]
-    (js/alert "register ok")
     {:dispatch-n (list
                    [:set-active-page :admin])
      :db         (assoc db :user user)}))
@@ -70,9 +70,13 @@
 (reg-event-fx
   :handle-logout
   (fn [_ _]
+    (js/console.log "handle logout ok............")
     {:dispatch-n (list
                    [:set-active-page :login]
-                   [:navigate-to "/#/login"])}))
+                   [:navigate-to "/#/login"])
+     :set-user! nil
+     :set-auth-token! nil
+     :db db/default-db}))
 
 (reg-event-fx
   :logout
@@ -81,6 +85,4 @@
                  :url                  "/api/logout"
                  :ignore-response-body true
                  :success-event        [:handle-logout]
-                 :error-event          [:handle-logout]}
-     :db db/default-db
-     :set-user! nil}))
+                 :error-event          [:handle-logout]}}))
