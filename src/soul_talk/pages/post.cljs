@@ -128,18 +128,17 @@
                        :size       "small"}]])))
 
 (defn posts-page []
-  (fn []
-    [basic-layout
-     [:<>
-      [c/breadcrumb-component ["文章" "列表"]]
-      [:> antd/Layout.Content {:className "main"}
-       [:> antd/Button
-        {:target "_blank"
-         :href   "#/posts/add"
-         :size   "small"}
-        "写文章"]
-       [:> antd/Divider]
-       [posts-list]]]]))
+  [basic-layout
+   [:div
+    [c/breadcrumb-component ["文章" "列表"]]
+    [:> antd/Layout.Content {:className "main"}
+     [:> antd/Button
+      {:target "_blank"
+       :href   "#/posts/add"
+       :size   "small"}
+      "写文章"]
+     [:> antd/Divider]
+     [posts-list]]]])
 
 (defn add-post-page []
   (r/with-let [post (rf/subscribe [:post])

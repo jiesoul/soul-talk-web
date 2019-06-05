@@ -17,8 +17,21 @@
 .main {
   background-color: #fff;
   padding: 10px;
-  min-height: 36vh;
+  min-height: 680px;
   margin: 0px;
+}
+.home {
+  background: #fff;
+}
+.home-header {
+  background: #563d7c;
+}
+.home-wrapper {
+  background: #563d7c;
+  height: 100vh;
+  margin-top: -64px;
+  padding-top: 64px;
+  text-align: center;
 }
 .ant-carousel .slick-slide {
   background-image: url('./images/IMAG0561.jpg');

@@ -7,10 +7,13 @@
 @normal-color: #d9d9d9;
 @white: #fff;
 @black: #000;
+@window-height: 100vh;
 
-@header-background: #795da3;
+@header-background: #563d7c;
 @header-height: 64px;
-@carousel-height: 100vh - @header-height;
+@carousel-height: 100vh - @header-height -@header-height;
+@home-wrapper-background: @header-background;
+@home-wrapper-height: 100vh - @header-height;
 
 .brand {
   text-align: center;
@@ -31,28 +34,32 @@
   float: left;
 }
 
-//.ant-layout-header {
-//  background: @header-background;
-//  height: @header-height;
-//  line-height: @header-height;
-//  color: @white;
-//  padding: 0 @width;
-//}
-//
-//.ant-layout-header .ant-menu-horizontal {
-//  background: @header-background;
-//  height: @header-height;
-//  line-height: @header-height;
-//  color: @white;
-//  border-bottom: 0px;
-//}
-//
-
 .main {
   background-color: @white;
   padding: @width;
-  min-height: @carousel-height;
+  min-height: 680px;
   margin: 0px;
+}
+
+.home {
+  background: @white;
+}
+
+.home-header {
+  background: @home-wrapper-background;
+}
+
+.home-wrapper {
+  background: @home-wrapper-background;
+  height: @window-height;
+  margin-top: 0 - @header-height;
+  padding-top: @header-height;
+  //vert-align: middle;
+  text-align: center;
+}
+
+.home-wrapper .page1 {
+
 }
 
 .ant-carousel .slick-slide {

@@ -43,6 +43,7 @@
                  [:set-active-page :home]]
                 events)))
 
+
 ;; 首页
 (defroute "/" []
   (let [pagination {:page     1
@@ -79,7 +80,6 @@
                [:set-active-page :users]]))
 
 (defroute categories "/categories" []
-  (js/console.log "------------------------- load category list page")
   (run-events [[:load-categories]
                [:set-active-page :categories]]))
 
@@ -127,6 +127,8 @@
 
 (defroute "*" []
   )
+
+(secretary/set-config! :prefix "#")
 
 ;; 使用浏览器可以使用前进后退 历史操作
 (defn hook-browser-navigation! []

@@ -8,7 +8,7 @@
             [antd :as antd]))
 
 
-(defn nav [user]
+(defn nav []
   [:> antd/Menu
    [:> antd/Menu.Item {:key "user-profile"
                        :on-click #(navigate! "#/user-profile")}
@@ -65,13 +65,14 @@
 (defn basic-layout [main]
   (r/with-let [user (subscribe [:user])
                active-page (subscribe [:active-page])]
-    [:div
-     [:> antd/Layout
-      [header
-       [header-dropdown (r/as-element [nav user]) (:name @user)]]
-      [:> antd/Layout
-       [sidebar active-page]
-       [:> antd/Layout.Content {:className "main"}
-        main]]
-      [footer]]]))
+    (fn []
+      [:div
+       [:> antd/Layout
+        [header
+         [header-dropdown (r/as-element [nav]) (:name @user)]]
+        [:> antd/Layout {:style {:min-height "660px"}}
+         [sidebar active-page]
+         [:> antd/Layout.Content {:className "main"}
+          main]]
+        [footer]]])))
 
