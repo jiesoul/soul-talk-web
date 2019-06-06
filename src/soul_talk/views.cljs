@@ -9,6 +9,7 @@
             [soul-talk.pages.users :as users]
             [soul-talk.pages.post :as post]
             [soul-talk.pages.category :as category]
+            [soul-talk.pages.blog :as blog]
             [soul-talk.pages.tag :as tag]
             [clojure.string :as str]
             [antd :as antd]))
@@ -20,6 +21,7 @@
 (defmethod pages :home [_ _] [home/home-page])
 (defmethod pages :login [_ _] [auth/login-page])
 (defmethod pages :register [_ _] [auth/register-page])
+(defmethod pages :blog [_ _] [blog/blog-page])
 (defmethod pages :posts/archives [_ _] [post/post-archives-page])
 (defmethod pages :posts/view [_ _] [post/post-view-page])
 

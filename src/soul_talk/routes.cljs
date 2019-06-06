@@ -52,6 +52,15 @@
       [[:load-posts pagination]
        [:load-posts-archives]])))
 
+
+(defroute "/blog" []
+  (let [pagination {:page     1
+                    :pre-page 3}]
+    (run-events
+      [[:load-posts pagination]
+       [:load-posts-archives]
+       [:set-active-page :blog]])))
+
 (defroute "/login" []
   (run-events [[:set-active-page :login]]))
 

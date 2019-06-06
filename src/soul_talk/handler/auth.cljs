@@ -1,6 +1,5 @@
 (ns soul-talk.handler.auth
   (:require [soul-talk.db :as db]
-            [soul-talk.auth-validate :refer [login-errors reg-errors]]
             [re-frame.core :refer [reg-event-fx reg-event-db dispatch inject-cofx]]
             [ajax.core :refer [POST GET DELETE PUT]]
             [soul-talk.local-storage :refer [login-user-key auth-token-key]]))

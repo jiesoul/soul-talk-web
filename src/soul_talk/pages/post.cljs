@@ -7,8 +7,7 @@
             [soul-talk.components.common :as c]
             [soul-talk.components.md-editor :refer [editor]]
             [soul-talk.date-utils :as du]
-            [bouncer.core :as b]
-            [bouncer.validators :as v]
+            [soul-talk.post-validate :refer [post-errors]]
             [clojure.string :as str]
             [antd :as antd]))
 

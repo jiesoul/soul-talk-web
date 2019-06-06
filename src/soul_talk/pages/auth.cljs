@@ -4,28 +4,9 @@
             [re-frame.core :refer [dispatch subscribe]]
             [soul-talk.layouts.user-layout :refer [user-layout]]
             [bouncer.core :as b]
+            [soul-talk.auth-validate :refer [login-errors reg-errors]]
             [bouncer.validators :as v])
   (:import goog.History))
-
-
-(defn reg-errors [{:keys [password] :as params}]
-  (first
-    (b/validate
-      params
-      :email [[v/required :message "email 不能为空"]
-              [v/email :message "email 不合法"]]
-      :password [[v/required :message "密码不能为空"]
-                 [v/min-count 7 :message "密码最少8位"]]
-      :pass-confirm [[= password :message "两次密码必须一样"]])))
-
-(defn login-errors [params]
-  (first
-    (b/validate
-      params
-      :email [[v/required :message "email 不能为空"]
-              [v/email :message "email 不合法"]]
-      :password [[v/required :message "密码不能为空"]
-                 [v/min-count 7 :message "密码最少8位"]])))
 
 (defn login-page []
   (r/with-let [login-data (r/atom {:email    ""
@@ -63,8 +44,10 @@
             [:div @error])
           [:> antd/Button
            {:type     "primary"
-            :block true
-            :on-click #(dispatch [:login @login-data])}
+            :block    true
+            :on-click #(if-let [error (login-errors @login-data)]
+                         (dispatch [:set-error @error])
+                         (dispatch [:login @login-data]))}
            "Login"]]]]])))
 
 (defn register-page []
@@ -104,5 +87,7 @@
           [:div.alert.alert-danger @error])
         [:button.btn.btn-lg.btn-primary.btn-block
          {:type     "submit"
-          :on-click #(dispatch [:register @reg-data])}
+          :on-click #(if-let [error (reg-errors @reg-data)]
+                       (dispatch [:set-error @error])
+                       (dispatch [:register @reg-data]))}
          "Register"]]])))

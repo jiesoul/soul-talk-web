@@ -1,7 +1,6 @@
 (ns soul-talk.handler.users
   (:require [re-frame.core :refer [reg-event-fx reg-event-db subscribe]]
             [ajax.core :refer [GET POST PUT]]
-            [soul-talk.auth-validate :refer [change-pass-errors]]
             [taoensso.timbre :as log]))
 
 (reg-event-db
@@ -30,16 +29,14 @@
   :change-pass
   [reagent.debug/tracking]
   (fn [_ [_ {:keys [email pass-old pass-new pass-confirm] :as params}]]
-    (if-let [error (change-pass-errors params)]
-      {:dispatch-n (list [:set-error (first error)])}
-      {:http {:method POST
-              :url "/api/admin/change-pass"
-              :ajax-map {:params {:email email
-                                  :pass-old pass-old
-                                  :pass-new pass-new
-                                  :pass-confirm pass-confirm}}
-              :success-event [:change-pass-ok]
-              :error-event [:change-pass-error]}})))
+    {:http {:method        POST
+            :url           "/api/admin/change-pass"
+            :ajax-map      {:params {:email        email
+                                     :pass-old     pass-old
+                                     :pass-new     pass-new
+                                     :pass-confirm pass-confirm}}
+            :success-event [:change-pass-ok]
+            :error-event   [:change-pass-error]}}))
 
 (reg-event-fx
   :save-user-profile-ok

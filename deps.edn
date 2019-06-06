@@ -18,8 +18,12 @@
            bouncer {:mvn/version "1.0.1"}
            com.taoensso/timbre {:mvn/version "4.10.0"}}
 
- :paths   ["src" "src-cljc" "target" "resources" "env/dev" "env/prod"]
+ :paths   ["src" "src-cljc" "target" "resources" "env/dev" "dev/prod"]
 
- :aliases {:dev {:main-opts ["-m" "figwheel.main" "-b" "dev" "-r"]}
+ :aliases {:dev {:main-opts ["-m" "figwheel.main" "-b" "dev" "-r"]
+                 :extra-paths ["env/dev"]}
+           :rebel {:extra-deps {com.bhauman/rebel-readline-cljs {:mvn/version "0.1.4"}}
+                   :main-opts ["-m" "rebel-readline.main"]}
            :test {:extra-paths ["test"]}
-           :prod {:main-opts ["-m" "figwheel.main" "-O" "advanced" "-bo" "prod" "-s"]}}}
+           :prod {:main-opts ["-m" "figwheel.main" "-O" "advanced" "-bo" "prod" "-s"]
+                  :extra-paths ["env/prod"]}}}

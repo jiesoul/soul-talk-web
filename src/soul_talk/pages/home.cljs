@@ -24,4 +24,6 @@
       [:> antd/Layout.Content {:className "home-wrapper"}
        [:div
         [:h1 "进一步有一步的欢喜"]]]
-      [main-component]]]))
+      [:> antd/Layout.Content {:className "home-wrapper"}
+       [:div.page1
+        [main-component]]]]]))

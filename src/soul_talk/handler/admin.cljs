@@ -1,7 +1,6 @@
 (ns soul-talk.handler.admin
   (:require [re-frame.core :refer [reg-event-fx reg-event-db]]
-            [ajax.core :refer [POST GET]]
-            [soul-talk.auth-validate :refer [login-errors]]))
+            [ajax.core :refer [POST GET]]))
 
 (reg-event-db
   :set-dashboard

@@ -2,11 +2,10 @@
 @height: @width + 10px;
 @white: #fff;
 @black: #000;
+@none-color: rgba(0,0,0,0);
 
 
 @normal-color: #d9d9d9;
-@white: #fff;
-@black: #000;
 @window-height: 100vh;
 
 @header-background: #563d7c;
@@ -46,11 +45,23 @@
 }
 
 .home-header {
-  background: @home-wrapper-background;
+  background: @none-color;
+}
+
+#home-nav {
+  background-color: @none-color;
+  height: @header-height;
+  padding: 10px 10px;
+  font-weight: bold;
+}
+
+#home-nav .ant-menu-item-selected {
+  background-color: @none-color;
 }
 
 .home-wrapper {
   background: @home-wrapper-background;
+  background-image: url('../images/IMAG0561.jpg');
   height: @window-height;
   margin-top: 0 - @header-height;
   padding-top: @header-height;
@@ -59,11 +70,13 @@
 }
 
 .home-wrapper .page1 {
-
+  background: @white;
+  min-height: @window-height;
+  padding-top: 20px;
 }
 
 .ant-carousel .slick-slide {
-  background-image: url('./images/IMAG0561.jpg');
+  background-image: url('../images/IMAG0561.jpg');
   min-height: 180px;
   text-align: center;
   background: #364D79;

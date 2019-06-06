@@ -4,8 +4,7 @@
             [re-frame.core :refer [subscribe dispatch]]
             [antd :as antd]
             [soul-talk.layouts.basic-layout :refer [basic-layout]]
-            [bouncer.core :as b]
-            [bouncer.validators :as v]
+            [soul-talk.user-validate :refer [change-pass-errors]]
             [soul-talk.components.common :as c]))
 
 (defn where-component []
@@ -49,16 +48,7 @@
                             [:td "action"]])]]]))]))
 
 
-(defn change-pass-errors [{:keys [pass-old pass-new] :as params}]
-  (first
-    (b/validate params
-      :pass-old [[v/required :message "旧密码不能为空"]
-                 [v/min-count 7 :message "旧密码至少8位"]]
-      :pass-new [[v/required :message "新密码不能为空"]
-                 [v/min-count 7 :message "新密码至少8 位"]
-                 [not= pass-old :message "新密码不能和旧密码一样"]]
-      :pass-confirm [[v/required :message "确认密码不能为空："]
-                     [= pass-new :message "确认密码必须和新密码相同"]])))
+
 
 (defn change-pass-page []
   (r/with-let [user (subscribe [:user])
