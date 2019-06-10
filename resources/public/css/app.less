@@ -42,6 +42,7 @@
 
 .home {
   background: @white;
+  height: auto;
 }
 
 .home .ant-layout-header {
@@ -62,16 +63,23 @@
 .home-wrapper {
   background: url('../images/sky-4237062_1920.jpg') no-repeat right top;
   height: @window-height;
-  //margin-top: 0 - @header-height;
-  //margin-bottom: 0;
-  //padding-top: @header-height;
   text-align: center;
+  position: relative;
 }
 
-.home-wrapper .page1 {
+.home-wrapper-section {
+  //position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  margin-top: 20%;
+}
+
+.home-wrapper-page1 {
   background: @white;
-  min-height: @window-height;
-  padding-top: 20px;
+  min-height: auto;
+  //padding-top: 20px;
 }
 
 .blog {

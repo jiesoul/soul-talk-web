@@ -20,13 +20,12 @@
   (r/with-let [active-page (rf/subscribe [:active-page])]
     (fn []
       [layout
-       [:> antd/Layout.Content {:className "home"}
-        [:> antd/Layout.Content {:className "home-wrapper"}
+       [:div
+        [:div.home-wrapper
          [:> antd/Row
           [header [nav @active-page]]]
          [:> antd/Row
-          [:div
+          [:div.home-wrapper-section
            [:h1 "进一步有一步的欢喜"]]]]
-        [:> antd/Layout.Content {:className "home-wrapper page1"}
-         [:div.page1
-          [main-component]]]]])))
+        [:div.home-wrapper-page1
+         [main-component]]]])))

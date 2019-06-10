@@ -37,23 +37,12 @@
          (let [url (str "/#/posts/" id)]
            ^{:key post} [:> antd/Row
                          [:> antd/Typography
-                          [:> antd/Typography.Title
+                          [:> antd/Typography.Title {:level 2}
                            [:a.text-muted
                             {:href   url
                              :target "_blank"}
                             title]]
                           [:p.blog-post-meta (str (.toDateString (js/Date. create_time)) " by " author)]
-                          ;[:> antd/Divider]
-                          [:> antd/Typography.Paragraph
-                           {:ellipsis {:rows       20
-                                       :expandable false}}
-                           [c/markdown-preview content]
-                           [:> antd/Col {:span 2}
-                            [:> antd/Button
-                             {:size   "small"
-                              :href   url
-                              :target "_blank"}
-                             "全部"]]]
                           [:> antd/Divider]]]))
        [:> antd/Row
         [:> antd/Col {:span 2}

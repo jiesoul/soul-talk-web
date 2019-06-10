@@ -21,8 +21,8 @@
 (defn layout [children]
   (r/with-let [active-page (rf/subscribe [:active-page])]
     (fn []
-      [:div
-       [:> antd/Layout {:className "home"}
-        [:> antd/Layout
-         children]
-        [footer]]])))
+      [:> antd/Layout
+       [:> antd/Layout.Content {:className "home"}
+        children]
+       ;[:> antd/Divier]
+       [footer]])))

@@ -2,9 +2,9 @@
 ^{:npm {:bundles {"dist/index.bundle.js" "src-js/index.js"}}}
 ^{:extra-main-files {:testing {:main soul-talk.test-runner}}}
 {:main soul-talk.app
- :output-to "resources/public/cljs-out/app.js"
- :output-dir "resources/public/cljs-out/dev/"
- :asset-path "cljs-out/dev"
+ ;:output-to "resources/public/cljs-out/app.js"
+ ;:output-dir "resources/public/cljs-out/"
+ ;:asset-path "cljs-out/dev"
  :npm-deps false
  :infer-externs true
  :closure-defines {"re_frame.trace.trace_enabled_QMARK_" true}
