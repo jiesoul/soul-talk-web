@@ -12,7 +12,7 @@
 @header-height: 64px;
 @carousel-height: 100vh - @header-height -@header-height;
 @home-wrapper-background: @header-background;
-@home-wrapper-height: 100vh - @header-height;
+@home-wrapper-height: 100vh + @header-height;
 
 .brand {
   text-align: center;
@@ -44,8 +44,8 @@
   background: @white;
 }
 
-.home-header {
-  background: @none-color;
+.home .ant-layout-header {
+  background-color: @none-color;
 }
 
 #home-nav {
@@ -60,12 +60,11 @@
 }
 
 .home-wrapper {
-  background: @home-wrapper-background;
-  background-image: url('../images/IMAG0561.jpg');
+  background: url('../images/sky-4237062_1920.jpg') no-repeat right top;
   height: @window-height;
-  margin-top: 0 - @header-height;
-  padding-top: @header-height;
-  //vert-align: middle;
+  //margin-top: 0 - @header-height;
+  //margin-bottom: 0;
+  //padding-top: @header-height;
   text-align: center;
 }
 
@@ -73,6 +72,18 @@
   background: @white;
   min-height: @window-height;
   padding-top: 20px;
+}
+
+.blog {
+  background-color: @white;
+}
+
+.blog .ant-layout-header {
+  background-color: @header-background;
+}
+
+.blog-wrapper {
+  min-height: @window-height;
 }
 
 .ant-carousel .slick-slide {

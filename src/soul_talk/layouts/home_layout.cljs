@@ -1,7 +1,6 @@
 (ns soul-talk.layouts.home-layout
   (:require [antd :as antd]
             [soul-talk.components.global-footer :refer [footer]]
-            [soul-talk.components.home-header :refer [header]]
             [soul-talk.routes :refer [navigate!]]
             [reagent.core :as r]
             [re-frame.core :as rf]))
@@ -24,8 +23,6 @@
     (fn []
       [:div
        [:> antd/Layout {:className "home"}
-        [header
-         [nav @active-page]]
         [:> antd/Layout
          children]
         [footer]]])))

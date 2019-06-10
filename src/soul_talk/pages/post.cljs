@@ -225,24 +225,14 @@
 (defn post-archives-page []
   (r/with-let [posts (subscribe [:posts])]
     (fn []
-      [:div.container-fluid
-       [:nav.navbar.navbar-expand-lg.navbar-light.bg-light
-        [:a.navbar-brand
-         {:href "#"} "Soul Talk"]
-        [:div.container
-         [:ul.navbar-nav
-          [:li.nav-item.active
-           [:a.nav-link
-            {:href "#"}
-            "文章"]]]]]
-       [:div.container
-        (doall
-          (for [{:keys [id title create_time author] :as post} @posts]
-            ^{:key post} [:div.blog-post
-                          [:h2.blog-post-title
-                           [:a.text-muted
-                            {:href   (str "/posts/" id)
-                             :target "_blank"}
-                            title]]
-                          [:p.blog-post-meta (str (.toDateString (js/Date. create_time)) " by " author)]
-                          [:hr]]))]])))
+      [:div
+       (doall
+         (for [{:keys [id title create_time author] :as post} @posts]
+           ^{:key post} [:div.blog-post
+                         [:h2.blog-post-title
+                          [:a.text-muted
+                           {:href   (str "/posts/" id)
+                            :target "_blank"}
+                           title]]
+                         [:p.blog-post-meta (str (.toDateString (js/Date. create_time)) " by " author)]
+                         [:hr]]))])))

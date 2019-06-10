@@ -23,8 +23,8 @@
 .home {
   background: #fff;
 }
-.home-header {
-  background: rgba(0, 0, 0, 0);
+.home .ant-layout-header {
+  background-color: rgba(0, 0, 0, 0);
 }
 #home-nav {
   background-color: rgba(0, 0, 0, 0);
@@ -36,17 +36,23 @@
   background-color: rgba(0, 0, 0, 0);
 }
 .home-wrapper {
-  background: #563d7c;
-  background-image: url('../images/IMAG0561.jpg');
+  background: url('../images/sky-4237062_1920.jpg') no-repeat right top;
   height: 100vh;
-  margin-top: -64px;
-  padding-top: 64px;
   text-align: center;
 }
 .home-wrapper .page1 {
   background: #fff;
   min-height: 100vh;
   padding-top: 20px;
+}
+.blog {
+  background-color: #fff;
+}
+.blog .ant-layout-header {
+  background-color: #563d7c;
+}
+.blog-wrapper {
+  min-height: 100vh;
 }
 .ant-carousel .slick-slide {
   background-image: url('../images/IMAG0561.jpg');

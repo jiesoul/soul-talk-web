@@ -7,7 +7,7 @@
    [:> antd/Row
     [:> antd/Col {:span 2}
      [logo]]
-    [:> antd/Col {:span 22
-                  :style {:text-align "right"
+    [:> antd/Col {:span  22
+                  :style {:text-align    "right"
                           :padding-right "20px"}}
      nav]]])

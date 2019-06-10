@@ -2,7 +2,9 @@
   (:require [antd :as antd]
             [reagent.core :as r]
             [re-frame.core :as rf]
-            [soul-talk.layouts.home-layout :refer [layout]]))
+            [soul-talk.layouts.home-layout :refer [layout nav]]
+            [soul-talk.pages.post :refer [blog-post-component]]
+            [soul-talk.components.home-header :refer [header]]))
 
 (defn main-component []
   (fn []
@@ -13,10 +15,10 @@
 (defn blog-page []
   (r/with-let [active-page (rf/subscribe [:active-page])]
     [layout
-     [:> antd/Layout.Content {:className "home"}
-      [:> antd/Layout.Content {:className "home-wrapper"}
-       [:div
-        [:h1 ""]]]
-      [:> antd/Layout.Content {:className "home-wrapper"}
-       [:div.page1
-        [main-component]]]]]))
+     [:> antd/Layout.Content {:className "blog"}
+      [:> antd/Layout.Content {:className "blog-wrapper"}
+       [:> antd/Row
+        [header [nav @active-page]]]
+       [:> antd/Row
+        [:> antd/Col {:span 16 :offset 4}
+         [blog-post-component]]]]]]))
