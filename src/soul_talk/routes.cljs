@@ -28,7 +28,6 @@
 
 (defn run-events-admin
   [events]
-  (js/console.log events)
   (doseq [event events]
     (if (logged-in?)
       (dispatch event)

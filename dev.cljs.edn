@@ -10,7 +10,4 @@
  :infer-externs true
  :closure-defines {"re_frame.trace.trace_enabled_QMARK_" true}
  :preloads [re-frisk.preload]
- :foreign-libs [{:file "dist/index.bundle.js"
-                 :provides ["react" "react-dom" "antd" "showdown" "hljs"]
-                 :global-exports {react React
-                                  react-dom ReactDOM}}]}
+ :foreign-libs [{:file "dist/index.bundle.js"}]}
