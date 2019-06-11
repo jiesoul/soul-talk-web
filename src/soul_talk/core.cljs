@@ -2,7 +2,7 @@
   (:require [reagent.core :as r]
             [goog.dom :as gdom]
             [soul-talk.ajax :refer [load-interceptors!]]
-            [soul-talk.routes :refer [hook-browser-navigation! logged-in?]]
+            [soul-talk.routes :refer [hook-browser-navigation! logged-in? navigate!]]
             [soul-talk.views :refer [main-page]]
             [re-frame.core :refer [dispatch-sync dispatch]]
     ;;初始化处理器和订阅器
@@ -23,5 +23,5 @@
   (if (logged-in?) (dispatch [:run-login-events]))
   (load-interceptors!)
   (hook-browser-navigation!)
-  (dispatch [:load-posts])
+  (dispatch [:load-posts {:page 1 :pre-page 6}])
   (mount-component))

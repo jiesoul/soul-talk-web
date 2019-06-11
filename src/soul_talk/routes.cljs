@@ -43,19 +43,17 @@
                  [:set-active-page :home]]
                 events)))
 
-
 ;; 首页
 (defroute "/" []
-  (let [pagination {:page     1
-                    :pre-page 3}]
-    (home-page-events
-      [[:load-posts pagination]
-       [:load-posts-archives]])))
+  (let [pagination (subscribe [:pagination])]
+    (run-events
+      [[:load-posts @pagination]
+       [:set-active-page :home]])))
 
 
 (defroute "/blog" []
   (let [pagination {:page     1
-                    :pre-page 3}]
+                    :pre-page 20}]
     (run-events
       [[:load-posts pagination]
        [:load-posts-archives]
@@ -111,9 +109,9 @@
   (run-events [[:admin/load-posts]
                [:set-active-page :posts]]))
 
-(defroute "/posts/archives/:year/:month" [year month]
+(defroute "/blog/archives/:year/:month" [year month]
   (run-events [[:load-posts-archives-year-month year month]
-               [:set-active-page :posts/archives]]))
+               [:set-active-page :blog/archives]]))
 
 (defroute "/posts/add" []
   (r/with-let [user (subscribe [:user])]

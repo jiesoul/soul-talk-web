@@ -17,10 +17,11 @@
            bouncer {:mvn/version "1.0.1"}
            com.taoensso/timbre {:mvn/version "4.10.0"}}
 
- :paths   ["src" "src-cljc" "target" "resources" "env/dev" "dev/prod"]
+ :paths   ["src" "src-cljc" "resources" "env/dev" "dev/prod"]
 
  :aliases {:fig {:extra-deps {com.bhauman/figwheel-main {:mvn/version "0.2.0"}
-                              com.bhauman/rebel-readline-cljs {:mvn/version "0.1.4"}}}
+                              com.bhauman/rebel-readline-cljs {:mvn/version "0.1.4"}}
+                 :extra-paths ["target" "test" "resources"]}
            :dev {:main-opts ["-m" "figwheel.main" "-b" "dev" "-r"]
                  :extra-paths ["env/dev"]}
            :test {:extra-paths ["test"]}

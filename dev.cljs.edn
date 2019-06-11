@@ -1,9 +1,10 @@
-^{:watch-dirs ["src" "env/dev"]}
-^{:npm {:bundles {"dist/index.bundle.js" "src-js/index.js"}}}
-^{:extra-main-files {:testing {:main soul-talk.test-runner}}}
+^{:watch-dirs ["src" "env/dev"]
+  :npm {:bundles {"dist/index.bundle.js" "src-js/index.js"}}
+  :auto-testing true}
+;^{:extra-main-files {:testing {:main soul-talk.test-runner}}}
 {:main soul-talk.app
- ;:output-to "resources/public/cljs-out/app.js"
- ;:output-dir "resources/public/cljs-out/"
+ :output-to "target/public/cljs/app.js"
+ :output-dir "target/public/cljs/"
  ;:asset-path "cljs-out/dev"
  :npm-deps false
  :infer-externs true

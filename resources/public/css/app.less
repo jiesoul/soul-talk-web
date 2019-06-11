@@ -3,6 +3,7 @@
 @white: #fff;
 @black: #000;
 @none-color: rgba(0,0,0,0);
+@background-color: #f5f5f5;
 
 
 @normal-color: #d9d9d9;
@@ -14,15 +15,20 @@
 @home-wrapper-background: @header-background;
 @home-wrapper-height: 100vh + @header-height;
 
+html, body {
+  color: @black;
+  background-color: @white;
+}
+
 .brand {
   text-align: center;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  color: @white;
+  //color: @white;
 }
 
 .brand-content {
   font-family: "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  color: @white;
+  color: inherit;
 }
 
 .logo {
@@ -34,41 +40,74 @@
 }
 
 .main {
-  background-color: @white;
+  background-color: transparent;
   padding: @width;
   min-height: 680px;
   margin: 0px;
 }
 
 .home {
-  background: @white;
-  height: auto;
+  //background: transparent;
+  position: relative;
+  width: 100%;
+  padding: 0px;
+  clear: both;
+  //height: auto;
 }
 
+.home:before {
+  content: "";
+  position: absolute;
+  top: 120px;
+  width: 100%;
+  height: 50%;
+  z-index: -1;
+  -webkit-transform: skewY(-5deg);
+  -moz-transform: skewY(-5deg);
+  -ms-transform: skewY(-5deg);
+  -o-transform: skewY(-5deg);
+  transform: skewY(-5deg);
+}
+
+.home:after {
+  content: "";
+  position: absolute;
+  top: 120px;
+  width: 100%;
+  height: 50%;
+  z-index: -1;
+  -webkit-transform: skewY(-5deg);
+  -moz-transform: skewY(-5deg);
+  -ms-transform: skewY(-5deg);
+  -o-transform: skewY(-5deg);
+  transform: skewY(-5deg);
+}
+
+
 .home .ant-layout-header {
-  background-color: @none-color;
+  background-color: inherit;
 }
 
 #home-nav {
-  background-color: @none-color;
+  background-color: inherit;
   height: @header-height;
   padding: 10px 10px;
   font-weight: bold;
+  border: 0;
 }
 
 #home-nav .ant-menu-item-selected {
-  background-color: @none-color;
+  background-color: inherit;
 }
 
 .home-wrapper {
-  background: url('../images/sky-4237062_1920.jpg') no-repeat right top;
+  background: url("../images/sky-4237062_1920.jpg");
   height: @window-height;
   text-align: center;
   position: relative;
 }
 
-.home-wrapper-section {
-  //position: absolute;
+.home-wrapper  .home-wrapper-section {
   left: 0;
   top: 0;
   right: 0;
@@ -77,25 +116,26 @@
 }
 
 .home-wrapper-page1 {
-  background: @white;
+  padding: 30px;
   min-height: auto;
-  //padding-top: 20px;
 }
 
 .blog {
-  background-color: @white;
+  background-color: inherit;
+  width: 100%;
 }
 
 .blog .ant-layout-header {
-  background-color: @header-background;
+  background-color: @white;
 }
 
 .blog-wrapper {
+  background: linear-gradient(-30deg, @background-color, @white);
   min-height: @window-height;
+  padding-bottom: 10px;
 }
 
 .ant-carousel .slick-slide {
-  background-image: url('../images/IMAG0561.jpg');
   min-height: 180px;
   text-align: center;
   background: #364D79;

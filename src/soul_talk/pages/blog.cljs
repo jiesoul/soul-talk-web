@@ -3,14 +3,8 @@
             [reagent.core :as r]
             [re-frame.core :as rf]
             [soul-talk.layouts.home-layout :refer [layout nav]]
-            [soul-talk.pages.post :refer [blog-post-component]]
+            [soul-talk.pages.post :refer [blog-posts blog-archives]]
             [soul-talk.components.home-header :refer [header]]))
-
-(defn main-component []
-  (fn []
-    [:div
-     [:> antd/Row
-      [:> antd/Col {:span 20 :offset 2}]]]))
 
 (defn blog-page []
   (r/with-let [active-page (rf/subscribe [:active-page])]
@@ -20,5 +14,24 @@
        [:> antd/Row
         [header [nav @active-page]]]
        [:> antd/Row
-        [:> antd/Col {:span 16 :offset 4}
-         [blog-post-component]]]]]]))
+        [:> antd/Col {:span 14 :offset 2}
+         [:> antd/Card
+          {:title "文章列表"}
+          [blog-posts]]]
+        [:> antd/Col {:span 6}
+         [:> antd/Card
+          {:title "归档"}
+          [blog-archives]]]]]]]))
+
+(defn blog-archives-page []
+  (r/with-let [active-page (rf/subscribe [:active-page])]
+    [layout
+     [:> antd/Layout.Content {:className "blog"}
+      [:> antd/Layout.Content {:className "blog-wrapper"}
+       [:> antd/Row
+        [header [nav @active-page]]]
+       [:> antd/Row
+        [:> antd/Col {:span 14 :offset 2}
+         [:> antd/Card
+          {:title "文章列表"}
+          [blog-posts]]]]]]]))

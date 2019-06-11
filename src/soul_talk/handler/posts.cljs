@@ -1,8 +1,6 @@
 (ns soul-talk.handler.posts
   (:require [re-frame.core :refer [reg-event-fx reg-event-db subscribe]]
-            [ajax.core :refer [POST GET DELETE PUT]]
-            [taoensso.timbre :as log]
-            [bouncer.core :as b]))
+            [ajax.core :refer [POST GET DELETE PUT]]))
 
 (reg-event-db
   :set-posts

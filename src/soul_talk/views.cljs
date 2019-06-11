@@ -22,7 +22,7 @@
 (defmethod pages :login [_ _] [auth/login-page])
 (defmethod pages :register [_ _] [auth/register-page])
 (defmethod pages :blog [_ _] [blog/blog-page])
-(defmethod pages :posts/archives [_ _] [post/post-archives-page])
+(defmethod pages :blog/archives [_ _] [blog/blog-archives-page])
 (defmethod pages :posts/view [_ _] [post/post-view-page])
 
 (defn admin [page]

@@ -11,54 +11,85 @@
             [clojure.string :as str]
             [antd :as antd]))
 
-(defn archives-component []
+(defn home-posts []
+  (r/with-let [posts (subscribe [:posts])
+               pagination (subscribe [:pagination])]
+    (when @posts
+      (fn []
+        (let [edited-pagination (-> @pagination
+                                  r/atom)
+              page (r/cursor edited-pagination [:page])
+              pre-page (r/cursor edited-pagination[:pre-page])
+              total (r/cursor edited-pagination [:total])]
+          [:> antd/Layout.Content
+           [:> antd/Row {:gutter 16}
+            (for [{:keys [id title create_time author content] :as post} @posts]
+              (let [url (str "/#/posts/" id)]
+                ^{:key post}
+                [:> antd/Col {:span 8}
+                 [:> antd/Card {:activeTabKey id
+                                :title        (r/as-element
+                                                [:div
+                                                 [:a.text-muted
+                                                  {:href   url
+                                                   :target "_blank"}
+                                                  title]
+                                                 [:br]
+                                                 [:span (str (.toDateString (js/Date. create_time)) " by " author)]])
+                                :bodyStyle    {:height "300px" :overflow "hidden"}
+                                :style        {:margin 5}
+                                :border       false
+                                :hoverable    true}
+                  [c/markdown-preview content]]]))]
+           [:> antd/Row
+            [:> antd/Col {:span  16 :offset 4
+                          :style {:text-align "center"}}
+             [:> antd/Pagination {:current   @page
+                                  :pageSize  @pre-page
+                                  :total     @total
+                                  :on-change #(do (reset! page %1)
+                                                  (reset! pre-page %2)
+                                                  (dispatch [:load-posts @edited-pagination]))}]]]])))))
+
+(defn blog-posts []
+  (r/with-let [posts (subscribe [:posts])
+               pagination (subscribe [:pagination])]
+    (when @posts
+      (fn []
+        (let [edited-pagination (-> @pagination
+                                  r/atom)
+              page (r/cursor edited-pagination [:page])
+              pre-page (r/cursor edited-pagination[:pre-page])
+              total (r/cursor edited-pagination [:total])]
+          [:> antd/Layout.Content
+           (for [{:keys [id title create_time author content] :as post} @posts]
+             (let [url (str "/#/posts/" id)]
+               ^{:key post}
+               [:> antd/Row
+                [:div
+                 [:a.text-muted
+                  {:href   url
+                   :target "_blank"}
+                  [:h2 title]]
+                 [:span (str (.toDateString (js/Date. create_time)) " by " author)]]
+                [:> antd/Divider]]))
+           (when @total
+             [:> antd/Row {:style {:text-align "center"}}
+              [:> antd/Pagination {:current   @page
+                                   :pageSize  @pre-page
+                                   :total     @total
+                                   :on-change #(do (reset! page %1)
+                                                   (reset! pre-page %2)
+                                                   (dispatch [:load-posts @edited-pagination]))}]])])))))
+
+(defn blog-archives []
   (r/with-let [posts-archives (subscribe [:posts-archives])]
     (fn []
       [:div.p-3
-       [:h4.font-italic "Archives"]
-       [:ol.list-unstyled.mb-0
+       [:ul.list-unstyled.mb-0
         (for [{:keys [year month] :as archive} @posts-archives]
           ^{:key archive}
-          [:li [:a {:href (str "/posts/archives/" year "/" month)} (str month " " year)]])]])))
-
-(defn blog-post-component []
-  (r/with-let [posts (subscribe [:posts])
-               pagination (subscribe [:pagination])
-               offset (r/cursor pagination [:offset])
-               page (r/cursor pagination [:page])
-               prev-page (r/cursor pagination [:previous])
-               next-page (r/cursor pagination [:next])
-               pre-page (r/cursor pagination[:pre-page])
-               total-pages (r/cursor pagination [:total-pages])]
-
-    (fn []
-      [:> antd/Layout.Content
-       (for [{:keys [id title create_time author content] :as post} @posts]
-         (let [url (str "/#/posts/" id)]
-           ^{:key post} [:> antd/Row
-                         [:> antd/Typography
-                          [:> antd/Typography.Title {:level 2}
-                           [:a.text-muted
-                            {:href   url
-                             :target "_blank"}
-                            title]]
-                          [:p.blog-post-meta (str (.toDateString (js/Date. create_time)) " by " author)]
-                          [:> antd/Divider]]]))
-       [:> antd/Row
-        [:> antd/Col {:span 2}
-         [:> antd/Button
-          {:type     "link"
-           :on-click #(dispatch [:load-posts {:page     @next-page
-                                              :pre-page @pre-page}])
-           :class    (if (>= @page @total-pages) "disabled")}
-          "Older"]]
-        [:> antd/Col {:span 2 :offset 20}
-         [:> antd/Button
-          {:type     "link"
-           :on-click #(dispatch [:load-posts {:page     @prev-page
-                                              :pre-page @pre-page}])
-           :class    (if (zero? @offset) "disabled")}
-          "Newer"]]]])))
+          [:li [:a {:href (str "#/blog/archives/" year "/" month)} (str year "年 " month "月 ")]])]])))
 
 (defn list-columns []
   [{:title "标题" :dataIndex "title", :key "title", :align "center"}
@@ -79,29 +110,30 @@
                 (let [{:keys [id publish]} (js->clj post :keywordize-keys true)]
                   [:div
                    [:> antd/Button {
-                                    :size "small"
+                                    :size   "small"
                                     :target "_blank"
-                                    :href (str "#/posts/" id)}
+                                    :href   (str "#/posts/" id)}
                     "查看"]
                    [:> antd/Divider {:type "vertical"}]
-                   [:> antd/Button {:icon "edit"
-                                    :size "small"
+                   [:> antd/Button {:icon   "edit"
+                                    :size   "small"
                                     :target "_blank"
                                     :href   (str "#/posts/" id "/edit")}]
                    [:> antd/Divider {:type "vertical"}]
                    [:> antd/Button {:type     "danger"
-                                    :icon "delete"
-                                    :size "small"
+                                    :icon     "delete"
+                                    :size     "small"
                                     :on-click (fn []
-                                                (c/show-confirm
-                                                  "文章删除"
-                                                  (str "你确认要删除这篇文章吗？")
-                                                  #(dispatch [:posts/delete id])
-                                                  #(js/console.log "cancel")))}]
+                                                (r/as-element
+                                                  (c/show-confirm
+                                                    "文章删除"
+                                                    (str "你确认要删除这篇文章吗？")
+                                                    #(dispatch [:posts/delete id])
+                                                    #(js/console.log "cancel"))))}]
                    [:> antd/Divider {:type "vertical"}]
                    (when (zero? publish)
                      [:> antd/Button {:type     "primary"
-                                      :size "small"
+                                      :size     "small"
                                       :on-click #(dispatch [:posts/publish id])}
                       "发布"])])))}])
 
