@@ -3,7 +3,7 @@
             [accountant.core :as accountant]
             [soul-talk.local-storage :as storage]
             [taoensso.timbre :as log]))
-(def api-url "http://localhost:3001")
+(def api-url "http://localhost:3000")
 
 (reg-fx
   :http
