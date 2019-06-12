@@ -3,7 +3,12 @@
            ;; client
            org.clojure/clojurescript       {:mvn/version "1.10.520"}
            com.andrewmcveigh/cljs-time {:mvn/version "0.5.2"}
-           reagent                         {:mvn/version "0.9.0-SNAPSHOT"}
+           ;com.bhauman/figwheel-main       {:mvn/version "0.2.0"}
+           ;com.bhauman/rebel-readline-cljs {:mvn/version "0.1.4"}
+           reagent                         {:mvn/version "0.9.0-SNAPSHOT"
+                                            :exclusions [cljsjs/react
+                                                         cljsjs/react-dom
+                                                         cljsjs/react-transition-group]}
            re-frame                        {:mvn/version "0.10.6"}
            re-frame-cookie-fx {:mvn/version "1.0.0-alpha"}
            venantius/accountant {:mvn/version "0.2.4"}

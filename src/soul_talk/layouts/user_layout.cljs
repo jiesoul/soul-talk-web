@@ -1,7 +1,5 @@
 (ns soul-talk.layouts.user-layout
-  (:require [antd :as antd]
-            [soul-talk.components.global-footer :refer [footer]]
-            [reagent.core :as r]))
+  (:require [antd :as antd]))
 
 (defn copyright []
   [:> antd/Layout.Footer
@@ -14,4 +12,5 @@
    [:> antd/Layout.Content {:style {:min-height "100vh"
                                     :padding "24px 0 20px 0"}}
     children
-    copyright]])
+    ;copyright
+    ]])
