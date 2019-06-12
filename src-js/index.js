@@ -5,8 +5,73 @@ window.ReactDOM = ReactDOM;
 
 import moment from 'moment';
 window.moment = moment;
-//     Skeleton, Slider, Statistic, Steps, Switch, Tabs, Tag, Timeline,
-//     TimePicker, Tooltip, Transfer, TreeSelect, Typography, Upload, version} from 'antd';
+
+// import {
+//     Button,
+//     Icon,
+//     Typography,
+//     Row,
+//     Col,
+//     Layout,
+//     Affix,
+//     Breadcrumb,
+//     Dropdown,
+//     Menu,
+//     Pagination,
+//     PageHeader,
+//     Steps,
+//     AutoComplete,
+//     Cascader,
+//     Checkbox,
+//     DatePicker,
+//     Form,
+//     Input,
+//     InputNumber,
+//     Mention,
+//     Rate,
+//     Radio,
+//     Switch,
+//     Select,
+//     Slider,
+//     TreeSelect,
+//     Transfer,
+//     TimePicker,
+//     Upload,
+//     Avatar,
+//     Badge,
+//     Comment,
+//     Collapse,
+//     Carousel,
+//     Card,
+//     Calendar,
+//     List,
+//     Popover,
+//     Statistic,
+//     Tree,
+//     Tooltip,
+//     Timeline,
+//     Tag,
+//     Tabs,
+//     Table,
+//
+//     Alert,
+//     Drawer,
+//     Modal,
+//     Message,
+//     Notification,
+//     Progress,
+//     Popconfirm,
+//     Spin,
+//     Skeleton,
+//
+//     Anchor,
+//     BackTop,
+//     ConfigProvider,
+//     Divider,
+//     LocaleProvider,
+// } from 'antd';
+//
+//
 import * as antd from 'antd';
 window.antd = antd;
 

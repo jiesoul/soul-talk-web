@@ -3,7 +3,6 @@ module.exports = {
     output: {
         filename: 'index.bundle.js'
     },
-
     module: {
         rules: [
             {
@@ -29,6 +28,7 @@ module.exports = {
                     }
                 ]
             }
+
         ]
     }
 }

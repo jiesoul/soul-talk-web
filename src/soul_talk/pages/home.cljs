@@ -2,7 +2,7 @@
   (:require [reagent.core :as r]
             [re-frame.core :as rf]
             [soul-talk.layouts.home-layout :refer [layout nav]]
-            [soul-talk.pages.post :refer [home-posts]]
+            [soul-talk.components.post :refer [home-posts]]
             [soul-talk.pages.users :refer [where-component]]
             [soul-talk.components.home-header :refer [header]]
             [antd :as antd])

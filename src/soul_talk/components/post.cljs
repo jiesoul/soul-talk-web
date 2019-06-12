@@ -1,4 +1,4 @@
-(ns soul-talk.pages.post
+(ns soul-talk.components.post
   (:require [reagent.core :as r]
             [re-frame.core :as rf :refer [subscribe dispatch]]
             [soul-talk.layouts.basic-layout :refer [basic-layout]]
@@ -51,6 +51,20 @@
                                                   (reset! pre-page %2)
                                                   (dispatch [:load-posts @edited-pagination]))}]]]])))))
 
+(defn blog-posts-list [posts]
+  [:div
+   (for [{:keys [id title create_time author content] :as post} @posts]
+     (let [url (str "/#/posts/" id)]
+       ^{:key post}
+       [:> antd/Row
+        [:div
+         [:a.text-muted
+          {:href   url
+           :target "_blank"}
+          [:h2 title]]
+         [:span (str (.toDateString (js/Date. create_time)) " by " author)]]
+        [:> antd/Divider]]))])
+
 (defn blog-posts []
   (r/with-let [posts (subscribe [:posts])
                pagination (subscribe [:pagination])]
@@ -62,17 +76,7 @@
               pre-page (r/cursor edited-pagination[:pre-page])
               total (r/cursor edited-pagination [:total])]
           [:> antd/Layout.Content
-           (for [{:keys [id title create_time author content] :as post} @posts]
-             (let [url (str "/#/posts/" id)]
-               ^{:key post}
-               [:> antd/Row
-                [:div
-                 [:a.text-muted
-                  {:href   url
-                   :target "_blank"}
-                  [:h2 title]]
-                 [:span (str (.toDateString (js/Date. create_time)) " by " author)]]
-                [:> antd/Divider]]))
+           [blog-posts-list posts]
            (when @total
              [:> antd/Row {:style {:text-align "center"}}
               [:> antd/Pagination {:current   @page
@@ -89,7 +93,14 @@
        [:ul.list-unstyled.mb-0
         (for [{:keys [year month] :as archive} @posts-archives]
           ^{:key archive}
-          [:li [:a {:href (str "#/blog/archives/" year "/" month)} (str year "年 " month "月 ")]])]])))
+          [:li [:a {:href (str "/#/blog/archives/" year "/" month)} (str year "年 " month "月 ")]])]])))
+
+(defn blog-archives-posts []
+  (r/with-let [posts (subscribe [:posts])]
+    (when @posts
+      (fn []
+        [:> antd/Layout.Content
+         [blog-posts-list posts]]))))
 
 (defn list-columns []
   [{:title "标题" :dataIndex "title", :key "title", :align "center"}

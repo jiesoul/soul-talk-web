@@ -2,28 +2,28 @@
 
            ;; client
            org.clojure/clojurescript       {:mvn/version "1.10.520"}
-           ;com.bhauman/figwheel-main       {:mvn/version "0.2.0"}
-           ;com.bhauman/rebel-readline-cljs {:mvn/version "0.1.4"}
-           reagent                         {:mvn/version "0.9.0-SNAPSHOT"
-                                            :exclusions [cljsjs/react
-                                                         cljsjs/react-dom
-                                                         cljsjs/react-transition-group]}
+           com.andrewmcveigh/cljs-time {:mvn/version "0.5.2"}
+           reagent                         {:mvn/version "0.9.0-SNAPSHOT"}
            re-frame                        {:mvn/version "0.10.6"}
            re-frame-cookie-fx {:mvn/version "1.0.0-alpha"}
            venantius/accountant {:mvn/version "0.2.4"}
-           re-frisk {:mvn/version "0.5.4.1"}
            cljs-ajax {:mvn/version "0.8.0"}
            clj-commons/secretary {:mvn/version "1.2.4"}
            bouncer {:mvn/version "1.0.1"}
-           com.taoensso/timbre {:mvn/version "4.10.0"}}
+           com.taoensso/timbre {:mvn/version "4.10.0"}
+           antizer {:mvn/version "0.3.1"}
+           cljsjs/showdown {:mvn/version "1.8.6-0"}
+           cljsjs/highlight {:mvn/version "9.12.0-2"}
+           cljsjs/simplemde {:mvn/version "1.11.2-0"}}
 
  :paths   ["src" "src-cljc" "resources" "env/dev" "dev/prod"]
 
  :aliases {:fig {:extra-deps {com.bhauman/figwheel-main {:mvn/version "0.2.0"}
-                              com.bhauman/rebel-readline-cljs {:mvn/version "0.1.4"}}
+                              com.bhauman/rebel-readline-cljs {:mvn/version "0.1.4"}
+                              re-frisk {:mvn/version "0.5.4.1"} }
                  :extra-paths ["target" "test" "resources"]}
            :dev {:main-opts ["-m" "figwheel.main" "-b" "dev" "-r"]
                  :extra-paths ["env/dev"]}
            :test {:extra-paths ["test"]}
-           :prod {:main-opts ["-m" "figwheel.main" "-O" "advanced" "-bo" "prod" "-s"]
+           :prod {:main-opts ["-m" "figwheel.main" "-O" "advanced" "-bo" "prod"]
                   :extra-paths ["env/prod"]}}}

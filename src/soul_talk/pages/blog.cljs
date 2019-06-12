@@ -3,7 +3,7 @@
             [reagent.core :as r]
             [re-frame.core :as rf]
             [soul-talk.layouts.home-layout :refer [layout nav]]
-            [soul-talk.pages.post :refer [blog-posts blog-archives]]
+            [soul-talk.components.post :refer [blog-posts blog-archives blog-archives-posts]]
             [soul-talk.components.home-header :refer [header]]))
 
 (defn blog-page []
@@ -31,7 +31,7 @@
        [:> antd/Row
         [header [nav @active-page]]]
        [:> antd/Row
-        [:> antd/Col {:span 14 :offset 2}
+        [:> antd/Col {:span 16 :offset 4}
          [:> antd/Card
           {:title "文章列表"}
-          [blog-posts]]]]]]]))
+          [blog-archives-posts]]]]]]]))

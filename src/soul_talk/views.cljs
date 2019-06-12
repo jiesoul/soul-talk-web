@@ -7,12 +7,12 @@
             [soul-talk.pages.home :as home]
             [soul-talk.pages.auth :as auth]
             [soul-talk.pages.users :as users]
-            [soul-talk.pages.post :as post]
+            [soul-talk.components.post :as post]
             [soul-talk.pages.category :as category]
             [soul-talk.pages.blog :as blog]
             [soul-talk.pages.tag :as tag]
             [clojure.string :as str]
-            [antd :as antd]))
+            [antizer.reagent :as antd]))
 
 ;;多重方法  响应对应的页面
 (defmulti pages (fn [page _] page))
@@ -72,7 +72,7 @@
   (r/with-let [ready? (subscribe [:initialised?])
                active-page (subscribe [:active-page])]
     (if-not @ready?
-      [:> antd/Spin {:tip "loading"}]
+      [antd/spin {:tip "loading"}]
       [:div
        [c/success-modal]
        [c/error-modal]
