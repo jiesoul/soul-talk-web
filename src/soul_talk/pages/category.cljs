@@ -1,7 +1,6 @@
 (ns soul-talk.pages.category
   (:require [re-frame.core :refer [dispatch subscribe]]
             [reagent.core :as r]
-            [antd :as antd]
             [soul-talk.layouts.basic-layout :refer [basic-layout]]
             [soul-talk.components.common :as c]))
 
@@ -12,7 +11,7 @@
               (let [{:keys [id name]} (js->clj category :keywordize-keys true)]
                 (r/as-element
                   [:div
-                   [:> antd/Button {:icon     "delete"
+                   [:> js/Button {:icon     "delete"
                                     :type     "danger"
                                     :on-click (fn []
                                                 (c/show-confirm
@@ -20,8 +19,8 @@
                                                   (str "你确认要删除分类 " name " 吗？")
                                                   #(dispatch [:categories/delete id])
                                                   #(js/console.log "cancel")))}]
-                   [:> antd/Divider {:type "vertical"}]
-                   [:> antd/Button {:icon "edit"
+                   [:> js/Divider {:type "vertical"}]
+                   [:> js/Button {:icon "edit"
                                     :on-click #(dispatch [:navigate-to
                                                           (str "#/categories/" id "/edit")])}]])))}])
 
@@ -29,7 +28,7 @@
   (r/with-let [categories (subscribe [:categories])]
     (fn []
       [:div
-       [:> antd/Table {:bordered   true
+       [:> js/Table {:bordered   true
                        :columns    (clj->js (columns))
                        :dataSource (clj->js @categories)
                        :row-key    "id"
@@ -39,14 +38,14 @@
   [basic-layout
    [:div
     [c/breadcrumb-component ["分类" "列表"]]
-    [:> antd/Layout.Content {:className "main"}
-     [:> antd/Button
+    [:> js/Layout.Content {:className "main"}
+     [:> js/Button
       {:type     "primary"
        :icon     "plus"
        :size     "small"
        :on-click #(dispatch [:navigate-to "#/categories-add"])}
       "添加"]
-     [:> antd/Divider]
+     [:> js/Divider]
      [categories-list]]]])
 
 (defn edit-page []
@@ -62,28 +61,28 @@
         [basic-layout
          [:div
           [c/breadcrumb-component ["分类" "编辑"]]
-          [:> antd/Layout.Content
+          [:> js/Layout.Content
            {:style {:background "#fff"
                     :padding    24
                     :margin     0
                     :min-height 280}}
 
-           [:> antd/Form
-            [:> antd/Input
+           [:> js/Form
+            [:> js/Input
              {:value     @name
               :on-change #(let [new-value (.-target.value %)]
                             (dispatch [:update-value [:category :name] new-value]))}]
             (when @error
               [:div
-               [:> antd/Alert {:message @error :type "error"}]])]
-           [:> antd/Row {:style {:margin-top "10px"}}
+               [:> js/Alert {:message @error :type "error"}]])]
+           [:> js/Row {:style {:margin-top "10px"}}
             [:div
-             [:> antd/Button
+             [:> js/Button
               {:type     "cancel"
                :size     "small"
                :on-click #(dispatch [:navigate-to "#/categories"])}
               "返回"]
-             [:> antd/Button
+             [:> js/Button
               {:type     "primary"
                :size     "small"
                :on-click #(if (nil? @id)

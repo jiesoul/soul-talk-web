@@ -8,8 +8,7 @@
             [soul-talk.components.md-editor :refer [editor]]
             [soul-talk.date-utils :as du]
             [soul-talk.post-validate :refer [post-errors]]
-            [clojure.string :as str]
-            [antd :as antd]))
+            [clojure.string :as str]))
 
 (defn home-posts []
   (r/with-let [posts (subscribe [:posts])
@@ -21,13 +20,13 @@
               page (r/cursor edited-pagination [:page])
               pre-page (r/cursor edited-pagination[:pre-page])
               total (r/cursor edited-pagination [:total])]
-          [:> antd/Layout.Content
-           [:> antd/Row {:gutter 16}
+          [:> js/Layout.Content
+           [:> js/Row {:gutter 16}
             (for [{:keys [id title create_time author content] :as post} @posts]
               (let [url (str "/#/posts/" id)]
                 ^{:key post}
-                [:> antd/Col {:span 8}
-                 [:> antd/Card {:activeTabKey id
+                [:> js/Col {:span 8}
+                 [:> js/Card {:activeTabKey id
                                 :title        (r/as-element
                                                 [:div
                                                  [:a.text-muted
@@ -41,10 +40,10 @@
                                 :border       false
                                 :hoverable    true}
                   [c/markdown-preview content]]]))]
-           [:> antd/Row
-            [:> antd/Col {:span  16 :offset 4
+           [:> js/Row
+            [:> js/Col {:span  16 :offset 4
                           :style {:text-align "center"}}
-             [:> antd/Pagination {:current   @page
+             [:> js/Pagination {:current   @page
                                   :pageSize  @pre-page
                                   :total     @total
                                   :on-change #(do (reset! page %1)
@@ -56,14 +55,14 @@
    (for [{:keys [id title create_time author content] :as post} @posts]
      (let [url (str "/#/posts/" id)]
        ^{:key post}
-       [:> antd/Row
+       [:> js/Row
         [:div
          [:a.text-muted
           {:href   url
            :target "_blank"}
           [:h2 title]]
          [:span (str (.toDateString (js/Date. create_time)) " by " author)]]
-        [:> antd/Divider]]))])
+        [:> js/Divider]]))])
 
 (defn blog-posts []
   (r/with-let [posts (subscribe [:posts])
@@ -75,11 +74,11 @@
               page (r/cursor edited-pagination [:page])
               pre-page (r/cursor edited-pagination[:pre-page])
               total (r/cursor edited-pagination [:total])]
-          [:> antd/Layout.Content
+          [:> js/Layout.Content
            [blog-posts-list posts]
            (when @total
-             [:> antd/Row {:style {:text-align "center"}}
-              [:> antd/Pagination {:current   @page
+             [:> js/Row {:style {:text-align "center"}}
+              [:> js/Pagination {:current   @page
                                    :pageSize  @pre-page
                                    :total     @total
                                    :on-change #(do (reset! page %1)
@@ -99,7 +98,7 @@
   (r/with-let [posts (subscribe [:posts])]
     (when @posts
       (fn []
-        [:> antd/Layout.Content
+        [:> js/Layout.Content
          [blog-posts-list posts]]))))
 
 (defn list-columns []
@@ -120,18 +119,18 @@
               (r/as-element
                 (let [{:keys [id publish]} (js->clj post :keywordize-keys true)]
                   [:div
-                   [:> antd/Button {
+                   [:> js/Button {
                                     :size   "small"
                                     :target "_blank"
                                     :href   (str "#/posts/" id)}
                     "查看"]
-                   [:> antd/Divider {:type "vertical"}]
-                   [:> antd/Button {:icon   "edit"
+                   [:> js/Divider {:type "vertical"}]
+                   [:> js/Button {:icon   "edit"
                                     :size   "small"
                                     :target "_blank"
                                     :href   (str "#/posts/" id "/edit")}]
-                   [:> antd/Divider {:type "vertical"}]
-                   [:> antd/Button {:type     "danger"
+                   [:> js/Divider {:type "vertical"}]
+                   [:> js/Button {:type     "danger"
                                     :icon     "delete"
                                     :size     "small"
                                     :on-click (fn []
@@ -141,9 +140,9 @@
                                                     (str "你确认要删除这篇文章吗？")
                                                     #(dispatch [:posts/delete id])
                                                     #(js/console.log "cancel"))))}]
-                   [:> antd/Divider {:type "vertical"}]
+                   [:> js/Divider {:type "vertical"}]
                    (when (zero? publish)
-                     [:> antd/Button {:type     "primary"
+                     [:> js/Button {:type     "primary"
                                       :size     "small"
                                       :on-click #(dispatch [:posts/publish id])}
                       "发布"])])))}])
@@ -152,7 +151,7 @@
   (r/with-let [posts (subscribe [:admin/posts])]
     (fn []
       [:div
-       [:> antd/Table {:columns    (clj->js (list-columns))
+       [:> js/Table {:columns    (clj->js (list-columns))
                        :dataSource (clj->js @posts)
                        :row-key    "id"
                        :bordered   true
@@ -162,13 +161,13 @@
   [basic-layout
    [:div
     [c/breadcrumb-component ["文章" "列表"]]
-    [:> antd/Layout.Content {:className "main"}
-     [:> antd/Button
+    [:> js/Layout.Content {:className "main"}
+     [:> js/Button
       {:target "_blank"
        :href   "#/posts/add"
        :size   "small"}
       "写文章"]
-     [:> antd/Divider]
+     [:> js/Divider]
      [posts-list]]]])
 
 (defn add-post-page []
@@ -193,14 +192,14 @@
          post
          edited-post
          categories
-         [:> antd/Layout.Content {:style {:backdrop-color "#fff"}}
-          [:> antd/Col {:span 16 :offset 4 :style {:padding-top "10px"}}
-           [:> antd/Form
-            [:> antd/Input
+         [:> js/Layout.Content {:style {:backdrop-color "#fff"}}
+          [:> js/Col {:span 16 :offset 4 :style {:padding-top "10px"}}
+           [:> js/Form
+            [:> js/Input
              {:on-change   #(let [val (-> % .-target .-value)]
                               (reset! title val))
               :placeholder "请输入标题"}]]
-           [:> antd/Row
+           [:> js/Row
             [editor content]
             ]]]]))))
 
@@ -222,22 +221,22 @@
             content     (r/cursor edited-post [:content])
             title       (r/cursor edited-post [:title])]
         (if-not @post
-          [:div [:> antd/Spin {:tip "loading"}]]
+          [:div [:> js/Spin {:tip "loading"}]]
           [post-layout
            post
            edited-post
            categories
-           [:> antd/Layout.Content {:style {:backdrop-color "#fff"}}
-            [:> antd/Col {:span 16 :offset 4 :style {:padding-top "10px"}}
-             [:> antd/Form
-              [:> antd/Input
+           [:> js/Layout.Content {:style {:backdrop-color "#fff"}}
+            [:> js/Col {:span 16 :offset 4 :style {:padding-top "10px"}}
+             [:> js/Form
+              [:> js/Input
                {:on-change    #(let [val (-> % .-target .-value)]
                                  (js/console.log val)
                                  (reset! title val))
                 :placeholder  "请输入标题"
                 :size         "large"
                 :defaultValue @title}]]
-             [:> antd/Row
+             [:> js/Row
               [editor content]]]]])))))
 
 
@@ -246,13 +245,13 @@
                user (subscribe [:user])]
     (fn []
       (if @post
-        [:> antd/Layout.Content {:style {:padding "50px"}}
-         [:> antd/Typography.Title {:style {:text-align "center"}}
+        [:> js/Layout.Content {:style {:padding "50px"}}
+         [:> js/Typography.Title {:style {:text-align "center"}}
           (:title @post)]
-         [:> antd/Divider]
+         [:> js/Divider]
          [:div.container
           [c/markdown-preview (:content @post)]]
-         [:> antd/Divider ]]))))
+         [:> js/Divider ]]))))
 
 (defn post-archives-page []
   (r/with-let [posts (subscribe [:posts])]

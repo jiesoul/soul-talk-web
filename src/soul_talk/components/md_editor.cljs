@@ -1,7 +1,6 @@
 (ns soul-talk.components.md-editor
   (:require [reagent.core :as r]
-            [re-frame.core :refer [dispatch subscribe]]
-            [antd :as antd]))
+            [re-frame.core :refer [dispatch subscribe]]))
 
 (def ^{:private true} hint-limit 10)
 

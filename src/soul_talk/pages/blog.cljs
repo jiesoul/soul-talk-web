@@ -1,5 +1,5 @@
 (ns soul-talk.pages.blog
-  (:require [antd :as antd]
+  (:require
             [reagent.core :as r]
             [re-frame.core :as rf]
             [soul-talk.layouts.home-layout :refer [layout nav]]
@@ -9,29 +9,29 @@
 (defn blog-page []
   (r/with-let [active-page (rf/subscribe [:active-page])]
     [layout
-     [:> antd/Layout.Content {:className "blog"}
-      [:> antd/Layout.Content {:className "blog-wrapper"}
-       [:> antd/Row
+     [:> js/Layout.Content {:className "blog"}
+      [:> js/Layout.Content {:className "blog-wrapper"}
+       [:> js/Row
         [header [nav @active-page]]]
-       [:> antd/Row
-        [:> antd/Col {:span 14 :offset 2}
-         [:> antd/Card
+       [:> js/Row
+        [:> js/Col {:span 14 :offset 2}
+         [:> js/Card
           {:title "文章列表"}
           [blog-posts]]]
-        [:> antd/Col {:span 6}
-         [:> antd/Card
+        [:> js/Col {:span 6}
+         [:> js/Card
           {:title "归档"}
           [blog-archives]]]]]]]))
 
 (defn blog-archives-page []
   (r/with-let [active-page (rf/subscribe [:active-page])]
     [layout
-     [:> antd/Layout.Content {:className "blog"}
-      [:> antd/Layout.Content {:className "blog-wrapper"}
-       [:> antd/Row
+     [:> js/Layout.Content {:className "blog"}
+      [:> js/Layout.Content {:className "blog-wrapper"}
+       [:> js/Row
         [header [nav @active-page]]]
-       [:> antd/Row
-        [:> antd/Col {:span 16 :offset 4}
-         [:> antd/Card
+       [:> js/Row
+        [:> js/Col {:span 16 :offset 4}
+         [:> js/Card
           {:title "文章列表"}
           [blog-archives-posts]]]]]]]))

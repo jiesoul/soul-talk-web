@@ -2,7 +2,6 @@
   (:require [re-frame.core :as rf :refer [dispatch subscribe]]
             [reagent.core :as r]
             [cljs-time.local :as local]
-            [antd :as antd]
             [showdown]
             [hljs]))
 
@@ -13,23 +12,23 @@
   (r/with-let [loading? (subscribe [:loading?])]
     (fn []
       (when @loading?
-        [:> antd/Spin {:tip  "加载中。。。。"
+        [:> js/Spin {:tip  "加载中。。。。"
                        :size "large"}]))))
 
 (defn spin-loading []
   (r/with-let [loading? (subscribe [:loading?])]
     (when @loading?
-      (antd/message.loading "正在加载中。。。。"))))
+      (js/message.loading "正在加载中。。。。"))))
 
 (defn success-modal []
   (r/with-let [success (subscribe [:success])]
     (when @success
-      (antd/message.success @success)
+      (js/message.success @success)
       (dispatch [:clean-success]))))
 
 (defn show-confirm
   [title content ok-fun cancel-fun]
-  (antd/Modal.confirm
+  (js/Modal.confirm
     (clj->js {:centered true
               :title    title
               :content  content
@@ -39,26 +38,26 @@
 (defn error-modal []
   (r/with-let [error (subscribe [:error])]
     (when @error
-      (antd/message.error @error)
+      (js/message.error @error)
       (dispatch [:clean-error]))))
 
 (defn breadcrumb-component [items]
   (fn [items]
-    [:> antd/Breadcrumb {:style {:margin "10px 0"}}
+    [:> js/Breadcrumb {:style {:margin "10px 0"}}
      (for [item items]
        ^{:key item}
-       [:> antd/Breadcrumb.Item item])]))
+       [:> js/Breadcrumb.Item item])]))
 
 (defn validation-modal [title errors]
-  [:> antd/Modal {:is-open (boolean @errors)}
-   [:> antd/ModalHeader title]
-   [:> antd/ModalBody
+  [:> js/Modal {:is-open (boolean @errors)}
+   [:> js/ModalHeader title]
+   [:> js/ModalBody
     [:ul
      (doall
        (for [[_ error] @errors]
          ^{:key error}
          [:li error]))]]
-   [:> antd/ModalFooter
+   [:> js/ModalFooter
     [:button.btn.btn-sm.btn-danger
      {:on-click #(reset! errors nil)}
      "Close"]]])

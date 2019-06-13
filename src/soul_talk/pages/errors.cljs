@@ -1,4 +1,3 @@
-(ns soul-talk.pages.errors
-  (:require [antd :as antd]))
+(ns soul-talk.pages.errors)
 
 

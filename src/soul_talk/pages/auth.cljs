@@ -1,6 +1,5 @@
 (ns soul-talk.pages.auth
   (:require [reagent.core :as r]
-            [antd :as antd]
             [re-frame.core :refer [dispatch subscribe]]
             [soul-talk.layouts.user-layout :refer [user-layout]]
             [bouncer.core :as b]
@@ -16,15 +15,15 @@
                password   (r/cursor login-data [:password])]
     (fn []
       [user-layout
-       [:> antd/Row {:type "flex"
+       [:> js/Row {:type "flex"
                      :align   "middle"
                      :justify "center"}
-        [:> antd/Col {:span 4}
-         [:> antd/Form {:style {:text-align "center"}}
+        [:> js/Col {:span 4}
+         [:> js/Form {:style {:text-align "center"}}
           [:h1.h3.mb-3.font-weight-normal.text-center "Soul Talk Login"]
-          [:> antd/Input
+          [:> js/Input
            {:id          "email"
-            :prefix      (r/as-element [:> antd/Icon {:type "user"}])
+            :prefix      (r/as-element [:> js/Icon {:type "user"}])
             :type        :text
             :name        "email"
             :placeholder "请输入Email"
@@ -32,9 +31,9 @@
             :auto-focus  true
             :on-change   #(reset! email (-> % .-target .-value))
             :style {:margin-bottom "10px"}}]
-          [:> antd/Input.Password
+          [:> js/Input.Password
            {:id          "password"
-            :prefix      (r/as-element [:> antd/Icon {:type "lock"}])
+            :prefix      (r/as-element [:> js/Icon {:type "lock"}])
             :name        "password"
             :placeholder "请输入密码"
             :required    true
@@ -42,7 +41,7 @@
             :style {:margin-bottom "10px"}}]
           (when @error
             [:div @error])
-          [:> antd/Button
+          [:> js/Button
            {:type     "primary"
             :block    true
             :on-click #(if-let [error (login-errors @login-data)]

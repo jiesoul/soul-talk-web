@@ -7,9 +7,8 @@
  :npm-deps false
  :infer-externs true
  :foreign-libs [{:file "dist/index.bundle.js"
-                 :provides ["react" "react-dom" "antd" "showdown" "hljs"]
+                 :provides ["react" "react-dom" "showdown" "hljs"]
                  :global-exports {react React
                                   react-dom ReactDOM
-                                  antd antd
                                   showdown showdown
                                   hljs hljs}}]}

@@ -1,16 +1,16 @@
 (ns soul-talk.layouts.user-layout
-  (:require [antd :as antd]))
+  (:require [soul-talk.components.global-footer :refer [footer]]
+            [reagent.core :as r]))
 
 (defn copyright []
-  [:> antd/Layout.Footer
+  [:> js/Layout.Footer
    "Copyright "
-   [:> antd/Icon {:type "copyright"}]
+   [:> js/Icon {:type "copyright"}]
    " 2019 "])
 
 (defn user-layout [children]
-  [:> antd/Layout {:title ""}
-   [:> antd/Layout.Content {:style {:min-height "100vh"
+  [:> js/Layout {:title ""}
+   [:> js/Layout.Content {:style {:min-height "100vh"
                                     :padding "24px 0 20px 0"}}
     children
-    ;copyright
-    ]])
+    copyright]])

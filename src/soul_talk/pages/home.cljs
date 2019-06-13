@@ -4,9 +4,7 @@
             [soul-talk.layouts.home-layout :refer [layout nav]]
             [soul-talk.components.post :refer [home-posts]]
             [soul-talk.pages.users :refer [where-component]]
-            [soul-talk.components.home-header :refer [header]]
-            [antd :as antd])
-  (:import [goog.history.Html5History]))
+            [soul-talk.components.home-header :refer [header]]))
 
 (defn home-page []
   (r/with-let [active-page (rf/subscribe [:active-page])]
@@ -14,9 +12,9 @@
       [layout
        [:div
         [:div.home-wrapper
-         [:> antd/Row
+         [:> js/Row
           [header [nav @active-page]]]
-         [:> antd/Row
+         [:> js/Row
           [:div.home-wrapper-section
            [:h1 "进一步有一步的欢喜"]]]]
         [:div.home-wrapper-page1

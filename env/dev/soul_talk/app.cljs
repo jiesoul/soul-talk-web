@@ -5,6 +5,8 @@
 
 (enable-console-print!)
 
+(set! *warn-on-infer* true)
+
 (devtools/set-pref! :dont-detect-custom-formatters true)
 (devtools/install!)
 

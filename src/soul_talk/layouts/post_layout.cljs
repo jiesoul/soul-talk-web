@@ -3,8 +3,7 @@
             [re-frame.core :as rf]
             [bouncer.core :as b]
             [bouncer.validators :as v]
-            [soul-talk.components.global-header :refer [header]]
-            [antd :as antd]))
+            [soul-talk.components.global-header :refer [header]]))
 
 (defn post-errors [post]
   (->
@@ -17,25 +16,25 @@
     (vals)))
 
 (defn category-select [category categories]
-  [:> antd/Select {:value        {:key @category}
+  [:> js/Select {:value        {:key @category}
                    :labelInValue true
                    :style        {:width 120 :padding "5px"}
                    :on-change    #(let [val (:key (js->clj % :keywordize-keys true))]
                                     (reset! category val))}
-   [:> antd/Select.Option {:value ""} "选择分类"]
+   [:> js/Select.Option {:value ""} "选择分类"]
    (doall
      (for [{:keys [id name]} @categories]
-       ^{:key id} [:> antd/Select.Option {:value id} name]))])
+       ^{:key id} [:> js/Select.Option {:value id} name]))])
 
 (defn edit-menu [post edited-post categories]
   (let [category (r/cursor edited-post [:category])]
     [:div {:style {:color "#FFF"}}
-     [:> antd/Col {:span 2 :offset 2}
+     [:> js/Col {:span 2 :offset 2}
       [:h3 {:style {:color "#FFF"}}
        (if @post "修改文章" "写文章")]]
-     [:> antd/Col {:span 16}
+     [:> js/Col {:span 16}
       [category-select category categories]
-      [:> antd/Button {:ghost   true
+      [:> js/Button {:ghost   true
                        :on-click #(if-let [error (r/as-element (post-errors @edited-post))]
                                     (rf/dispatch [:set-error error])
                                     (if @post
@@ -44,8 +43,8 @@
        "保存"]]]))
 
 (defn post-layout [post edited-post categories main]
-  [:> antd/Layout
+  [:> js/Layout
    [header
     [edit-menu post edited-post categories]]
-   [:> antd/Layout.Content {:className "main"}
+   [:> js/Layout.Content {:className "main"}
     main]])
