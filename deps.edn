@@ -2,6 +2,7 @@
 
            ;; client
            org.clojure/clojurescript       {:mvn/version "1.10.520"}
+           com.andrewmcveigh/cljs-time {:mvn/version "0.5.2"}
            reagent                         {:mvn/version "0.9.0-SNAPSHOT"
                                             :exclusions [cljsjs/react
                                                          cljsjs/react-dom
@@ -18,9 +19,9 @@
  :aliases {:fig {:extra-deps {com.bhauman/figwheel-main {:mvn/version "0.2.0"}
                               com.bhauman/rebel-readline-cljs {:mvn/version "0.1.4"}
                               re-frisk {:mvn/version "0.5.4.1"} }
-                 :extra-paths ["target" "test" "resources"]}
+                 :extra-paths ["target"]}
            :dev {:main-opts ["-m" "figwheel.main" "-b" "dev" "-r"]
                  :extra-paths ["env/dev"]}
            :test {:extra-paths ["test"]}
-           :prod {:main-opts ["-m" "figwheel.main" "-O" "advanced" "-bo" "prod"]
+           :prod {:main-opts ["-m" "figwheel.main" "-bo" "prod"]
                   :extra-paths ["env/prod"]}}}

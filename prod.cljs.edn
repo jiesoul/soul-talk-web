@@ -1,11 +1,10 @@
-^{:watch-dirs ["src" "env/prod"]}
-^{:npm {:bundles {"dist/index.bundle.js" "src-js/index.js"}}}
 {:main soul-talk.app
+ :npm {:bundles {"dist/index.bundle.js" "src-js/index.js"}}
  :output-to "target/public/cljs/app.js"
  :output-dir "target/public/cljs/"
- :asset-path "cljs/"
  :npm-deps false
  :infer-externs true
+ :optimizations :advanced
  :foreign-libs [{:file "dist/index.bundle.js"
                  :provides ["react" "react-dom" "showdown" "hljs"]
                  :global-exports {react React

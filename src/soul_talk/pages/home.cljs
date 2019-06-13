@@ -14,8 +14,13 @@
         [:div.home-wrapper
          [:> js/Row
           [header [nav @active-page]]]
-         [:> js/Row
-          [:div.home-wrapper-section
-           [:h1 "进一步有一步的欢喜"]]]]
+         [:> js/Row {:className "home-wrapper-section"
+                     :style {:text-align "center"}}
+          [:> js/Col {:span 12}
+           [:div
+            [:img {:src "images/sicp001.png"}]]]
+          [:> js/Col {:span 12}
+           [:h1 {:style {:text-size "98"}} "进一步有一步的欢喜"]]
+          ]]
         [:div.home-wrapper-page1
          [home-posts]]]])))

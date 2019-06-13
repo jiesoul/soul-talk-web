@@ -1,4 +1,4 @@
-// var goog = goog || {global = widdow};
+var goog = goog;
 
 import React from 'react';
 import ReactDOM from 'react-dom';

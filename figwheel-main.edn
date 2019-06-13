@@ -1,2 +1,2 @@
-{:watch-dirs ["src" "src-cljc" "env/dev" "env/prod"]
+{:watch-dirs ["src" "src-cljc"]
  :css-dirs   ["resources/public/css"]}
