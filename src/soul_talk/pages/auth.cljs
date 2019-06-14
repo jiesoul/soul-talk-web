@@ -4,7 +4,8 @@
             [soul-talk.layouts.user-layout :refer [user-layout]]
             [bouncer.core :as b]
             [soul-talk.auth-validate :refer [login-errors reg-errors]]
-            [bouncer.validators :as v])
+            [bouncer.validators :as v]
+            [antd :as antd])
   (:import goog.History))
 
 (defn login-page []
@@ -15,15 +16,15 @@
                password   (r/cursor login-data [:password])]
     (fn []
       [user-layout
-       [:> js/Row {:type "flex"
+       [:> antd/Row {:type "flex"
                      :align   "middle"
                      :justify "center"}
-        [:> js/Col {:span 4}
-         [:> js/Form {:style {:text-align "center"}}
+        [:> antd/Col {:span 4}
+         [:> antd/Form {:style {:text-align "center"}}
           [:h1.h3.mb-3.font-weight-normal.text-center "Soul Talk Login"]
-          [:> js/Input
+          [:> antd/Input
            {:id          "email"
-            :prefix      (r/as-element [:> js/Icon {:type "user"}])
+            :prefix      (r/as-element [:> antd/Icon {:type "user"}])
             :type        :text
             :name        "email"
             :placeholder "请输入Email"
@@ -31,9 +32,9 @@
             :auto-focus  true
             :on-change   #(reset! email (-> % .-target .-value))
             :style {:margin-bottom "10px"}}]
-          [:> js/Input.Password
+          [:> antd/Input.Password
            {:id          "password"
-            :prefix      (r/as-element [:> js/Icon {:type "lock"}])
+            :prefix      (r/as-element [:> antd/Icon {:type "lock"}])
             :name        "password"
             :placeholder "请输入密码"
             :required    true
@@ -41,7 +42,7 @@
             :style {:margin-bottom "10px"}}]
           (when @error
             [:div @error])
-          [:> js/Button
+          [:> antd/Button
            {:type     "primary"
             :block    true
             :on-click #(if-let [error (login-errors @login-data)]

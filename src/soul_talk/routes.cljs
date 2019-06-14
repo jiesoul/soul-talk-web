@@ -46,7 +46,7 @@
 (defroute "/" []
   (let [pagination (subscribe [:pagination])]
     (run-events
-      [[:load-posts @pagination]
+      [[:load-posts {:page 1 :pre-page 6}]
        [:set-active-page :home]])))
 
 
@@ -73,39 +73,46 @@
 
 ;; 后台管理
 (defroute admin "/admin" []
-  (run-events [[:set-active-page :admin]]))
+  (run-events [[:set-breadcrumb ["面板"]]
+               [:set-active-page :admin]]))
 
-(defroute change-pass "/change-pass" []
-  (run-events [[:set-active-page :change-pass]]))
+(defroute "/change-pass" []
+  (run-events [[:set-breadcrumb ["个人管理" "修改密码"]]
+               [:set-active-page :change-pass]]))
 
-(defroute user-profile "/user-profile" []
-  (run-events [[:set-active-page :user-profile]]))
+(defroute "/user-profile" []
+  (run-events [[:set-breadcrumb ["个人管理" "个人信息"]]
+               [:set-active-page :user-profile]]))
 
-(defroute users "/users" []
-  (run-events [[:admin/load-users]
+(defroute "/users" []
+  (run-events [[:set-breadcrumb ["用户" "清单"]]
+               [:admin/load-users]
                [:set-active-page :users]]))
 
-(defroute categories "/categories" []
-  (run-events [[:load-categories]
+(defroute "/categories" []
+  (run-events [[:set-breadcrumb ["分类" "清单"]]
+               [:load-categories]
                [:set-active-page :categories]]))
 
-(defroute categroies-add "/categories-add" []
-  (run-events
-    [[:close-category]
-     [:set-active-page :categories-add]]))
-
-(defroute categories-edit "/categories/:id/edit" [id]
+(defroute "/category/edit/" []
   (run-events [[:close-category]
+               [:set-breadcrumb ["分类" "新增"]]
+               [:set-active-page :categories-add]]))
+
+(defroute "/category/edit/:id" [id]
+  (run-events [[:close-category]
+               [:set-breadcrumb ["分类" "编辑"]]
                [:load-category id]
                [:set-active-page :categories-edit]]))
 
-(defroute category "/categories/:id" [id]
+(defroute "/category/view/:id" [id]
   (run-events [[:load-category id]
                [:set-active-page :category-view]]))
 
 
-(defroute posts "/posts" []
+(defroute "/posts" []
   (run-events [[:admin/load-posts]
+               [:set-breadcrumb ["文章" "列表"]]
                [:set-active-page :posts]]))
 
 (defroute "/blog/archives/:year/:month" [year month]

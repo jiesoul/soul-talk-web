@@ -1,7 +1,8 @@
 (ns soul-talk.pages.dash
   (:require [reagent.core :as r]
             [soul-talk.layouts.basic-layout :refer [basic-layout]]
-            [soul-talk.components.common :as c]))
+            [soul-talk.components.common :as c]
+            [antd :as antd]))
 
 (defn show-revenue-chart
   []
@@ -42,11 +43,9 @@
   (fn []
     [basic-layout
      [:div
-      [c/breadcrumb-component ["Dash"]]
-      [:> js/Layout.Content {:className "main"}
-       [:h1.h2 "Dashboard"]
-       [:div.btn-toolbar.mb-2.mb-md-0
-        [:div.btn-group.mr-2
-         [:button.btn.btn-sm.btn-outline-secondary "Share"]
-         [:button.btn.btn-sm.btn-outline-secondary "Export"]
-         [complex-component "a" "b" "c"]]]]]]))
+      [:h1.h2 "Dashboard"]
+      [:div.btn-toolbar.mb-2.mb-md-0
+       [:div.btn-group.mr-2
+        [:button.btn.btn-sm.btn-outline-secondary "Share"]
+        [:button.btn.btn-sm.btn-outline-secondary "Export"]
+        [complex-component "a" "b" "c"]]]]]))

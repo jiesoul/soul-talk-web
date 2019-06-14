@@ -20,6 +20,10 @@ html, body {
   background-color: @white;
 }
 
+.ant-layout-header {
+  background-color: @header-background;
+}
+
 .brand {
   text-align: center;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -40,10 +44,13 @@ html, body {
 }
 
 .main {
-  background-color: transparent;
+  background-color: @white;
   padding: @width;
-  min-height: 680px;
-  margin: 0px;
+  min-height: 80vh;
+}
+
+.sidebar {
+  min-height: 78vh;
 }
 
 .home {

@@ -1,10 +1,11 @@
-(ns soul-talk.components.header-dropdown)
+(ns soul-talk.components.header-dropdown
+  (:require [antd :as antd]))
 
 (defn header-dropdown [menu title]
-  [:> js/Dropdown {:overlay menu}
+  [:> antd/Dropdown {:overlay menu}
    [:a {:className "ant-dropdown-link"
         :style {:color "#FFF"}
         :href "#"}
-    [:> js/Icon {:type "user"}]
+    [:> antd/Icon {:type "user"}]
     " " title]
    ])

@@ -4,74 +4,79 @@
             [soul-talk.components.global-header :refer [header]]
             [soul-talk.components.header-dropdown :refer [header-dropdown]]
             [soul-talk.components.global-footer :refer [footer]]
-            [soul-talk.routes :refer [navigate!]]))
+            [soul-talk.routes :refer [navigate!]]
+            [antd :as antd]
+            [soul-talk.components.common :as c]))
 
 
 (defn nav []
-  [:> js/Menu
-   [:> js/Menu.Item {:key "user-profile"
+  [:> antd/Menu
+   [:> antd/Menu.Item {:key "user-profile"
                        :on-click #(navigate! "#/user-profile")}
-    [:> js/Icon {:type "user"}]
+    [:> antd/Icon {:type "user"}]
     "个人信息"]
-   [:> js/Menu.Item {:key "change-pass"
+   [:> antd/Menu.Item {:key "change-pass"
                        :on-click #(navigate! "#/change-pass")}
-    [:> js/Icon {:type "setting"}]
+    [:> antd/Icon {:type "setting"}]
     "密码修改"]
-   [:> js/Menu.Divider]
-   [:> js/Menu.Item {:key      "cancel"
+   [:> antd/Menu.Divider]
+   [:> antd/Menu.Item {:key      "cancel"
                        :on-click #(dispatch [:logout])}
-    [:> js/Icon {:type "poweroff"}]
+    [:> antd/Icon {:type "poweroff"}]
     "退出登录"]])
 
 (defn sidebar [active-page]
-  [:> js/Layout.Sider
-   [:> js/Menu {:mode                "inline"
+  [:> antd/Layout.Sider {:className "sidebar"}
+   [:> antd/Menu {:mode                "inline"
+                  :className            "sidebar"
                   :theme               "light"
                   :default-select-keys ["admin"]
                   :default-open-keys   ["blog" "user"]
-                  :selected-keys       [(key->js @active-page)]
-                  :style               {:height       "100%"
-                                        :border-right 0}}
-    [:> js/Menu.Item {:key      "admin"
+                  :selected-keys       [(key->js @active-page)]}
+    [:> antd/Menu.Item {:key      "admin"
                         :on-click #(navigate! "#/admin")}
      [:span
-      [:> js/Icon {:type "area-chart"}]
+      [:> antd/Icon {:type "area-chart"}]
       [:span "Dash"]]]
-    [:> js/Menu.SubMenu {:key   "blog"
+    [:> antd/Menu.SubMenu {:key   "blog"
                            :title (r/as-element [:span
-                                                 [:> js/Icon {:type "form"}]
+                                                 [:> antd/Icon {:type "form"}]
                                                  [:span "文章管理"]])}
-     [:> js/Menu.Item {:key      "categories"
+     [:> antd/Menu.Item {:key      "categories"
                          :on-click #(navigate! "#/categories")}
       "分类"]
-     [:> js/Menu.Item {:key      "posts"
+     [:> antd/Menu.Item {:key      "posts"
                          :on-click #(navigate! "#/posts")}
       "文章"]]
 
-    [:> js/Menu.SubMenu {:key   "user"
+    [:> antd/Menu.SubMenu {:key   "user"
                            :title (r/as-element
                                     [:span
-                                     [:> js/Icon {:type "user"}]
+                                     [:> antd/Icon {:type "user"}]
                                      [:span "个人管理"]])}
-     [:> js/Menu.Item {:key      "user-profile"
+     [:> antd/Menu.Item {:key      "user-profile"
                          :icon     "user"
                          :on-click #(navigate! "#/user-profile")}
       "个人信息"]
-     [:> js/Menu.Item {:key      "change-pass"
+     [:> antd/Menu.Item {:key      "change-pass"
                          :on-click #(navigate! "#/change-pass")} "密码修改"]
      ]]])
 
 (defn basic-layout [main]
   (r/with-let [user (subscribe [:user])
-               active-page (subscribe [:active-page])]
+               active-page (subscribe [:active-page])
+               breadcrumb (subscribe [:breadcrumb])]
     (fn []
       [:div
-       [:> js/Layout
+       [:> antd/Layout
         [header
          [header-dropdown (r/as-element [nav]) (:name @user)]]
-        [:> js/Layout {:style {:min-height "660px"}}
+        [:> antd/Layout
          [sidebar active-page]
-         [:> js/Layout.Content {:className "main"}
-          main]]
+         [:> antd/Layout.Content {:className "main"}
+          [:div
+           [c/breadcrumb-component ["User" "profile"]]
+           [:hr]
+           main]]]
         [footer]]])))
 

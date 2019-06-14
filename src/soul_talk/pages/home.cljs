@@ -4,7 +4,8 @@
             [soul-talk.layouts.home-layout :refer [layout nav]]
             [soul-talk.components.post :refer [home-posts]]
             [soul-talk.pages.users :refer [where-component]]
-            [soul-talk.components.home-header :refer [header]]))
+            [soul-talk.components.home-header :refer [header]]
+            [antd :as antd]))
 
 (defn home-page []
   (r/with-let [active-page (rf/subscribe [:active-page])]
@@ -12,14 +13,14 @@
       [layout
        [:div
         [:div.home-wrapper
-         [:> js/Row
+         [:> antd/Row
           [header [nav @active-page]]]
-         [:> js/Row {:className "home-wrapper-section"
+         [:> antd/Row {:className "home-wrapper-section"
                      :style {:text-align "center"}}
-          [:> js/Col {:span 12}
+          [:> antd/Col {:span 12}
            [:div
             [:img {:src "images/sicp001.png"}]]]
-          [:> js/Col {:span 12}
+          [:> antd/Col {:span 12}
            [:h1 {:style {:text-size "98"}} "进一步有一步的欢喜"]]
           ]]
         [:div.home-wrapper-page1

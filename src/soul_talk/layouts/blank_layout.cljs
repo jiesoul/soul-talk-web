@@ -1,9 +1,10 @@
 (ns soul-talk.layouts.blank-layout
-  (:require [soul-talk.components.global-footer :refer [footer]]))
+  (:require [soul-talk.components.global-footer :refer [footer]]
+            [antd :as antd]))
 
 (defn layout [children]
-  [:> js/Layout
-   [:> js/Layout.Content
+  [:> antd/Layout
+   [:> antd/Layout.Content
     children]
-   [:> js/Divider]
+   [:> antd/Divider]
    [footer]])

@@ -11,7 +11,8 @@
             [soul-talk.pages.category :as category]
             [soul-talk.pages.blog :as blog]
             [soul-talk.pages.tag :as tag]
-            [clojure.string :as str]))
+            [clojure.string :as str]
+            [antd :as antd]))
 
 ;;多重方法  响应对应的页面
 (defmulti pages (fn [page _] page))
@@ -47,7 +48,7 @@
   (admin category/categories-page))
 
 (defmethod pages :categories-add [_ _]
-  (admin category/edit-page))
+  (admin category/add-page))
 
 (defmethod pages :categories-edit [_ _]
   (admin category/edit-page))
@@ -71,7 +72,7 @@
   (r/with-let [ready? (subscribe [:initialised?])
                active-page (subscribe [:active-page])]
     (if-not @ready?
-      [js/Spin {:tip "loading"}]
+      [:> antd/Spin {:tip "loading"}]
       [:div
        [c/success-modal]
        [c/error-modal]

@@ -3,6 +3,9 @@ body {
   color: #000;
   background-color: #fff;
 }
+.ant-layout-header {
+  background-color: #563d7c;
+}
 .brand {
   text-align: center;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -19,10 +22,12 @@ body {
   float: left;
 }
 .main {
-  background-color: transparent;
+  background-color: #fff;
   padding: 10px;
-  min-height: 680px;
-  margin: 0px;
+  min-height: 80vh;
+}
+.sidebar {
+  min-height: 78vh;
 }
 .home {
   position: relative;

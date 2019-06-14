@@ -4,10 +4,8 @@
  :output-dir "target/public/cljs/"
  :npm-deps false
  :infer-externs true
- :optimizations :advanced
+ :optimizations :simple
  :foreign-libs [{:file "dist/index.bundle.js"
-                 :provides ["react" "react-dom" "showdown" "hljs"]
+                 :provides ["react" "react-dom"]
                  :global-exports {react React
-                                  react-dom ReactDOM
-                                  showdown showdown
-                                  hljs hljs}}]}
+                                  react-dom ReactDOM}}]}
