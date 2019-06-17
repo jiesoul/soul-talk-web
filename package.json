@@ -8,12 +8,15 @@
   },
   "repository": "https://github.com//jiesoul/soul-talk-web.git",
   "keywords": [],
-  "author": "zhangyunjie <jiesoul@gmail.com>",
+  "author": "jiesoul <jiesoul@gmail.com>",
   "license": "ISC",
   "dependencies": {
     "antd": "^3.19.3",
+    "highlight.js": "^9.15.8",
     "react": "^16.8.6",
-    "react-dom": "^16.8.6"
+    "react-dom": "^16.8.6",
+    "showdown": "^1.9.0",
+    "simplemde": "^1.11.2"
   },
   "devDependencies": {
     "babel-plugin-import": "^1.12.0",

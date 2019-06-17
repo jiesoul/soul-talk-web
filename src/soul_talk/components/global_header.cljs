@@ -1,8 +1,10 @@
 (ns soul-talk.components.global-header
-  (:require [antd :as antd]))
+  (:require [antd :as antd]
+            [soul-talk.routes :refer [navigate!]]))
 
 (defn logo []
-  [:h1 {:className "brand"} "Soul Talk"])
+  [:h1 {:className "brand"
+        :on-click #(navigate! "/")} "Soul Talk"])
 
 (defn header [nav]
   [:> antd/Layout.Header

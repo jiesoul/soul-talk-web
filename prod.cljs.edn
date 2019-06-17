@@ -4,8 +4,10 @@
  :output-dir "target/public/cljs/"
  :npm-deps false
  :infer-externs true
- :optimizations :simple
+ :optimizations :advanced
  :foreign-libs [{:file "dist/index.bundle.js"
-                 :provides ["react" "react-dom"]
+                 :provides ["react" "react-dom" "hljs" "SimpleMDE"]
                  :global-exports {react React
-                                  react-dom ReactDOM}}]}
+                                  react-dom ReactDOM
+                                  hljs hljs
+                                  SimpleMDE SimpleMDE}}]}
