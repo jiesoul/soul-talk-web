@@ -2,27 +2,26 @@
   (:require [soul-talk.components.global-footer :refer [footer]]
             [soul-talk.routes :refer [navigate!]]
             [reagent.core :as r]
-            [re-frame.core :as rf]
-            [antd :as antd]))
+            [re-frame.core :as rf]))
 
 (defn nav [active-page]
-  [:> antd/Menu {:id "home-nav"
+  [:> js/antd.Menu {:id "home-nav"
                  :mode                "horizontal"
                  :theme               "light"
                  :defaultSelectKeys ["home"]
                  :selectedKeys       [(key->js active-page)]}
-   [:> antd/Menu.Item {:key      "home"
+   [:> js/antd.Menu.Item {:key      "home"
                        :on-click #(navigate! "/")}
     "首页"]
-   [:> antd/Menu.Item {:key      "blog"
+   [:> js/antd.Menu.Item {:key      "blog"
                        :on-click #(navigate! "#/blog")}
     "博客"]])
 
 (defn layout [children]
   (r/with-let [active-page (rf/subscribe [:active-page])]
     (fn []
-      [:> antd/Layout
-       [:> antd/Layout.Content {:className "home"}
+      [:> js/antd.Layout
+       [:> js/antd.Layout.Content {:className "home"}
         children]
-       ;[:> antd/Divier]
+       ;[:> js/Divier]
        [footer]])))

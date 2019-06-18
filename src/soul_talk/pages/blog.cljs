@@ -5,34 +5,34 @@
             [soul-talk.layouts.home-layout :refer [layout nav]]
             [soul-talk.components.post :refer [blog-posts blog-archives blog-archives-posts]]
             [soul-talk.components.home-header :refer [header]]
-            [antd :as antd]))
+            ))
 
 (defn blog-page []
   (r/with-let [active-page (rf/subscribe [:active-page])]
     [layout
-     [:> antd/Layout.Content {:className "blog"}
-      [:> antd/Layout.Content {:className "blog-wrapper"}
-       [:> antd/Row
+     [:> js/antd.Layout.Content {:className "blog"}
+      [:> js/antd.Layout.Content {:className "blog-wrapper"}
+       [:> js/antd.Row
         [header [nav @active-page]]]
-       [:> antd/Row
-        [:> antd/Col {:span 14 :offset 2}
-         [:> antd/Card
+       [:> js/antd.Row
+        [:> js/antd.Col {:span 14 :offset 2}
+         [:> js/antd.Card
           {:title "文章列表"}
           [blog-posts]]]
-        [:> antd/Col {:span 6}
-         [:> antd/Card
+        [:> js/antd.Col {:span 6}
+         [:> js/antd.Card
           {:title "归档"}
           [blog-archives]]]]]]]))
 
 (defn blog-archives-page []
   (r/with-let [active-page (rf/subscribe [:active-page])]
     [layout
-     [:> antd/Layout.Content {:className "blog"}
-      [:> antd/Layout.Content {:className "blog-wrapper"}
-       [:> antd/Row
+     [:> js/antd.Layout.Content {:className "blog"}
+      [:> js/antd.Layout.Content {:className "blog-wrapper"}
+       [:> js/antd.Row
         [header [nav @active-page]]]
-       [:> antd/Row
-        [:> antd/Col {:span 16 :offset 4}
-         [:> antd/Card
+       [:> js/antd.Row
+        [:> js/antd.Col {:span 16 :offset 4}
+         [:> js/antd.Card
           {:title "文章列表"}
           [blog-archives-posts]]]]]]]))

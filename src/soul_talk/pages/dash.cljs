@@ -2,7 +2,7 @@
   (:require [reagent.core :as r]
             [soul-talk.layouts.basic-layout :refer [basic-layout]]
             [soul-talk.components.common :as c]
-            [antd :as antd]))
+            ))
 
 (defn show-revenue-chart
   []

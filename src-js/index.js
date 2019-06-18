@@ -13,9 +13,11 @@ import SimpleMDE from 'simplemde';
 window.SimpleMDE = SimpleMDE;
 
 import moment from 'moment';
+import 'moment/locale/zh-cn'
 window.moment = moment;
 
 import * as antd from 'antd';
+import zhCN from 'antd/lib/locale-provider/zh_CN'
 window.antd = antd;
 
 import './default.less';

@@ -4,7 +4,7 @@
             [soul-talk.layouts.basic-layout :refer [basic-layout]]
             [soul-talk.user-validate :refer [change-pass-errors]]
             [soul-talk.components.common :as c]
-            [antd :as antd]))
+            ))
 
 (defn where-component []
   (fn []
@@ -59,30 +59,30 @@
     (fn []
       (if @user
         [basic-layout
-         [:> antd/Layout.Content {:className "main" :align "center"}
-          [:> antd/Row
-           [:> antd/Col {:span 8 :offset 8}
-            [:> antd/Input {:id           "username"
+         [:> js/antd.Layout.Content {:className "main" :align "center"}
+          [:> js/antd.Row
+           [:> js/antd.Col {:span 8 :offset 8}
+            [:> js/antd.Input {:id           "username"
                             :disabled     true
                             :addon-before "用户名："
                             :value        (:name @pass-data)}]
-            [:> antd/Input.Password {:id           "old-pass"
+            [:> js/antd.Input.Password {:id           "old-pass"
                                      :name         "old-pass"
                                      :placeholder  "请输入旧密码"
                                      :addon-before "旧密码："
                                      :on-change    #(reset! pass-old (.-target.value %))}]
-            [:> antd/Input.Password {:id           "pass-new"
+            [:> js/antd.Input.Password {:id           "pass-new"
                                      :name         "pass-new"
                                      :placeholder  "请输入新密码"
                                      :addon-before "新密码："
                                      :on-change    #(reset! pass-new (.-target.value %))}]
-            [:> antd/Input.Password {:id           "pass-confirm"
+            [:> js/antd.Input.Password {:id           "pass-confirm"
                                      :name         "pass-confirm"
                                      :placeholder  "重复新密码"
                                      :addon-before "新密码："
                                      :on-change    #(reset! pass-confirm (.-target.value %))}]
             [:div
-             [:> antd/Button {:type     "primary"
+             [:> js/antd.Button {:type     "primary"
                               :on-click #(if-let [error (r/as-element (change-pass-errors @pass-data))]
                                            (dispatch [:set-error error])
                                            (dispatch [:change-pass @pass-data]))}
@@ -97,17 +97,17 @@
     (fn []
       (if @user
         [basic-layout
-         [:> antd/Layout.Content
-          [:> antd/Row
-           [:> antd/Col {:span 8 :offset 8}
-            [:> antd/Input
+         [:> js/antd.Layout.Content
+          [:> js/antd.Row
+           [:> js/antd.Col {:span 8 :offset 8}
+            [:> js/antd.Input
              {:id           "email"
               :addon-before "邮箱："
               :disabled     true
               :value        (:email @edited-user)
               :read-only    true}
              ]
-            [:> antd/Input
+            [:> js/antd.Input
              {:id           "name"
               :addon-before "名字："
               :defaultValue @name
@@ -116,7 +116,7 @@
             (when @error
               [:div.alert.alert-message @error])
             [:div {:style {:text-align "center"}}
-             [:> antd/Button
+             [:> js/antd.Button
               {:type     :submit
                :on-click #(dispatch [:save-user-profile @edited-user])}
               "保存"]]]]]]))))

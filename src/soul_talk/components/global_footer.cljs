@@ -1,8 +1,7 @@
-(ns soul-talk.components.global-footer
-  (:require [antd :as antd]))
+(ns soul-talk.components.global-footer)
 
 (defn footer []
-  [:> antd/Layout.Footer {:style {:text-align "center"
+  [:> js/antd.Layout.Footer {:style {:text-align "center"
                                   :background "#3e3e3e"}}
    [:h4 {:style {:color "#FFF"}}
     "Made with By "
