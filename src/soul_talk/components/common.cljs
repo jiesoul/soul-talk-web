@@ -1,9 +1,9 @@
 (ns soul-talk.components.common
   (:require [re-frame.core :as rf :refer [dispatch subscribe]]
             [reagent.core :as r]
-            [cljsjs.showdown]
-            [hljs :as hljs]
-            [cljsjs.antd :as antd]))
+            [showdown]
+            [hljs]
+            [antd :as antd]))
 
 (defn to-time [date]
   (str (.toDateString (js/Date. date))))
@@ -78,7 +78,7 @@
     (loop [i (.-length nodes)]
       (when-not (neg? i)
         (when-let [item (.item nodes i)]
-          (hljs/highlightBlock item))
+          (.highlightBlock js/hljs item))
         (recur (dec i))))))
 
 ;; 处理 markdown 转换

@@ -11,8 +11,9 @@
   "author": "jiesoul <jiesoul@gmail.com>",
   "license": "ISC",
   "dependencies": {
-    "antd": "^3.19.3",
+    "antd": "^3.19.5",
     "highlight.js": "^9.15.8",
+    "moment": "^2.24.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "showdown": "^1.9.0",

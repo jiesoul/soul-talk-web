@@ -5,6 +5,8 @@
 
 (enable-console-print!)
 
+(js/console.log "laded......" js/Affix)
+
 (set! *warn-on-infer* true)
 
 (devtools/set-pref! :dont-detect-custom-formatters true)
