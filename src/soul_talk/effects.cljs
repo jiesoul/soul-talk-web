@@ -3,6 +3,8 @@
             [accountant.core :as accountant]
             [soul-talk.local-storage :as storage]
             [taoensso.timbre :as log]))
+
+
 (def api-url "http://localhost:3000")
 
 (reg-fx
@@ -18,7 +20,6 @@
     (dispatch [:set-loading])
     (method (str api-url url) (merge
                   {:handler       (fn [response]
-                                    (js/console.log "server response message: " response)
                                     (when success-event
                                       (dispatch (if ignore-response-body
                                                   success-event
@@ -43,7 +44,6 @@
 (reg-fx
   :set-user!
   (fn [user-identity]
-    (log/debug "取消" user-identity)
     (storage/set-item! storage/login-user-key user-identity)))
 
 (reg-fx

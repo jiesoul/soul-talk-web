@@ -1,25 +1,24 @@
-html,
-body {
-  color: #000;
-  background-color: #fff;
-}
-.ant-layout-header {
-  background-color: #563d7c;
+.logo {
+  width: 200px;
+  height: auto;
+  background: transparent;
+  float: left;
 }
 .brand {
-  text-align: center;
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  width: 100%;
+  height: auto;
 }
-.brand-content {
-  font-family: "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  color: inherit;
+.ant-layout-header {
+  height: 54px;
+  line-height: 54px;
+  background: #fff;
 }
-.logo {
-  width: 120px;
-  height: 31px;
-  background: rgba(255, 255, 255, 0.2);
-  margin: 16px 24px 16px 0;
-  float: left;
+.admin .ant-layout-header {
+  background: #2c3e50;
+}
+.home-nav {
+  background: inherit;
+  border: 0;
 }
 .main {
   background-color: #fff;
@@ -27,94 +26,30 @@ body {
   min-height: 80vh;
 }
 .sidebar {
-  min-height: 78vh;
+  min-height: 80vh;
 }
 .home {
-  position: relative;
   width: 100%;
-  padding: 0px;
-  clear: both;
-}
-.home:before {
-  content: "";
-  position: absolute;
-  top: 120px;
-  width: 100%;
-  height: 50%;
-  z-index: -1;
-  -webkit-transform: skewY(-5deg);
-  -moz-transform: skewY(-5deg);
-  -ms-transform: skewY(-5deg);
-  -o-transform: skewY(-5deg);
-  transform: skewY(-5deg);
-}
-.home:after {
-  content: "";
-  position: absolute;
-  top: 120px;
-  width: 100%;
-  height: 50%;
-  z-index: -1;
-  -webkit-transform: skewY(-5deg);
-  -moz-transform: skewY(-5deg);
-  -ms-transform: skewY(-5deg);
-  -o-transform: skewY(-5deg);
-  transform: skewY(-5deg);
-}
-.home .ant-layout-header {
-  background-color: inherit;
-}
-#home-nav {
-  background-color: inherit;
-  height: 64px;
-  padding: 10px 10px;
-  font-weight: bold;
-  border: 0;
-}
-#home-nav .ant-menu-item-selected {
-  background-color: inherit;
 }
 .home-wrapper {
-  background: url("../images/sky-4237062_1920.jpg");
+  background: #3e3e3e url("../images/sicp001.png") no-repeat;
   height: auto;
   text-align: center;
-  position: relative;
+  vertical-align: middle;
+  padding: 20px 0;
+  color: #fff;
 }
-.home-wrapper .home-wrapper-section {
-  left: 0;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  padding: 10px 0;
+.home-wrapper h1 {
+  font-size: 3.5em;
+  margin-top: 0;
+  margin-bottom: 0;
+  color: #fff;
 }
 .home-wrapper-page1 {
-  padding: 30px;
+  padding: 10px 5px;
   min-height: auto;
 }
-.blog {
-  background-color: inherit;
-  width: 100%;
-}
-.blog .ant-layout-header {
-  background-color: #fff;
-}
-.blog-wrapper {
-  background: linear-gradient(-30deg, #f5f5f5, #fff);
-  min-height: 100vh;
-  padding-bottom: 10px;
-}
-.ant-carousel .slick-slide {
-  min-height: 180px;
-  text-align: center;
-  background: #364D79;
-  vertical-align: middle;
-  overflow: hidden;
-}
-.ant-carousel .slick-slide h3 {
-  color: #FFF;
-}
-.post-preview {
-  max-height: 280px;
-  overflow: hidden;
+.ant-list {
+  background: #fff;
 }
 /*# sourceMappingURL=app.css.map */

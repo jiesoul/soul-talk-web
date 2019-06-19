@@ -5,10 +5,11 @@
 (reg-event-fx
   :ajax-error
   (fn [db [_ {:keys [response status] :as resp}]]
-    (log/error "ajax error: " resp)
-    {:dispatch-n (list [:set-error (:message response)]
-                   (when (= status 401)
-                     [:logout]))}))
+    {:dispatch-n
+     (condp = status
+       401 (list [:set-error "验证过期，请重新登录"]
+             [:logout])
+       [:set-error (:message response)])}))
 
 
 (reg-event-db

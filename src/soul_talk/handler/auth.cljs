@@ -69,10 +69,8 @@
 (reg-event-fx
   :handle-logout
   (fn [_ _]
-    (js/console.log "handle logout ok............")
     {:dispatch-n (list
-                   [:set-active-page :login]
-                   [:navigate-to "/#/login"])
+                   [:set-active-page :login])
      :set-user! nil
      :set-auth-token! nil
      :db db/default-db}))

@@ -2,8 +2,8 @@
   (:require [soul-talk.routes :refer [navigate!]]))
 
 (defn logo []
-  [:h1 {:className "brand"
-        :on-click #(navigate! "/")} "Soul Talk"])
+  [:a {:on-click #(navigate! "/")}
+   [:h1 "Soul Talk"]])
 
 (defn header [nav]
   [:> js/antd.Layout.Header

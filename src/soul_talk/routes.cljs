@@ -49,6 +49,10 @@
       [[:load-posts {:page 1 :pre-page 6}]
        [:set-active-page :home]])))
 
+(defroute "/blog/archives/:year/:month" [year month]
+  (run-events [[:load-posts-archives-year-month year month]
+               [:load-posts-archives]
+               [:set-active-page :blog/archives]]))
 
 (defroute "/blog" []
   (let [pagination {:page     1
@@ -115,9 +119,7 @@
                [:set-breadcrumb ["文章" "列表"]]
                [:set-active-page :posts]]))
 
-(defroute "/blog/archives/:year/:month" [year month]
-  (run-events [[:load-posts-archives-year-month year month]
-               [:set-active-page :blog/archives]]))
+
 
 (defroute "/posts/add" []
   (r/with-let [user (subscribe [:user])]

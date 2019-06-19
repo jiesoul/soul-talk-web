@@ -1,7 +1,9 @@
 (ns soul-talk.pages.auth
   (:require [reagent.core :as r]
             [re-frame.core :refer [dispatch subscribe]]
+            [soul-talk.routes :refer [navigate!]]
             [soul-talk.layouts.user-layout :refer [user-layout]]
+            [soul-talk.components.global-header :refer [logo]]
             [bouncer.core :as b]
             [soul-talk.auth-validate :refer [login-errors reg-errors]]
             [bouncer.validators :as v]
@@ -21,7 +23,9 @@
                      :justify "center"}
         [:> js/antd.Col {:span 4}
          [:> js/antd.Form {:style {:text-align "center"}}
-          [:h1.h3.mb-3.font-weight-normal.text-center "Soul Talk Login"]
+          [:div
+           [logo]
+           [:h1.h3.mb-3.font-weight-normal.text-center " Login"]]
           [:> js/antd.Input
            {:id          "email"
             :prefix      (r/as-element [:> js/antd.Icon {:type "user"}])
@@ -42,13 +46,14 @@
             :style {:margin-bottom "10px"}}]
           (when @error
             [:div @error])
-          [:> js/antd.Button
-           {:type     "primary"
-            :block    true
-            :on-click #(if-let [error (login-errors @login-data)]
-                         (dispatch [:set-error @error])
-                         (dispatch [:login @login-data]))}
-           "Login"]]]]])))
+          [:div
+           [:> js/antd.Button
+            {:type     "primary"
+             :block    true
+             :on-click #(if-let [error (login-errors @login-data)]
+                          (dispatch [:set-error @error])
+                          (dispatch [:login @login-data]))}
+            "Login"]]]]]])))
 
 (defn register-page []
   (r/with-let

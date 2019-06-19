@@ -1,27 +1,30 @@
 (ns soul-talk.layouts.home-layout
   (:require [soul-talk.components.global-footer :refer [footer]]
+            [soul-talk.components.global-header :refer [header]]
             [soul-talk.routes :refer [navigate!]]
             [reagent.core :as r]
             [re-frame.core :as rf]))
 
 (defn nav [active-page]
-  [:> js/antd.Menu {:id "home-nav"
-                 :mode                "horizontal"
-                 :theme               "light"
-                 :defaultSelectKeys ["home"]
-                 :selectedKeys       [(key->js active-page)]}
+  [:> js/antd.Menu {:className         "home-nav"
+                    :mode              "horizontal"
+                    :defaultSelectKeys ["home"]
+                    :selectedKeys      [(key->js active-page)]}
    [:> js/antd.Menu.Item {:key      "home"
-                       :on-click #(navigate! "/")}
+                          :on-click #(navigate! "/")}
     "首页"]
    [:> js/antd.Menu.Item {:key      "blog"
-                       :on-click #(navigate! "#/blog")}
+                          :on-click #(navigate! "#/blog")}
     "博客"]])
 
 (defn layout [children]
   (r/with-let [active-page (rf/subscribe [:active-page])]
     (fn []
       [:> js/antd.Layout
-       [:> js/antd.Layout.Content {:className "home"}
+       [header [nav @active-page]]
+       [:> js/antd.Layout.Content
+        [:div.home-wrapper
+         [:h1
+          "进一步有一步的欢喜"]]
         children]
-       ;[:> js/Divier]
        [footer]])))

@@ -1,6 +1,7 @@
 (ns soul-talk.components.post
   (:require [reagent.core :as r]
             [re-frame.core :as rf :refer [subscribe dispatch]]
+            [soul-talk.routes :refer (navigate!)]
             [soul-talk.layouts.basic-layout :refer [basic-layout]]
             [soul-talk.layouts.post-layout :refer [post-layout]]
             [soul-talk.layouts.blank-layout :refer [layout]]
@@ -88,11 +89,23 @@
 (defn blog-archives []
   (r/with-let [posts-archives (subscribe [:posts-archives])]
     (fn []
-      [:div.p-3
-       [:ul.list-unstyled.mb-0
-        (for [{:keys [year month] :as archive} @posts-archives]
-          ^{:key archive}
-          [:li [:a {:href (str "/#/blog/archives/" year "/" month)} (str year "年 " month "月 ")]])]])))
+      [:> js/antd.Card
+       {:title "文章归档"}
+       [:> js/antd.List
+        {:itemLayout "vertical"
+         :dataSource @posts-archives
+         :renderItem (fn [post]
+                       (let [post    (js->clj post :keywordize-keys true)
+                             year    (:year post)
+                             month   (:month post)
+                             counter (:counter post)
+                             title   (str year "年 " month " 月 (" counter ")")]
+                         (r/as-element
+                           [:> js/antd.List.Item
+                            [:div
+                             [:a
+                              {:on-click #(navigate! (str "#/blog/archives/" year "/" month))}
+                              title]]])))}]])))
 
 (defn blog-archives-posts []
   (r/with-let [posts (subscribe [:posts])]

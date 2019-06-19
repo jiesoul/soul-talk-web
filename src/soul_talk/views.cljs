@@ -21,15 +21,15 @@
 (defmethod pages :home [_ _] [home/home-page])
 (defmethod pages :login [_ _] [auth/login-page])
 (defmethod pages :register [_ _] [auth/register-page])
-(defmethod pages :blog [_ _] [blog/blog-page])
 (defmethod pages :blog/archives [_ _] [blog/blog-archives-page])
+(defmethod pages :blog [_ _] [blog/blog-page])
 (defmethod pages :posts/view [_ _] [post/post-view-page])
 
 (defn admin [page]
   (r/with-let [user (subscribe [:user])]
     (if @user
       [page]
-      (pages :login nil))))
+      (navigate! "#/admin"))))
 
 ;;后台页面
 (defmethod pages :admin [_ _]
@@ -70,10 +70,13 @@
 ;; 根据配置加载不同页面
 (defn main-page []
   (r/with-let [ready? (subscribe [:initialised?])
-               active-page (subscribe [:active-page])]
-    (if-not @ready?
-      [:> js/Spin {:tip "loading"}]
-      [:div
-       [c/success-modal]
-       [c/error-modal]
-       (pages @active-page nil)])))
+               active-page (subscribe [:active-page])
+               loading? (subscribe [:loading?])]
+    (js/console.log "loading " @loading?)
+    (fn []
+      [:> js/antd.Spin {:tip      "loading"
+                        :spinning  @loading?}
+       [:div
+        [c/success-modal]
+        [c/error-modal]
+        (pages @active-page nil)]])))

@@ -66,7 +66,7 @@
                active-page (subscribe [:active-page])
                breadcrumb (subscribe [:breadcrumb])]
     (fn []
-      [:div
+      [:div.admin
        [:> js/antd.Layout
         [header
          [header-dropdown (r/as-element [nav]) (:name @user)]]
@@ -74,7 +74,7 @@
          [sidebar active-page]
          [:> js/antd.Layout.Content {:className "main"}
           [:div
-           [c/breadcrumb-component ["User" "profile"]]
+           [c/breadcrumb-component @breadcrumb]
            [:hr]
            main]]]
         [footer]]])))
