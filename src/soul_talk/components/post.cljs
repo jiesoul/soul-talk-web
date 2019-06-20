@@ -9,6 +9,7 @@
             [soul-talk.components.md-editor :refer [editor]]
             [soul-talk.date-utils :as du]
             [soul-talk.post-validate :refer [post-errors]]
+            [soul-talk.date-utils :refer [to-date]]
             [clojure.string :as str]))
 
 (defn home-posts []
@@ -28,18 +29,18 @@
                 ^{:key post}
                 [:> js/antd.Col {:span 8}
                  [:> js/antd.Card {:activeTabKey id
-                                :title        (r/as-element
-                                                [:div
-                                                 [:a.text-muted
-                                                  {:href   url
-                                                   :target "_blank"}
-                                                  title]
-                                                 [:br]
-                                                 [:span (str (.toDateString (js/Date. create_time)) " by " author)]])
-                                :bodyStyle    {:height "300px" :overflow "hidden"}
-                                :style        {:margin 5}
-                                ;:bordered     false
-                                :hoverable    true}
+                                   :title        (r/as-element
+                                                   [:div
+                                                    [:a.text-muted
+                                                     {:href   url
+                                                      :target "_blank"}
+                                                     title]
+                                                    [:br]
+                                                    [:span (str (to-date create_time) " by " author)]])
+                                   :bodyStyle    {:height "300px" :overflow "hidden"}
+                                   :style        {:margin 5}
+                                   ;:bordered     false
+                                   :hoverable    true}
                   [c/markdown-preview content]]]))]
            [:> js/antd.Row
             [:> js/antd.Col {:span  16 :offset 4
@@ -52,18 +53,18 @@
                                                   (dispatch [:load-posts @edited-pagination]))}]]]])))))
 
 (defn blog-posts-list [posts]
-  [:div
-   (for [{:keys [id title create_time author content] :as post} @posts]
-     (let [url (str "/#/posts/" id)]
-       ^{:key post}
-       [:> js/antd.Row
-        [:div
-         [:a.text-muted
-          {:href   url
-           :target "_blank"}
-          [:h2 title]]
-         [:span (str (.toDateString (js/Date. create_time)) " by " author)]]
-        [:> js/antd.Divider]]))])
+  [:> js/antd.List
+   {:itemLayout "vertical"
+    :dataSource @posts
+    :renderItem #(let [{:keys [id title content create_time author] :as post} (js->clj % :keywordize-keys true)]
+                   (r/as-element
+                     [:> js/antd.List.Item
+                      [:div.post-title
+                       [:a
+                        {:href   (str "#/posts/" id)
+                         :target "_blank"}
+                        title]
+                       [:span (str " " (to-date create_time) " by " author)]]]))}])
 
 (defn blog-posts []
   (r/with-let [posts (subscribe [:posts])
@@ -75,44 +76,48 @@
               page (r/cursor edited-pagination [:page])
               pre-page (r/cursor edited-pagination[:pre-page])
               total (r/cursor edited-pagination [:total])]
-          [:> js/antd.Layout.Content
-           [blog-posts-list posts]
-           (when @total
-             [:> js/antd.Row {:style {:text-align "center"}}
-              [:> js/antd.Pagination {:current   @page
-                                   :pageSize  @pre-page
-                                   :total     @total
-                                   :on-change #(do (reset! page %1)
-                                                   (reset! pre-page %2)
-                                                   (dispatch [:load-posts @edited-pagination]))}]])])))))
-
-(defn blog-archives []
-  (r/with-let [posts-archives (subscribe [:posts-archives])]
-    (fn []
-      [:> js/antd.Card
-       {:title "文章归档"}
-       [:> js/antd.List
-        {:itemLayout "vertical"
-         :dataSource @posts-archives
-         :renderItem (fn [post]
-                       (let [post    (js->clj post :keywordize-keys true)
-                             year    (:year post)
-                             month   (:month post)
-                             counter (:counter post)
-                             title   (str year "年 " month " 月 (" counter ")")]
-                         (r/as-element
-                           [:> js/antd.List.Item
-                            [:div
-                             [:a
-                              {:on-click #(navigate! (str "#/blog/archives/" year "/" month))}
-                              title]]])))}]])))
+          [:> js/antd.Card
+           {:title "文章列表"}
+           [:div
+            [blog-posts-list posts]
+            (when (pos? @total)
+              [:> js/antd.Row {:style {:text-align "center"}}
+               [:> js/antd.Pagination {:current   @page
+                                       :pageSize  @pre-page
+                                       :total     @total
+                                       :on-change #(do (reset! page %1)
+                                                       (reset! pre-page %2)
+                                                       (dispatch [:load-posts @edited-pagination]))}]])]])))))
 
 (defn blog-archives-posts []
   (r/with-let [posts (subscribe [:posts])]
     (when @posts
       (fn []
-        [:> js/antd.Layout.Content
-         [blog-posts-list posts]]))))
+        [:> js/antd.Card
+         {:title "文章列表"}
+         [:> js/antd.Layout.Content
+          [blog-posts-list posts]]]))))
+
+(defn blog-archives []
+  (r/with-let [posts-archives (subscribe [:posts-archives])]
+    (when @posts-archives
+      (fn []
+        [:> js/antd.Card
+         {:title "文章归档"}
+         [:> js/antd.List
+          {:itemLayout "vertical"
+           :dataSource @posts-archives
+           :renderItem (fn [post]
+                         (let [{:keys [year month counter :as post]} (js->clj post :keywordize-keys true)
+                               title (str year "年 " month " 月 (" counter ")")]
+                           (r/as-element
+                             [:> js/antd.List.Item
+                              [:div
+                               [:a
+                                {:on-click #(navigate! (str "#/blog/archives/" year "/" month))}
+                                title]]])))}]]))))
+
+
 
 (defn list-columns []
   [{:title "标题" :dataIndex "title", :key "title", :align "center"}

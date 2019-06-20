@@ -6,15 +6,14 @@
 
 (defn blog-page []
   (r/with-let [active-page (rf/subscribe [:active-page])]
-    [layout
-     [:div.home-wrapper-page1
-      [:> js/antd.Row {:gutter 16}
-       [:> js/antd.Col {:span 14 :offset 2}
-        [:> js/antd.Card
-         {:title "文章列表"}
-         [blog-posts]]]
-       [:> js/antd.Col {:span 6}
-        [blog-archives]]]]]))
+    (fn []
+      [layout
+       [:div.home-wrapper-page1
+        [:> js/antd.Row {:gutter 16}
+         [:> js/antd.Col {:span 16 :offset 2}
+          [blog-posts]]
+         [:> js/antd.Col {:span 4}
+          [blog-archives]]]]])))
 
 (defn blog-archives-page []
   (r/with-let [active-page (rf/subscribe [:active-page])]
@@ -22,8 +21,6 @@
      [:div.home-wrapper-page1
       [:> js/antd.Row {:gutter 16}
        [:> js/antd.Col {:span 16 :offset 2}
-        [:> js/antd.Card
-         {:title "文章列表"}
-         [blog-archives-posts]]]
+        [blog-archives-posts]]
        [:> js/antd.Col {:span 4}
         [blog-archives]]]]]))

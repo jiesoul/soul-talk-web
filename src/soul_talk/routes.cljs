@@ -49,10 +49,7 @@
       [[:load-posts {:page 1 :pre-page 6}]
        [:set-active-page :home]])))
 
-(defroute "/blog/archives/:year/:month" [year month]
-  (run-events [[:load-posts-archives-year-month year month]
-               [:load-posts-archives]
-               [:set-active-page :blog/archives]]))
+
 
 (defroute "/blog" []
   (let [pagination {:page     1
@@ -61,6 +58,11 @@
       [[:load-posts pagination]
        [:load-posts-archives]
        [:set-active-page :blog]])))
+
+(defroute "/blog/archives/:year/:month" [year month]
+  (run-events [[:load-posts-archives-year-month year month]
+               [:load-posts-archives]
+               [:set-active-page :blog/archives]]))
 
 (defroute "/login" []
   (run-events [[:set-active-page :login]]))
