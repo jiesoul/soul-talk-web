@@ -13,6 +13,9 @@
               (let [{:keys [id name]} (js->clj category :keywordize-keys true)]
                 (r/as-element
                   [:div
+                   [:> js/antd.Button {:icon     "edit"
+                                    :on-click #(navigate! (str "#/category/edit/" id))}]
+                   [:> js/antd.Divider {:type "vertical"}]
                    [:> js/antd.Button {:icon     "delete"
                                     :type     "danger"
                                     :on-click (fn []
@@ -21,9 +24,7 @@
                                                   (str "你确认要删除分类 " name " 吗？")
                                                   #(dispatch [:categories/delete id])
                                                   #(js/console.log "cancel")))}]
-                   [:> js/antd.Divider {:type "vertical"}]
-                   [:> js/antd.Button {:icon     "edit"
-                                    :on-click #(navigate! (str "#/category/edit/" id))}]])))}])
+                   ])))}])
 
 (defn categories-list []
   (r/with-let [categories (subscribe [:categories])]
@@ -38,13 +39,13 @@
 (defn categories-page []
   [basic-layout
    [:> js/antd.Layout.Content {:className "main"}
-    [:> js/antd.Button
-     {:type     "primary"
-      :icon     "plus"
-      :size     "small"
-      :on-click #(navigate! "#/category/edit/")}
-     "新增"]
-    [:> js/antd.Divider]
+    [:div.table-operations
+     [:> js/antd.Button
+      {:type     "primary"
+       :icon     "plus"
+       :size     "small"
+       :on-click #(navigate! "#/category/edit/")}
+      "新增"]]
     [categories-list]]])
 
 (defn edit-component [category]

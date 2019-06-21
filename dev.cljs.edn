@@ -1,6 +1,5 @@
 ^{:watch-dirs ["src" "env/dev"]
-  :npm {:bundles {"dist/index.bundle.js" "src-js/index.js"}}
-  :auto-testing true}
+  :npm {:bundles {"dist/index.bundle.js" "src-js/index.js"}}}
 {:main soul-talk.app
  :output-to "target/public/cljs/app.js"
  :output-dir "target/public/cljs/"

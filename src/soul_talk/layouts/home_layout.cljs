@@ -8,6 +8,7 @@
 (defn nav [active-page]
   [:> js/antd.Menu {:className         "home-nav"
                     :mode              "horizontal"
+                    :theme "dark"
                     :defaultSelectKeys ["home"]
                     :selectedKeys      [(key->js active-page)]}
    [:> js/antd.Menu.Item {:key      "home"

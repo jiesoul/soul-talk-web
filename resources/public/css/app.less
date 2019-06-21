@@ -9,17 +9,14 @@
 @normal-color: #d9d9d9;
 @window-height: 100vh;
 
-@header-height: 54px;
-
-a:link {
-  color: #2c3e50;
-}
+@header-height: 64px;
 
 .logo {
   width: 200px;
-  height: auto;
+  height: @header-height - 5px;
   background: transparent;
   float: left;
+  padding: 0;
 }
 
 .brand {
@@ -27,19 +24,25 @@ a:link {
   height: auto;
 }
 
-.ant-layout-header {
+.home-header {
+  background: @none-color;
   height: @header-height;
   line-height: @header-height;
-  background: @white;
-}
-
-.admin .ant-layout-header{
-  background: #2c3e50;
 }
 
 .home-nav {
-  background: inherit;
-  border: 0;
+  background: @none-color;
+  height: @header-height;
+  padding: auto;
+}
+
+.home-nav .ant-menu-submenu {
+}
+
+.home-nav .ant-menu-item  {
+  height: @header-height;
+  padding: 10px 20px;
+  margin: 0 10px;
 }
 
 .main {
@@ -75,6 +78,14 @@ a:link {
 .home-wrapper-page1 {
   padding: 10px 5px;
   min-height: auto;
+}
+
+.table-operations {
+  margin-bottom: 16px;
+}
+
+.table-operations > button {
+  margin-right: 8px;
 }
 
 .ant-list {

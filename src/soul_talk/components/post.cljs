@@ -23,7 +23,7 @@
               pre-page (r/cursor edited-pagination[:pre-page])
               total (r/cursor edited-pagination [:total])]
           [:> js/antd.Layout.Content
-           [:> js/antd.Row {:gutter 16}
+           [:> js/antd.Row {:gutter 10}
             (for [{:keys [id title create_time author content] :as post} @posts]
               (let [url (str "/#/posts/" id)]
                 ^{:key post}
@@ -37,13 +37,13 @@
                                                      title]
                                                     [:br]
                                                     [:span (str (to-date create_time) " by " author)]])
-                                   :bodyStyle    {:height "300px" :overflow "hidden"}
+                                   :bodyStyle    {:height "220px" :overflow "hidden"}
                                    :style        {:margin 5}
                                    ;:bordered     false
                                    :hoverable    true}
                   [c/markdown-preview content]]]))]
            [:> js/antd.Row
-            [:> js/antd.Col {:span  16 :offset 4
+            [:> js/antd.Col {:span  24
                           :style {:text-align "center"}}
              [:> js/antd.Pagination {:current   @page
                                   :pageSize  @pre-page
@@ -260,13 +260,17 @@
                user (subscribe [:user])]
     (fn []
       (if @post
-        [:> js/antd.Layout.Content {:style {:padding "50px"}}
-         [:> js/antd.Typography.Title {:style {:text-align "center"}}
-          (:title @post)]
-         [:> js/antd.Divider]
-         [:div.container
-          [c/markdown-preview (:content @post)]]
-         [:> js/antd.Divider ]]))))
+        [:div.post-view
+         [:> js/antd.Card
+          [:div
+           [:> js/antd.Typography.Title {:style {:text-align "center"}}
+            (:title @post)]
+           [:div
+            {:style {:text-align "center"}}
+            (str (to-date (:create_time @post)) " by " (:author @post))]
+           [:> js/antd.Divider]
+           [:> js/antd.Typography.Text
+            [c/markdown-preview (:content @post)]]]]]))))
 
 (defn post-archives-page []
   (r/with-let [posts (subscribe [:posts])]

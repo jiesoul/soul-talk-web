@@ -1,8 +1,16 @@
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+
 module.exports = {
     entry: './src-js/index.js',
     output: {
         filename: 'index.bundle.js'
     },
+    plugins: [
+        new MiniCssExtractPlugin({
+            filename: "[name].css",
+            chunkFilename: "[id].css"
+        })
+    ],
     module: {
         rules: [
             {
@@ -13,9 +21,6 @@ module.exports = {
                     },
                     {
                         loader: 'css-loader',
-                        options: {
-                            modules: true
-                        }
                     },
                     {
                         loader: 'less-loader',

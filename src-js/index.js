@@ -17,7 +17,7 @@ import 'moment/locale/zh-cn'
 window.moment = moment;
 
 import * as antd from 'antd';
-import zhCN from 'antd/lib/locale-provider/zh_CN'
+// import zhCN from 'antd/lib/locale-provider/zh_CN'
 window.antd = antd;
 
 import './default.less';

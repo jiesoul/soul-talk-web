@@ -1,27 +1,28 @@
-a:link {
-  color: #2c3e50;
-}
 .logo {
   width: 200px;
-  height: auto;
+  height: 59px;
   background: transparent;
   float: left;
+  padding: 0;
 }
 .brand {
   width: 100%;
   height: auto;
 }
-.ant-layout-header {
-  height: 54px;
-  line-height: 54px;
-  background: #fff;
-}
-.admin .ant-layout-header {
-  background: #2c3e50;
+.home-header {
+  background: rgba(0, 0, 0, 0);
+  height: 64px;
+  line-height: 64px;
 }
 .home-nav {
-  background: inherit;
-  border: 0;
+  background: rgba(0, 0, 0, 0);
+  height: 64px;
+  padding: auto;
+}
+.home-nav .ant-menu-item {
+  height: 64px;
+  padding: 10px 20px;
+  margin: 0 10px;
 }
 .main {
   background-color: #fff;
@@ -51,6 +52,12 @@ a:link {
 .home-wrapper-page1 {
   padding: 10px 5px;
   min-height: auto;
+}
+.table-operations {
+  margin-bottom: 16px;
+}
+.table-operations > button {
+  margin-right: 8px;
 }
 .ant-list {
   background: #fff;
