@@ -14,9 +14,11 @@ RUN mkdir /app/cljs
 
 COPY target/public/cljs/app.js /app/cljs/app.js
 
-#COPY start-container.sh /usr/local/bin/start-container
+#COPY site-entrypoint.sh /app/site-entrypoint.sh
 #
-#ENTRYPOINT ["start-container"]
+#EXPOSE 80
+#
+#ENTRYPOINT ["/app/site-entrypoint.sh"]
 #
 #CMD ["nginx"]
 
