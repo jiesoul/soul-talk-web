@@ -1,4 +1,5 @@
 # Created by .ignore support plugin (hsz.mobi)
+dist
 .cpcache/
 .idea/
 out
@@ -6,4 +7,4 @@ target
 .rebel_readline_history
 node_modules/
 package-lock.json
-resources/public/css/app.css.map
+yarn.lock
