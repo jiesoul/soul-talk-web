@@ -1,11 +1,7 @@
 (ns soul-talk.effects
   (:require [re-frame.core :as rf :refer [dispatch reg-fx reg-event-fx]]
             [accountant.core :as accountant]
-            [soul-talk.local-storage :as storage]
-            [taoensso.timbre :as log]))
-
-
-(def api-url "http://localhost:3000")
+            [soul-talk.local-storage :as storage]))
 
 (reg-fx
   :http
@@ -18,15 +14,16 @@
         :or {error-event [:ajax-error]
              ajax-map {}}}]
     (dispatch [:set-loading])
-    (method (str api-url url) (merge
+    (method url (merge
                   {:handler       (fn [response]
                                     (when success-event
                                       (dispatch (if ignore-response-body
                                                   success-event
                                                   (conj success-event response))))
                                     (dispatch [:unset-loading]))
-                   :error-handler (fn [error]
-                                    (dispatch (conj error-event error))
+                   :error-handler (fn [resp]
+                                    (js/console.log resp)
+                                    (dispatch (conj error-event resp))
                                     (dispatch [:unset-loading]))}
                   ajax-map))))
 

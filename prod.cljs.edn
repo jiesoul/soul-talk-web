@@ -7,6 +7,7 @@
  :optimizations :advanced
  :pseudo-names true
  :pretty-print true
+ :closure-defines {"goog.DEBUG" false}
  :foreign-libs [{:file "dist/index.bundle.js"
                  :provides ["react" "react-dom" "showdown" "hljs" "SimpleMDE"]
                  :global-exports {react React

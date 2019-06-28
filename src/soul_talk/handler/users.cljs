@@ -1,7 +1,7 @@
 (ns soul-talk.handler.users
   (:require [re-frame.core :refer [reg-event-fx reg-event-db subscribe]]
             [ajax.core :refer [GET POST PUT]]
-            [taoensso.timbre :as log]))
+            [soul-talk.routes :refer [soul-talk-api]]))
 
 (reg-event-db
   :admin/set-users
@@ -11,8 +11,8 @@
 (reg-event-fx
   :admin/load-users
   (fn [_ _]
-    {:http {:method GET
-            :url "/api/admin/users"
+    {:http {:method        GET
+            :url           (str soul-talk-api "/admin/users")
             :success-event [:admin/set-users]}}))
 
 (reg-event-fx
@@ -30,7 +30,7 @@
   [reagent.debug/tracking]
   (fn [_ [_ {:keys [email pass-old pass-new pass-confirm] :as params}]]
     {:http {:method        POST
-            :url           "/api/admin/change-pass"
+            :url           (str soul-talk-api "/admin/change-pass")
             :ajax-map      {:params {:email        email
                                      :pass-old     pass-old
                                      :pass-new     pass-new
@@ -51,8 +51,8 @@
 (reg-event-fx
   :save-user-profile
   (fn [_ [_ {:keys [email name] :as user}]]
-    {:http {:method POST
-            :url "/api/admin/user-profile"
-            :ajax-map {:params user}
+    {:http {:method        POST
+            :url           (str soul-talk-api "/admin/user-profile")
+            :ajax-map      {:params user}
             :success-event [:save-user-profile-ok]
-            :error-event [:save-user-profile-error]}}))
+            :error-event   [:save-user-profile-error]}}))

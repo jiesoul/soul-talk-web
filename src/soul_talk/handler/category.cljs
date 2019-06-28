@@ -1,7 +1,8 @@
 (ns soul-talk.handler.category
   (:require [re-frame.core :refer [reg-event-fx reg-event-db]]
             [ajax.core :refer [POST GET DELETE PUT]]
-            [clojure.string :as str]))
+            [clojure.string :as str]
+            [soul-talk.routes :refer [soul-talk-api]]))
 
 (reg-event-db
   :set-categories
@@ -12,7 +13,7 @@
   :load-categories
   (fn [_ _]
     {:http {:method        GET
-            :url           "/api/categories"
+            :url           (str soul-talk-api "/categories")
             :success-event [:set-categories]}}))
 
 (reg-event-db
@@ -31,10 +32,10 @@
   (fn [_ [_ {:keys [name] :as category}]]
     (if (str/blank? name)
       {:dispatch [:set-error "名称不能为空"]}
-      {:http {:method POST
-              :url    "/api/admin/categories/"
-                      :ajax-map {:params category}
-                      :success-event [:categories/add-ok]}})))
+      {:http {:method        POST
+              :url           (str soul-talk-api "/admin/categories/")
+              :ajax-map      {:params category}
+              :success-event [:categories/add-ok]}})))
 
 (reg-event-db
   :set-category
@@ -45,7 +46,7 @@
   :load-category
   (fn [_ [_ id]]
     {:http {:method        GET
-            :url           (str "/api/categories/" id)
+            :url           (str soul-talk-api "/categories/" id)
             :success-event [:set-category]}}))
 
 (reg-event-fx
@@ -60,7 +61,7 @@
     (if (str/blank? name)
       {:dispatch [:set-error "名称不能为空"]}
       {:http {:method        PUT
-              :url           "/api/admin/categories/"
+              :url           (str soul-talk-api "/admin/categories/")
               :ajax-map      {:params category}
               :success-event [:categories/edit-ok]}})))
 
@@ -79,5 +80,5 @@
   :categories/delete
   (fn [_ [_ id]]
     {:http {:method        DELETE
-            :url           (str "/api/admin/categories/" id)
+            :url           (str soul-talk-api "/admin/categories/" id)
             :success-event [:categories/delete-ok]}}))

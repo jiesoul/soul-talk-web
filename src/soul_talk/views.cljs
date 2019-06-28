@@ -72,11 +72,11 @@
   (r/with-let [ready? (subscribe [:initialised?])
                active-page (subscribe [:active-page])
                loading? (subscribe [:loading?])]
-    (js/console.log "loading " @loading?)
-    (fn []
-      [:> js/antd.Spin {:tip      "loading"
-                        :spinning  @loading?}
-       [:div
-        [c/success-modal]
-        [c/error-modal]
-        (pages @active-page nil)]])))
+    (when @ready?
+      (fn []
+        [:> js/antd.Spin {:tip      "loading"
+                          :spinning @loading?}
+         [:div
+          [c/success-modal]
+          [c/error-modal]
+          (pages @active-page nil)]]))))

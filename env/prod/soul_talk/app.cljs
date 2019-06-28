@@ -2,5 +2,4 @@
   (:require [soul-talk.core :as core]))
 
 (set! *print-fn* (fn [& _]))
-(goog-define DEBUG false)
 (core/init!)
