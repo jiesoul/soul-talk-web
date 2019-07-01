@@ -42,7 +42,7 @@
   :login
   (fn [_ [_ {:keys [email password] :as user}]]
     {:http {:method        POST
-            :url           (str soul-talk-api "login")
+            :url           (str soul-talk-api "/login")
             :ajax-map      {:params {:email    email
                                      :password password}}
             :success-event [:handle-login-ok]}}))
