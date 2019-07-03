@@ -1,6 +1,7 @@
 (ns soul-talk.handler.admin
   (:require [re-frame.core :refer [reg-event-fx reg-event-db]]
-            [ajax.core :refer [POST GET]]))
+            [ajax.core :refer [POST GET]]
+            [soul-talk.routes :refer [soul-talk-api]]))
 
 (reg-event-db
   :set-dashboard
@@ -10,6 +11,6 @@
 (reg-event-fx
   :load-dashboard
   (fn [_ _]
-    {:http {:method GET
-            :url "/api/admin/dashboard"
+    {:http {:method        GET
+            :url           (str soul-talk-api "/admin/dashboard")
             :success-event [:set-dashboard]}}))

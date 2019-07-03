@@ -7,6 +7,8 @@
   (:import [goog History]
            [goog.History EventType]))
 
+(def soul-talk-api "http://localhost:3001/api")
+
 ;; 判断是否登录
 (defn logged-in? []
   @(subscribe [:user]))

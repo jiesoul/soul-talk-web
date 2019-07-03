@@ -1,7 +1,7 @@
 (ns soul-talk.handler.files
   (:require [re-frame.core :refer [reg-event-fx reg-event-db subscribe]]
             [ajax.core :refer [POST]]
-            [taoensso.timbre :as log]))
+            [soul-talk.routes :refer [soul-talk-api]]))
 
 (reg-event-db
   :upload-md-file-ok
@@ -22,7 +22,7 @@
                  (.append "file" files))]
       {:http
        {:method   POST
-        :url               (str "/api/admin/files/md")
+        :url               (str soul-talk-api "/admin/files/md")
         :ajax-map          {:body data}
         :success-event [:upload-md-file-ok]
         :error-event [:upload-md-file-error]}})))

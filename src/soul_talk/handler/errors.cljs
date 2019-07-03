@@ -4,12 +4,13 @@
 
 (reg-event-fx
   :ajax-error
-  (fn [db [_ {:keys [response status] :as resp}]]
-    {:dispatch-n
-     (condp = status
-       401 (list [:set-error "验证过期，请重新登录"]
-             [:logout])
-       [:set-error (:message response)])}))
+  (fn [db [_ {:keys [response status status-text] :as resp}]]
+    (js/console.log "ajax-error: " resp)
+    {:dispatch-n (condp = status
+                   0 (list [:set-error status-text])
+                   401 (list [:set-error (:message response)] [:logout])
+                   404 (list [:set-error "资源未找到"])
+                   (list [:set-error (:message response)]))}))
 
 
 (reg-event-db

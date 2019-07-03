@@ -50,8 +50,8 @@
            [:> js/antd.Button
             {:type     "primary"
              :block    true
-             :on-click #(if-let [error (login-errors @login-data)]
-                          (dispatch [:set-error @error])
+             :on-click #(if-let [message (login-errors @login-data)]
+                          (dispatch [:set-error (str message)])
                           (dispatch [:login @login-data]))}
             "Login"]]]]]])))
 
