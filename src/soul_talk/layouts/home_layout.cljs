@@ -12,11 +12,14 @@
                     :defaultSelectKeys ["home"]
                     :selectedKeys      [(key->js active-page)]}
    [:> js/antd.Menu.Item {:key      "home"
-                          :on-click #(navigate! "/")}
+                          :on-click #(navigate! "#/")}
     "首页"]
    [:> js/antd.Menu.Item {:key      "blog"
                           :on-click #(navigate! "#/blog")}
     "博客"]])
+
+(defn banner []
+  [:h1 "进一步有一步的欢喜"])
 
 (defn layout [children]
   (r/with-let [active-page (rf/subscribe [:active-page])]
@@ -24,8 +27,5 @@
       [:> js/antd.Layout
        [header [nav @active-page]]
        [:> js/antd.Layout.Content
-        [:div.home-wrapper
-         [:h1
-          "进一步有一步的欢喜"]]
         children]
        [footer]])))

@@ -2,7 +2,7 @@
   (:require [re-frame.core :refer [reg-event-fx reg-event-db]]
             [ajax.core :refer [GET POST]]
             [clojure.string :as str]
-            [soul-talk.routes :refer [soul-talk-api]]))
+            [soul-talk.db :refer [api-uri]]))
 
 
 (reg-event-db
@@ -15,7 +15,7 @@
   :load-tags
   (fn [_ _]
     {:http {:method        GET
-            :url           (str soul-talk-api "/tags")
+            :url           (str api-uri "/tags")
             :success-event [:set-tags]}}))
 
 (reg-event-db
@@ -30,6 +30,6 @@
     (if (str/blank? name)
       {:dispatch [:set-error "名称不能为空"]}
       {:http {:method        POST
-              :url           (str soul-talk-api "/admin/tags/add")
+              :url           (str api-uri "/admin/tags/add")
               :ajax-map      {:params tag}
               :success-event [:add-tag-ok]}})))

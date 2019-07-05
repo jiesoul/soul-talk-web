@@ -14,57 +14,47 @@
 
 (defn home-posts []
   (r/with-let [posts (subscribe [:posts])
-               pagination (subscribe [:pagination])]
-    (when @posts
-      (fn []
-        (let [edited-pagination (-> @pagination
-                                  r/atom)
-              page (r/cursor edited-pagination [:page])
-              pre-page (r/cursor edited-pagination[:pre-page])
-              total (r/cursor edited-pagination [:total])]
-          [:> js/antd.Layout.Content
-           [:> js/antd.Row {:gutter 10}
-            (for [{:keys [id title create_time author content] :as post} @posts]
-              (let [url (str "/#/posts/" id)]
-                ^{:key post}
-                [:> js/antd.Col {:span 8}
-                 [:> js/antd.Card {:activeTabKey id
-                                   :title        (r/as-element
-                                                   [:div
-                                                    [:a.text-muted
-                                                     {:href   url
-                                                      :target "_blank"}
-                                                     title]
-                                                    [:br]
-                                                    [:span (str (to-date create_time) " by " author)]])
-                                   :bodyStyle    {:height "220px" :overflow "hidden"}
-                                   :style        {:margin 5}
-                                   ;:bordered     false
-                                   :hoverable    true}
-                  [c/markdown-preview content]]]))]
-           [:> js/antd.Row
-            [:> js/antd.Col {:span  24
-                          :style {:text-align "center"}}
-             [:> js/antd.Pagination {:current   @page
-                                  :pageSize  @pre-page
-                                  :total     @total
-                                  :on-change #(do (reset! page %1)
-                                                  (reset! pre-page %2)
-                                                  (dispatch [:load-posts @edited-pagination]))}]]]])))))
+               loading? (subscribe [:loading?])]
+    (fn []
+      [:> js/antd.Skeleton
+       {:loading @loading?
+        :active true}
+       [:> js/antd.Layout.Content
+        [:> js/antd.Row {:gutter 10}
+         (for [{:keys [id title create_time author content] :as post} @posts]
+           (let [url (str "/#/posts/" id)]
+             ^{:key post}
+             [:> js/antd.Col {:xs 24 :sm 24 :md 8 :lg 8}
+              [:> js/antd.Card {:activeTabKey id
+                                :title        (r/as-element
+                                                [:div
+                                                 [:a.text-muted
+                                                  {:href   url
+                                                   :target "_blank"}
+                                                  title]
+                                                 [:br]
+                                                 [:span (str (to-date create_time) " by " author)]])
+                                :bodyStyle    {:height "220px" :overflow "hidden"}
+                                :style        {:margin 5}
+                                ;:bordered     false
+                                :hoverable    true}
+               content]]))]]])))
 
 (defn blog-posts-list [posts]
   [:> js/antd.List
    {:itemLayout "vertical"
+    :size       "small"
     :dataSource @posts
     :renderItem #(let [{:keys [id title content create_time author] :as post} (js->clj % :keywordize-keys true)]
                    (r/as-element
                      [:> js/antd.List.Item
-                      [:div.post-title
-                       [:a
-                        {:href   (str "#/posts/" id)
-                         :target "_blank"}
-                        title]
-                       [:span (str " " (to-date create_time) " by " author)]]]))}])
+                      [:> js/antd.List.Item.Meta
+                       {:title       (r/as-element [:a
+                                                    {:href   (str "#/posts/" id)
+                                                     :target "_blank"}
+                                                    [:h2 title]])
+                        :description (str " " (to-date create_time) " by " author)}]
+                      [c/markdown-preview content]]))}])
 
 (defn blog-posts []
   (r/with-let [posts (subscribe [:posts])
@@ -138,31 +128,31 @@
                 (let [{:keys [id publish]} (js->clj post :keywordize-keys true)]
                   [:div
                    [:> js/antd.Button {
-                                    :size   "small"
-                                    :target "_blank"
-                                    :href   (str "#/posts/" id)}
+                                       :size   "small"
+                                       :target "_blank"
+                                       :href   (str "#/posts/" id)}
                     "查看"]
                    [:> js/antd.Divider {:type "vertical"}]
                    [:> js/antd.Button {:icon   "edit"
-                                    :size   "small"
-                                    :target "_blank"
-                                    :href   (str "#/posts/" id "/edit")}]
+                                       :size   "small"
+                                       :target "_blank"
+                                       :href   (str "#/posts/" id "/edit")}]
                    [:> js/antd.Divider {:type "vertical"}]
                    [:> js/antd.Button {:type     "danger"
-                                    :icon     "delete"
-                                    :size     "small"
-                                    :on-click (fn []
-                                                (r/as-element
-                                                  (c/show-confirm
-                                                    "文章删除"
-                                                    (str "你确认要删除这篇文章吗？")
-                                                    #(dispatch [:posts/delete id])
-                                                    #(js/console.log "cancel"))))}]
+                                       :icon     "delete"
+                                       :size     "small"
+                                       :on-click (fn []
+                                                   (r/as-element
+                                                     (c/show-confirm
+                                                       "文章删除"
+                                                       (str "你确认要删除这篇文章吗？")
+                                                       #(dispatch [:posts/delete id])
+                                                       #(js/console.log "cancel"))))}]
                    [:> js/antd.Divider {:type "vertical"}]
                    (when (zero? publish)
                      [:> js/antd.Button {:type     "primary"
-                                      :size     "small"
-                                      :on-click #(dispatch [:posts/publish id])}
+                                         :size     "small"
+                                         :on-click #(dispatch [:posts/publish id])}
                       "发布"])])))}])
 
 (defn posts-list []
@@ -170,10 +160,10 @@
     (fn []
       [:div
        [:> js/antd.Table {:columns    (clj->js (list-columns))
-                       :dataSource (clj->js @posts)
-                       :row-key    "id"
-                       :bordered   true
-                       :size       "small"}]])))
+                          :dataSource (clj->js @posts)
+                          :row-key    "id"
+                          :bordered   true
+                          :size       "small"}]])))
 
 (defn posts-page []
   [basic-layout

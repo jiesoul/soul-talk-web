@@ -4,6 +4,7 @@
 @black: #000;
 @none-color: rgba(0,0,0,0);
 @background-color: #eceff1;
+@background-color-dark: #3e3e3e;
 
 
 @normal-color: #d9d9d9;
@@ -46,7 +47,7 @@
 }
 
 .main {
-  background-color: @white;
+  background-color: @background-color;
   padding: @width;
   min-height: 80vh;
 }
@@ -60,7 +61,7 @@
 }
 
 .home-wrapper {
-  background: #3e3e3e url("../images/sicp001.png") no-repeat;
+  background: @background-color-dark url("../images/sicp001.png") no-repeat;
   height: auto;
   text-align: center;
   vertical-align: middle;
@@ -75,9 +76,29 @@
   color: @white;
 }
 
-.home-wrapper-page1 {
+.home-wrapper-post {
   padding: 10px 5px;
   min-height: auto;
+}
+
+.home-wrapper-about {
+  background: @background-color-dark;
+  color: @white;
+  margin-top: 20px;
+  padding: 5px 20px;
+  min-height: auto;
+}
+
+.home-wrapper-about .contact-me {
+  background: @background-color-dark;
+  color: @white;
+  margin-top: 5px;
+}
+
+.contact-me-title {
+  background-color: @background-color-dark;
+  color: @white;
+  padding-left: 10px;
 }
 
 .table-operations {

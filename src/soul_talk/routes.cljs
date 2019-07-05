@@ -7,7 +7,6 @@
   (:import [goog History]
            [goog.History EventType]))
 
-(def soul-talk-api "http://localhost:3001/api")
 
 ;; 判断是否登录
 (defn logged-in? []
@@ -46,10 +45,9 @@
 
 ;; 首页
 (defroute "/" []
-  (let [pagination (subscribe [:pagination])]
-    (run-events
-      [[:load-posts {:page 1 :pre-page 6}]
-       [:set-active-page :home]])))
+  (run-events
+    [[:load-posts {:page 1 :pre-page 3}]
+     [:set-active-page :home]]))
 
 
 

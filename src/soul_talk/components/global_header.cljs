@@ -3,15 +3,15 @@
 
 (defn logo []
   [:div.logo
-   [:a {:on-click #(navigate! "/")}
-    [:h1 "Soul Talk"]]])
+   [:a {:on-click #(navigate! "#/")}
+    [:h1 "JIESOUL的个人网站"]]])
 
 (defn header [nav]
   [:> js/antd.Layout.Header
    {:className "home-header"}
    [:> js/antd.Row
-    [:> js/antd.Col {:span 2}
+    [:> js/antd.Col {:xs 24 :sm 24 :md 8 :lg 8}
      [logo]]
-    [:> js/antd.Col {:span 22
+    [:> js/antd.Col {:xs 24 :sm 24 :md 16 :lg 16
                   :style {:text-align "right"}}
      nav]]])

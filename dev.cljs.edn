@@ -1,4 +1,4 @@
-^{:watch-dirs ["src" "env/dev"]
+^{:watch-dirs ["src-cljc" "src" "env/dev"]
   :npm {:bundles {"dist/index.bundle.js" "src-js/index.js"}}}
 {:main soul-talk.app
  :output-to "target/public/cljs/app.js"
@@ -15,4 +15,5 @@
                                   hljs hljs
                                   showdown showdown
                                   antd antd
-                                  SimpleMDE SimpleMDE}}]}
+                                  SimpleMDE SimpleMDE
+                                  api-uri "http://localhost:3000/api"}}]}

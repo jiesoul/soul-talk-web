@@ -2,7 +2,7 @@
   (:require [re-frame.core :refer [reg-event-fx reg-event-db]]
             [ajax.core :refer [POST GET DELETE PUT]]
             [clojure.string :as str]
-            [soul-talk.routes :refer [soul-talk-api]]))
+            [soul-talk.db :refer [api-uri]]))
 
 (reg-event-db
   :set-categories
@@ -13,7 +13,7 @@
   :load-categories
   (fn [_ _]
     {:http {:method        GET
-            :url           (str soul-talk-api "/categories")
+            :url           (str api-uri "/categories")
             :success-event [:set-categories]}}))
 
 (reg-event-db
@@ -33,7 +33,7 @@
     (if (str/blank? name)
       {:dispatch [:set-error "名称不能为空"]}
       {:http {:method        POST
-              :url           (str soul-talk-api "/admin/categories/")
+              :url           (str api-uri "/admin/categories/")
               :ajax-map      {:params category}
               :success-event [:categories/add-ok]}})))
 
@@ -46,7 +46,7 @@
   :load-category
   (fn [_ [_ id]]
     {:http {:method        GET
-            :url           (str soul-talk-api "/categories/" id)
+            :url           (str api-uri "/categories/" id)
             :success-event [:set-category]}}))
 
 (reg-event-fx
@@ -61,7 +61,7 @@
     (if (str/blank? name)
       {:dispatch [:set-error "名称不能为空"]}
       {:http {:method        PUT
-              :url           (str soul-talk-api "/admin/categories/")
+              :url           (str api-uri "/admin/categories/")
               :ajax-map      {:params category}
               :success-event [:categories/edit-ok]}})))
 
@@ -80,5 +80,5 @@
   :categories/delete
   (fn [_ [_ id]]
     {:http {:method        DELETE
-            :url           (str soul-talk-api "/admin/categories/" id)
+            :url           (str api-uri "/admin/categories/" id)
             :success-event [:categories/delete-ok]}}))

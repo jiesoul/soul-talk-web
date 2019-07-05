@@ -70,13 +70,10 @@
 ;; 根据配置加载不同页面
 (defn main-page []
   (r/with-let [ready? (subscribe [:initialised?])
-               active-page (subscribe [:active-page])
-               loading? (subscribe [:loading?])]
+               active-page (subscribe [:active-page])]
     (when @ready?
       (fn []
-        [:> js/antd.Spin {:tip      "loading"
-                          :spinning @loading?}
-         [:div
-          [c/success-modal]
-          [c/error-modal]
-          (pages @active-page nil)]]))))
+        [:div
+         [c/success-modal]
+         [c/error-modal]
+         (pages @active-page nil)]))))

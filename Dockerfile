@@ -10,5 +10,7 @@ RUN mkdir /app/cljs
 
 COPY target/public/cljs/app.js /app/cljs/app.js
 
+EXPOSE 80
+
 
 

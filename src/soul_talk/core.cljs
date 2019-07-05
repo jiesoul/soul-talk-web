@@ -22,5 +22,4 @@
   (if (logged-in?) (dispatch [:run-login-events]))
   (load-interceptors!)
   (hook-browser-navigation!)
-  (dispatch [:load-posts {:page 1 :pre-page 6}])
   (mount-component))

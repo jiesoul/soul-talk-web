@@ -1,7 +1,7 @@
 (ns soul-talk.handler.posts
   (:require [re-frame.core :refer [reg-event-fx reg-event-db subscribe]]
             [ajax.core :refer [POST GET DELETE PUT]]
-            [soul-talk.routes :refer [soul-talk-api]]))
+            [soul-talk.db :refer [api-uri]]))
 
 (reg-event-db
   :set-posts
@@ -13,7 +13,7 @@
   :load-posts
   (fn [_ [_ pagination]]
     {:http {:method        GET
-            :url           (str soul-talk-api "/posts")
+            :url           (str api-uri "/posts")
             :ajax-map      {:params pagination}
             :success-event [:set-posts]}}))
 
@@ -32,7 +32,7 @@
   :admin/load-posts
   (fn [_ [_ pagination]]
     {:http {:method        GET
-            :url           (str soul-talk-api "/admin/posts")
+            :url           (str api-uri "/admin/posts")
             :ajax-map      {:params pagination}
             :success-event [:admin/set-posts]}}))
 
@@ -50,7 +50,7 @@
   :posts/add
   (fn [_ [_ post]]
     {:http {:method        POST
-            :url           (str soul-talk-api "/admin/posts")
+            :url           (str api-uri "/admin/posts")
             :ajax-map      {:params post}
             :success-event [:posts/add-ok post]}}))
 
@@ -74,7 +74,7 @@
                  (.append "file" files))]
       {:http
        {:method   POST
-        :url               (str soul-talk-api "/admin/posts/upload")
+        :url               (str api-uri "/admin/posts/upload")
         :ajax-map          {:body data}
         :success-event [:posts/upload-ok]
         :error-event [:posts/upload-error]}})))
@@ -94,7 +94,7 @@
   :posts/edit
   (fn [_ [_ {:keys [id counter] :as post}]]
     {:http {:method        PUT
-            :url           (str soul-talk-api "/admin/posts/" id)
+            :url           (str api-uri "/admin/posts/" id)
             :ajax-map      {:params post}
             :success-event [:posts/edit-ok]
             :error-event   [:posts/edit-error]}}))
@@ -108,7 +108,7 @@
   :load-post
   (fn [_ [_ id]]
     {:http {:method        GET
-            :url           (str soul-talk-api "/posts/" id)
+            :url           (str api-uri "/posts/" id)
             :success-event [:set-post]}}))
 
 (reg-event-db
@@ -133,7 +133,7 @@
   :posts/delete
   (fn [_ [_ id]]
     {:http {:method        DELETE
-            :url           (str soul-talk-api "/admin/posts/" id)
+            :url           (str api-uri "/admin/posts/" id)
             :success-event [:posts/delete-ok id]
             :error-event   [:posts/delete-error]}}))
 
@@ -152,7 +152,7 @@
   :posts/publish
   (fn [_ [_ id]]
     {:http {:method PUT
-            :url (str soul-talk-api "/admin/posts/" id "/publish")
+            :url (str api-uri "/admin/posts/" id "/publish")
             :success-event [:posts/publish-ok]
             :error-event [:posts/publish-error]}}))
 
@@ -165,7 +165,7 @@
   :load-posts-archives
   (fn [_ _]
     {:http {:method        GET
-            :url           (str soul-talk-api "/posts/archives")
+            :url           (str api-uri "/posts/archives")
             :success-event [:set-posts-archives]}}))
 
 (reg-event-db
@@ -177,5 +177,5 @@
   :load-posts-archives-year-month
   (fn [_ [_ year month]]
     {:http {:method        GET
-            :url           (str soul-talk-api "/posts/archives/" year "/" month)
+            :url           (str api-uri "/posts/archives/" year "/" month)
             :success-event [:set-posts-archives-year-month]}}))

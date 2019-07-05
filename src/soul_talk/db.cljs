@@ -6,3 +6,6 @@
                :pre-page 6}
    :breadcrumb ["Home"]
    :login-events []})
+
+
+(goog-define api-uri "http://localhost:3000/api")

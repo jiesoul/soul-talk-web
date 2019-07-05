@@ -3,7 +3,7 @@
             [re-frame.core :refer [reg-event-fx reg-event-db dispatch inject-cofx]]
             [ajax.core :refer [POST GET DELETE PUT]]
             [soul-talk.local-storage :refer [login-user-key auth-token-key]]
-            [soul-talk.routes :refer [soul-talk-api]]))
+            [soul-talk.db :refer [api-uri]]))
 
 
 ;; 运行 login
@@ -42,7 +42,7 @@
   :login
   (fn [_ [_ {:keys [email password] :as user}]]
     {:http {:method        POST
-            :url           (str soul-talk-api "/login")
+            :url           (str api-uri "/login")
             :ajax-map      {:params {:email    email
                                      :password password}}
             :success-event [:handle-login-ok]}}))
@@ -61,7 +61,7 @@
   :register
   (fn [_ [_ {:keys [email password pass-confirm] :as user}]]
     {:http {:method        POST
-            :url           (str soul-talk-api "/register")
+            :url           (str api-uri "/register")
             :ajax-map      {:params {:email        email
                                      :password     password
                                      :pass-confirm pass-confirm}}
@@ -80,7 +80,7 @@
   :logout
   (fn [_ _]
     {:http {:method               POST
-            :url                  (str soul-talk-api "/logout")
+            :url                  (str api-uri "/logout")
             :ignore-response-body true
             :success-event        [:handle-logout]
             :error-event          [:handle-logout]}}))

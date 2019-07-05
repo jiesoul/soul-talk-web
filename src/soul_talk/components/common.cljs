@@ -130,3 +130,4 @@
            [:a.page-link
             {:on-click #(dispatch [handler (assoc paginate-params :page @next-page)])}
             "Next"]]]]))))
+
