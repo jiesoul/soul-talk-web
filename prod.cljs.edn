@@ -11,7 +11,7 @@
  :pseudo-names    true
  :pretty-print    true
  :closure-defines {"goog.DEBUG"            false
-                   "soul_talk.db.api_uri" "https://jiesoul.com/api"}
+                   "soul_talk.db.api_uri" "https://jiesoul.com/api/v1"}
  :foreign-libs    [{:file           "dist/index.bundle.js"
                     :provides       ["react" "react-dom" "showdown" "hljs" "SimpleMDE"]
                     :global-exports {react     React
@@ -19,4 +19,4 @@
                                      hljs      hljs
                                      showdown  showdown
                                      SimpleMDE SimpleMDE
-                                     api-uri "https://jiesoul.com/api"}}]}
+                                     api-uri "https://jiesoul.com/api/v1"}}]}

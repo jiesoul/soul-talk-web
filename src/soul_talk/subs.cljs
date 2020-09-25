@@ -39,26 +39,18 @@
 
 (reg-sub :loading? query)
 
-(reg-sub :categories query)
-
-(reg-sub :category query)
-
 (reg-sub :tags query)
 
 (reg-sub :post query)
 
-(reg-sub :posts query)
+(reg-sub :articles query)
 
-(reg-sub :posts-archives query)
+(reg-sub :articles-archives query)
 
 (reg-sub :pagination query)
 
 (reg-sub :admin/users query)
 
-(reg-sub :admin/categories query)
-
-(reg-sub :admin/category query)
-
-(reg-sub :admin/posts query)
+(reg-sub :admin/articles query)
 
 (reg-sub :admin/pagination query)

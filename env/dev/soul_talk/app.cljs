@@ -11,6 +11,7 @@
 (devtools/install!)
 
 (rf/clear-subscription-cache!)
-(goog-define api-uri "http://localhost:3000/api")
+(goog-define api-uri "http://localhost:3001/api/v1")
+
 (core/init!)
 

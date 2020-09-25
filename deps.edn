@@ -1,7 +1,7 @@
-{:deps    {org.clojure/clojure             {:mvn/version "1.10.0"}
+{:deps    {org.clojure/clojure             {:mvn/version "1.10.1"}
 
            ;; client
-           org.clojure/clojurescript       {:mvn/version "1.10.520"}
+           org.clojure/clojurescript       {:mvn/version "1.10.597"}
            com.andrewmcveigh/cljs-time {:mvn/version "0.5.2"}
            reagent                         {:mvn/version "0.8.1"
                                             :exclusions [cljsjs/react cljsjs/react-dom]}

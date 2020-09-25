@@ -8,4 +8,4 @@
    :login-events []})
 
 
-(goog-define api-uri "http://localhost:3000/api")
+(goog-define api-uri "http://localhost:3001/api/v1")

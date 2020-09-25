@@ -46,22 +46,20 @@
 ;; 首页
 (defroute "/" []
   (run-events
-    [[:load-posts {:page 1 :pre-page 3}]
+    [[:load-public-articles {:page 1 :pre-page 3}]
      [:set-active-page :home]]))
-
-
 
 (defroute "/blog" []
   (let [pagination {:page     1
                     :pre-page 20}]
     (run-events
-      [[:load-posts pagination]
-       [:load-posts-archives]
+      [[:load-public-articles pagination]
+       [:load-public-articles-archives]
        [:set-active-page :blog]])))
 
 (defroute "/blog/archives/:year/:month" [year month]
-  (run-events [[:load-posts-archives-year-month year month]
-               [:load-posts-archives]
+  (run-events [[:load-public-articles-archives-year-month year month]
+               [:load-public-articles-archives]
                [:set-active-page :blog/archives]]))
 
 (defroute "/login" []
@@ -95,52 +93,36 @@
                [:admin/load-users]
                [:set-active-page :users]]))
 
-(defroute "/categories" []
-  (run-events [[:set-breadcrumb ["分类" "清单"]]
-               [:load-categories]
-               [:set-active-page :categories]]))
-
-(defroute "/category/edit/" []
-  (run-events [[:close-category]
-               [:set-breadcrumb ["分类" "新增"]]
-               [:set-active-page :categories-add]]))
-
-(defroute "/category/edit/:id" [id]
-  (run-events [[:close-category]
-               [:set-breadcrumb ["分类" "编辑"]]
-               [:load-category id]
-               [:set-active-page :categories-edit]]))
-
 (defroute "/category/view/:id" [id]
   (run-events [[:load-category id]
                [:set-active-page :category-view]]))
 
 
-(defroute "/posts" []
-  (run-events [[:admin/load-posts]
+(defroute "/articles" []
+  (run-events [[:admin/load-articles]
                [:set-breadcrumb ["文章" "列表"]]
-               [:set-active-page :posts]]))
+               [:set-active-page :articles]]))
 
 
 
-(defroute "/posts/add" []
+(defroute "/articles/add" []
   (r/with-let [user (subscribe [:user])]
     (run-events [[:load-categories]
                  [:load-tags]
-                 [:set-active-page :posts/add]])))
+                 [:set-active-page :articles/add]])))
 
-(defroute "/posts/:id/edit" [id]
+(defroute "/articles/:id/edit" [id]
   (if-not (or (logged-in?)
             (nil? @(subscribe [:post])))
     (navigate! "/login")
     (run-events [[:load-post id]
                  [:load-categories]
-                 [:set-active-page :posts/edit]])))
+                 [:set-active-page :articles/edit]])))
 
-(defroute "/posts/:id" [id]
+(defroute "/articles/:id" [id]
   (run-events [[:load-categories]
                [:load-post id]
-               [:set-active-page :posts/view]]))
+               [:set-active-page :articles/view]]))
 
 (defroute "*" []
   )

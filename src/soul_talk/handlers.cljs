@@ -1,15 +1,12 @@
 (ns soul-talk.handlers
   (:require [re-frame.core :refer [inject-cofx dispatch dispatch-sync reg-event-db reg-event-fx subscribe]]
             [soul-talk.db :refer [default-db]]
-            [soul-talk.local-storage :as storage]
-            soul-talk.handler.posts
-            soul-talk.handler.errors
-            soul-talk.handler.auth
-            soul-talk.handler.admin
-            soul-talk.handler.users
-            soul-talk.handler.category
-            soul-talk.handler.tag
-            soul-talk.handler.files))
+            [soul-talk.base.local-storage :as storage]
+            [soul-talk.article.handler]
+            [soul-talk.common.errors]
+            [soul-talk.auth.handler]
+            [soul-talk.tag.handler]
+            [soul-talk.user.handler]))
 
 ;; 初始化
 (reg-event-fx

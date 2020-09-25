@@ -16,4 +16,4 @@
                                   showdown showdown
                                   antd antd
                                   SimpleMDE SimpleMDE
-                                  api-uri "http://localhost:3000/api"}}]}
+                                  api-uri "http://localhost:3001/api/v1"}}]}

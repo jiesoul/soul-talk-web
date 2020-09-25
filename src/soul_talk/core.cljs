@@ -1,19 +1,19 @@
 (ns soul-talk.core
   (:require [reagent.core :as r]
-            [soul-talk.ajax :refer [load-interceptors!]]
+            [soul-talk.base.ajax :refer [load-interceptors!]]
             [soul-talk.routes :refer [hook-browser-navigation! logged-in? navigate!]]
-            [soul-talk.views :refer [main-page]]
             [re-frame.core :refer [dispatch-sync dispatch]]
     ;;初始化处理器和订阅器
-            soul-talk.routes
-            soul-talk.coeffects
-            soul-talk.effects
-            soul-talk.handlers
-            soul-talk.subs))
+            [soul-talk.base.coeffects]
+            [soul-talk.base.effects]
+            [soul-talk.routes]
+            [soul-talk.handlers]
+            [soul-talk.subs]
+            [soul-talk.views]))
 
 ;; 挂载页面组件
 (defn mount-component []
-  (r/render [#'main-page]
+  (r/render [#'soul-talk.views/main-page]
             (js/document.getElementById "app")))
 
 ;; 初始化方法
