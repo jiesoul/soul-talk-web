@@ -18,7 +18,9 @@
 
  :aliases {:fig {:extra-deps {com.bhauman/figwheel-main {:mvn/version "0.2.0"}
                               com.bhauman/rebel-readline-cljs {:mvn/version "0.1.4"}
+                              com.bhauman/rebel-readline {:mvn/version "0.1.4"}
                               re-frisk {:mvn/version "0.5.4.1"} }
+                 :main-opts ["-m" "rebel-readline.main"]
                  :extra-paths ["target"]}
            :dev {:main-opts ["-m" "figwheel.main" "-b" "dev" "-r"]
                  :extra-paths ["env/dev"]}

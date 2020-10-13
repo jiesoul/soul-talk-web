@@ -38,7 +38,7 @@
 (defn home-page-events [& events]
   (.scrollTo js/window 0 0)
   (run-events (into
-                [[:load-categories]
+                [[:load-public-articles]
                  [:load-tags]
                  [:set-active-page :home]]
                 events)))
@@ -72,34 +72,38 @@
 (defn admin-page-events [& events]
   (.scrollTo js/window 0 0)
   (run-events-admin (into
-                      [[:set-active-page :admin]]
+                      [[:set-active-page :dash]]
                       events)))
 
 ;; 后台管理
-(defroute admin "/admin" []
+(defroute "/dash" []
   (run-events [[:set-breadcrumb ["面板"]]
-               [:set-active-page :admin]]))
+               [:set-active-page :dash]]))
 
-(defroute "/change-pass" []
+(defroute "/user/password" []
   (run-events [[:set-breadcrumb ["个人管理" "修改密码"]]
                [:set-active-page :change-pass]]))
 
-(defroute "/user-profile" []
+(defroute "/user/profile" []
   (run-events [[:set-breadcrumb ["个人管理" "个人信息"]]
                [:set-active-page :user-profile]]))
 
-(defroute "/users" []
+(defroute "/users/edit" []
   (run-events [[:set-breadcrumb ["用户" "清单"]]
                [:admin/load-users]
                [:set-active-page :users]]))
 
-(defroute "/category/view/:id" [id]
-  (run-events [[:load-category id]
-               [:set-active-page :category-view]]))
+(defroute "/tags" []
+  (run-events [[:load-tags]
+               [:set-active-page :tags]]))
+
+(defroute "/tags/:id" [id]
+  (run-events [[:load-tag id]
+               [:set-active-page :tag-view]]))
 
 
 (defroute "/articles" []
-  (run-events [[:admin/load-articles]
+  (run-events [[:load-articles]
                [:set-breadcrumb ["文章" "列表"]]
                [:set-active-page :articles]]))
 
@@ -107,8 +111,7 @@
 
 (defroute "/articles/add" []
   (r/with-let [user (subscribe [:user])]
-    (run-events [[:load-categories]
-                 [:load-tags]
+    (run-events [[:load-tags]
                  [:set-active-page :articles/add]])))
 
 (defroute "/articles/:id/edit" [id]
@@ -116,12 +119,12 @@
             (nil? @(subscribe [:post])))
     (navigate! "/login")
     (run-events [[:load-post id]
-                 [:load-categories]
+                 [:load-tags]
                  [:set-active-page :articles/edit]])))
 
 (defroute "/articles/:id" [id]
-  (run-events [[:load-categories]
-               [:load-post id]
+  (run-events [[:load-tags]
+               [:load-article id]
                [:set-active-page :articles/view]]))
 
 (defroute "*" []

@@ -1,7 +1,8 @@
 (ns soul-talk.article.handler
   (:require [re-frame.core :refer [reg-event-fx reg-event-db subscribe]]
             [ajax.core :refer [POST GET DELETE PUT]]
-            [soul-talk.db :refer [api-uri]]))
+            [soul-talk.db :refer [api-uri]]
+            [taoensso.timbre :as log]))
 
 (reg-event-db
   :set-public-articles
@@ -12,6 +13,7 @@
 (reg-event-fx
   :load-public-articles
   (fn [_ [_ pagination]]
+    (js/console.log "url:" api-uri)
     {:http {:method        GET
             :url           (str api-uri "/articles/public")
             :ajax-map      {:params pagination}
@@ -25,11 +27,11 @@
 (reg-event-db
   :set-articles
   (fn [db [_ {:keys [articles pagination]}]]
-    (assoc db :admin/articles articles
-              :admin/pagination pagination)))
+    (assoc db :articles articles
+              :edit-pagination pagination)))
 
 (reg-event-fx
-  :load-all-articles
+  :load-articles
   (fn [_ [_ pagination]]
     {:http {:method        GET
             :url           (str api-uri "/articles")
@@ -43,20 +45,20 @@
 
 (reg-event-fx
   :articles/add-ok
-  (fn [{:keys [db]} [_ {:keys [post]}]]
+  (fn [{:keys [db]} [_ {:keys [article]}]]
     {:dispatch-n (list [:set-success "保存成功"])}))
 
 (reg-event-fx
   :articles/add
-  (fn [_ [_ post]]
+  (fn [_ [_ article]]
     {:http {:method        POST
             :url           (str api-uri "/articles")
-            :ajax-map      {:params post}
-            :success-event [:articles/add-ok post]}}))
+            :ajax-map      {:params article}
+            :success-event [:articles/add-ok article]}}))
 
 (reg-event-fx
   :articles/upload-ok
-  (fn [{:keys [db]} [_ {:keys [id] :as post}]]
+  (fn [{:keys [db]} [_ {:keys [id] :as article}]]
     {:db (-> db
            )
      :dispatch-n (list [:set-success "保存成功"])}))
@@ -92,17 +94,17 @@
 
 (reg-event-fx
   :articles/edit
-  (fn [_ [_ {:keys [id counter] :as post}]]
+  (fn [_ [_ {:keys [id counter] :as article}]]
     {:http {:method        PUT
             :url           (str api-uri "/articles/" id)
-            :ajax-map      {:params post}
+            :ajax-map      {:params article}
             :success-event [:articles/edit-ok]
             :error-event   [:articles/edit-error]}}))
 
 (reg-event-db
   :set-article
-  (fn [db [_ {post :post}]]
-    (assoc db :post post)))
+  (fn [db [_ {article :article}]]
+    (assoc db :article article)))
 
 (reg-event-fx
   :load-article
@@ -114,7 +116,7 @@
 (reg-event-db
   :clear-article
   (fn [db _]
-    (dissoc db :post)))
+    (dissoc db :article)))
 
 (reg-event-fx
   :articles/delete-ok
@@ -157,25 +159,25 @@
             :error-event [:articles/publish-error]}}))
 
 (reg-event-db
-  :set-articles-archives
+  :set-public-articles-archives
   (fn [db [_ {:keys [archives]}]]
-    (assoc db :articles-archives archives)))
+    (assoc db :public-articles-archives archives)))
 
 (reg-event-fx
-  :load-articles-archives
+  :load-public-articles-archives
   (fn [_ _]
     {:http {:method        GET
             :url           (str api-uri "/articles/archives")
-            :success-event [:set-articles-archives]}}))
+            :success-event [:set-public-articles-archives]}}))
 
 (reg-event-db
-  :set-articles-archives-year-month
+  :set-public-articles-archives-year-month
   (fn [db [_ {:keys [articles]}]]
-    (assoc db :articles articles)))
+    (assoc db :public-articles-archives-year-month articles)))
 
 (reg-event-fx
-  :load-articles-archives-year-month
+  :load-public-articles-archives-year-month
   (fn [_ [_ year month]]
     {:http {:method        GET
             :url           (str api-uri "/articles/archives/" year "/" month)
-            :success-event [:set-articles-archives-year-month]}}))
+            :success-event [:set-public-articles-archives-year-month]}}))

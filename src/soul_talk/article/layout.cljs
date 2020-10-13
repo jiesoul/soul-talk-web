@@ -10,8 +10,7 @@
     (b/validate
       article
       :title [[v/required :message "标题不能为空\n"]]
-      :category [[v/required :message "请选择一个分类\n"]]
-      :content [[v/required :message "内容不能为空\n"]])
+      :body [[v/required :message "内容不能为空\n"]])
     first
     (vals)))
 

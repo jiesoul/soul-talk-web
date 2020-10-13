@@ -16,7 +16,7 @@
 (defmulti pages (fn [page _] page))
 
 ;;页面
-
+(defmethod pages :home [_ _] [home/home-page])
 (defmethod pages :login [_ _] [auth/login-page])
 (defmethod pages :register [_ _] [auth/register-page])
 (defmethod pages :blog/archives [_ _] [blog/blog-archives-page])
@@ -27,10 +27,10 @@
   (r/with-let [user (subscribe [:user])]
     (if @user
       [page]
-      (navigate! "#/admin"))))
+      (navigate! "#/dash"))))
 
 ;;后台页面
-(defmethod pages :admin [_ _]
+(defmethod pages :dash [_ _]
   (admin dash/dash-page))
 
 (defmethod pages :change-pass [_ _]

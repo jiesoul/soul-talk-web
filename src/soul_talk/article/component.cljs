@@ -7,7 +7,6 @@
             [soul-talk.common.common :as c]
             [soul-talk.common.md-editor :refer [editor]]
             [soul-talk.date-utils :as du]
-            [soul-talk.post-validate :refer [post-errors]]
             [soul-talk.date-utils :refer [to-date]]
             [clojure.string :as str]))
 
@@ -20,9 +19,9 @@
         :active true}
        [:> js/antd.Layout.Content
         [:> js/antd.Row {:gutter 10}
-         (for [{:keys [id title create_time author content] :as post} @articles]
+         (for [{:keys [id title createat author body] :as article} @articles]
            (let [url (str "/#/articles/" id)]
-             ^{:key post}
+             ^{:key article}
              [:> js/antd.Col {:xs 24 :sm 24 :md 8 :lg 8}
               [:> js/antd.Card {:activeTabKey id
                                 :title        (r/as-element
@@ -32,19 +31,19 @@
                                                    :target "_blank"}
                                                   title]
                                                  [:br]
-                                                 [:span (str (to-date create_time) " by " author)]])
+                                                 [:span (str (to-date createat) " by " author)]])
                                 :bodyStyle    {:height "220px" :overflow "hidden"}
                                 :style        {:margin 5}
                                 ;:bordered     false
                                 :hoverable    true}
-               content]]))]]])))
+               body]]))]]])))
 
 (defn blog-articles-list [articles]
   [:> js/antd.List
    {:itemLayout "vertical"
     :size       "small"
     :dataSource @articles
-    :renderItem #(let [{:keys [id title content create_time author] :as post} (js->clj % :keywordize-keys true)]
+    :renderItem #(let [{:keys [id title body createat author] :as article} (js->clj % :keywordize-keys true)]
                    (r/as-element
                      [:> js/antd.List.Item
                       [:> js/antd.List.Item.Meta
@@ -52,12 +51,12 @@
                                                     {:href   (str "#/articles/" id)
                                                      :target "_blank"}
                                                     [:h2 title]])
-                        :description (str " " (to-date create_time) " by " author)}]
-                      [c/markdown-preview content]]))}])
+                        :description (str " " (to-date createat) " by " author)}]
+                      [c/markdown-preview body]]))}])
 
 (defn blog-articles []
   (r/with-let [articles (subscribe [:public-articles])
-               pagination (subscribe [:pagination])]
+               pagination (subscribe [:home-pagination])]
     (when @articles
       (fn []
         (let [edited-pagination (-> @pagination
@@ -96,8 +95,8 @@
          [:> js/antd.List
           {:itemLayout "vertical"
            :dataSource @articles-archives
-           :renderItem (fn [post]
-                         (let [{:keys [year month counter :as post]} (js->clj post :keywordize-keys true)
+           :renderItem (fn [article]
+                         (let [{:keys [year month counter :as article]} (js->clj article :keywordize-keys true)
                                title (str year "年 " month " 月 (" counter ")")]
                            (r/as-element
                              [:> js/antd.List.Item
@@ -110,21 +109,21 @@
 
 (defn list-columns []
   [{:title "标题" :dataIndex "title", :key "title", :align "center"}
-   {:title  "创建时间" :dataIndex "create_time" :key "create_time" :align "center"
-    :render (fn [_ post]
-              (let [post (js->clj post :keywordize-keys true)]
-                (du/to-date-time (:create_time post))))}
-   {:title  "更新时间" :dataIndex "modify_time" :key "modify_time" :align "center"
-    :render (fn [_ post]
-              (let [post (js->clj post :keywordize-keys true)]
-                (du/to-date-time (:modify_time post))))}
+   {:title  "创建时间" :dataIndex "createat" :key "createat" :align "center"
+    :render (fn [_ article]
+              (let [article (js->clj article :keywordize-keys true)]
+                (du/to-date-time (:createat article))))}
+   {:title  "更新时间" :dataIndex "modifyat" :key "modifyat" :align "center"
+    :render (fn [_ article]
+              (let [article (js->clj article :keywordize-keys true)]
+                (du/to-date-time (:modifyat article))))}
    {:title "发布状态" :dataIndex "publish" :key "publish" :align "center"}
    {:title "作者" :dataIndex "author" :key "author" :align "center"}
    {:title "浏览量" :dataIndex "counter" :key "counter" :align "center"}
    {:title  "操作" :dataIndex "actions" :key "actions" :align "center"
-    :render (fn [_ post]
+    :render (fn [_ article]
               (r/as-element
-                (let [{:keys [id publish]} (js->clj post :keywordize-keys true)]
+                (let [{:keys [id publish]} (js->clj article :keywordize-keys true)]
                   [:div
                    [:> js/antd.Button {
                                        :size   "small"
@@ -178,25 +177,25 @@
 (defn add-article-page []
   (r/with-let [article (rf/subscribe [:article])
                user (rf/subscribe [:user])
-               categories (rf/subscribe [:categories])]
+               tags (rf/subscribe [:tags])]
     (fn []
       (let [edited-article (-> @article
                           (update :id #(or % nil))
                           (update :title #(or % nil))
-                          (update :content #(or % nil))
-                          (update :category #(or % nil))
+                          (update :body #(or % nil))
+                          (update :tags #(or % nil))
                           (update :author #(or % (:name @user)))
                           (update :publish #(or % 0))
                           (update :counter #(or % 0))
-                          (update :create_time #(or % (js/Date.)))
+                          (update :createat #(or % (js/Date.)))
                           r/atom)
-            content     (r/cursor edited-article [:content])
+            body     (r/cursor edited-article [:body])
             title       (r/cursor edited-article [:title])]
 
         [article-layout
          article
          edited-article
-         categories
+         tags
          [:> js/antd.Layout.Content {:style {:backdrop-color "#fff"}}
           [:> js/antd.Col {:span 16 :offset 4 :style {:padding-top "10px"}}
            [:> js/antd.Form
@@ -205,32 +204,32 @@
                               (reset! title val))
               :placeholder "请输入标题"}]]
            [:> js/antd.Row
-            [editor content]
+            [editor body]
             ]]]]))))
 
 (defn edit-article-page []
   (r/with-let [article (subscribe [:article])
                user (subscribe [:user])
-               categories (subscribe [:categories])]
+               tags (subscribe [:tags])]
     (fn []
       (let [edited-article (-> @article
                           (update :id #(or % nil))
                           (update :title #(or % nil))
-                          (update :content #(or % nil))
+                          (update :body #(or % nil))
                           (update :category #(or % nil))
                           (update :author #(or % (:name @user)))
                           (update :publish #(or % 0))
                           (update :counter #(or % 0))
-                          (update :create_time #(or % (js/Date.)))
+                          (update :createat #(or % (js/Date.)))
                           r/atom)
-            content     (r/cursor edited-article [:content])
+            body     (r/cursor edited-article [:body])
             title       (r/cursor edited-article [:title])]
         (if-not @article
           [:div [:> js/antd.Spin {:tip "loading"}]]
           [article-layout
            article
            edited-article
-           categories
+           tags
            [:> js/antd.Layout.Content {:style {:backdrop-color "#fff"}}
             [:> js/antd.Col {:span 16 :offset 4 :style {:padding-top "10px"}}
              [:> js/antd.Form
@@ -241,7 +240,7 @@
                 :size         "large"
                 :defaultValue @title}]]
              [:> js/antd.Row
-              [editor content]]]]])))))
+              [editor body]]]]])))))
 
 
 (defn article-view-page []
@@ -256,22 +255,22 @@
             (:title @article)]
            [:div
             {:style {:text-align "center"}}
-            (str (to-date (:create_time @article)) " by " (:author @article))]
+            (str (to-date (:createat @article)) " by " (:author @article))]
            [:> js/antd.Divider]
            [:> js/antd.Typography.Text
-            [c/markdown-preview (:content @article)]]]]]))))
+            [c/markdown-preview (:body @article)]]]]]))))
 
 (defn article-archives-page []
   (r/with-let [articles (subscribe [:articles])]
     (fn []
       [:div
        (doall
-         (for [{:keys [id title create_time author] :as article} @articles]
+         (for [{:keys [id title createat author] :as article} @articles]
            ^{:key article} [:div.blog-article
                          [:h2.blog-article-title
                           [:a.text-muted
                            {:href   (str "/articles/" id)
                             :target "_blank"}
                            title]]
-                         [:p.blog-article-meta (str (.toDateString (js/Date. create_time)) " by " author)]
+                         [:p.blog-article-meta (str (.toDateString (js/Date. createat)) " by " author)]
                          [:hr]]))])))

@@ -51,7 +51,7 @@
 (reg-event-fx
   :save-user-profile
   (fn [_ [_ {:keys [id email name] :as user}]]
-    {:http {:method        POST
+    {:http {:method        PUT
             :url           (str api-uri "/users/" id "/profile")
             :ajax-map      {:params user}
             :success-event [:save-user-profile-ok]

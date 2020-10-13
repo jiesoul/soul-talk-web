@@ -12,5 +12,5 @@
   :load-dashboard
   (fn [_ _]
     {:http {:method        GET
-            :url           (str api-uri "/admin/dashboard")
+            :url           (str api-uri "/dashboard")
             :success-event [:set-dashboard]}}))

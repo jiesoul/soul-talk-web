@@ -20,6 +20,10 @@
   :api-url
   query)
 
+(reg-sub :home-pagination query)
+
+(reg-sub :edit-pagination query)
+
 ;; 当前页配置
 (reg-sub :auth-token query)
 
@@ -41,16 +45,16 @@
 
 (reg-sub :tags query)
 
-(reg-sub :post query)
-
 (reg-sub :articles query)
 
-(reg-sub :articles-archives query)
+(reg-sub :article query)
 
-(reg-sub :pagination query)
+(reg-sub :public-articles query)
 
-(reg-sub :admin/users query)
+(reg-sub :public-articles-archives query)
 
-(reg-sub :admin/articles query)
+(reg-sub :public-articles-archives-year-month query)
 
-(reg-sub :admin/pagination query)
+(reg-sub :users query)
+
+

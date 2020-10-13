@@ -7,6 +7,11 @@
 yarn install
 ```
 
+更新所有 js 包
+```base
+yarn upgrade-interactive --latest
+```
+
 打包外部 JS
 ```bash
 yarn webpack
