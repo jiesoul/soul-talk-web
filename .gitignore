@@ -2,9 +2,9 @@
 dist
 .cpcache/
 .idea/
+.history/
 out
 target
 .rebel_readline_history
+.nrepl-port
 node_modules/
-package-lock.json
-yarn.lock

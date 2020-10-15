@@ -1,8 +1,9 @@
-{:deps    {org.clojure/clojure             {:mvn/version "1.10.1"}
-
-           ;; client
-           org.clojure/clojurescript       {:mvn/version "1.10.597"}
+{:deps    {org.clojure/clojurescript       {:mvn/version "1.10.597"}
+           org.clojure/core.incubator {:mvn/version "0.1.4"}
            com.andrewmcveigh/cljs-time {:mvn/version "0.5.2"}
+           markdown-clj {:mvn/version "1.10.5"}
+           camel-snake-kebab {:mvn/version "0.4.1"}
+           alandipert/storage-atom {:mvn/version "1.2.4"}
            reagent                         {:mvn/version "0.8.1"
                                             :exclusions [cljsjs/react cljsjs/react-dom]}
            re-frame                        {:mvn/version "0.10.6"}
@@ -11,7 +12,6 @@
            clj-commons/secretary {:mvn/version "1.2.4"}
            bouncer {:mvn/version "1.0.1"}
            com.taoensso/timbre {:mvn/version "4.10.0"}
-           ;cljsjs/antd {:mvn/version "3.19.0-0"}
            }
 
  :paths   ["src" "src-cljc" "resources"]
