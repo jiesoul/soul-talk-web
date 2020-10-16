@@ -1,8 +1,9 @@
 (ns soul-talk.common.common
   (:require [re-frame.core :as rf :refer [dispatch subscribe]]
             [reagent.core :as r]
+            [reagent.dom :as rd]
             [showdown]
-            [hljs]))
+            [highlight.js]))
 
 (defn to-time [date]
   (str (.toDateString (js/Date. date))))
@@ -73,7 +74,7 @@
 
 ;;高亮代码 循环查找结节
 (defn highlight-code [node]
-  (let [nodes (.querySelectorAll (r/dom-node node) "pre code")]
+  (let [nodes (.querySelectorAll (rd/dom-node node) "pre code")]
     (loop [i (.-length nodes)]
       (when-not (neg? i)
         (when-let [item (.item nodes i)]
@@ -85,9 +86,9 @@
   (let [md-parser (js/showdown.Converter.)]
     (r/create-class
       {:component-did-mount
-       #(highlight-code (r/dom-node %))
+       #(highlight-code (rd/dom-node %))
        :component-did-update
-       #(highlight-code (r/dom-node %))
+       #(highlight-code (rd/dom-node %))
        :reagent-render
        (fn [content]
          [:div

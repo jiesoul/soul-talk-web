@@ -1,5 +1,6 @@
 (ns soul-talk.common.md-editor
-  (:require [reagent.core :as r]
+  (:require [reagent.dom :as rd]
+            [reagent.core :as r]
             [re-frame.core :refer [dispatch subscribe]]))
 
 (def ^{:private true} hint-limit 10)
@@ -34,7 +35,7 @@
                 :ch to}))))
 
 (defn- render-hint [element self data]
-  (r/render
+  (rd/render
     [:div.list-group-item
      [:span "#" (get-in (js->clj data) ["displayText" "support-issue-id"])]
      " "
@@ -129,7 +130,7 @@
                                                                :className "fa fa-file"
                                                                :title     "upload md file"}]
                                             :renderingConfig {:codeSyntaxHighlighting true}
-                                            :element         (r/dom-node this)
+                                            :element         (rd/dom-node this)
                                             :force-sync      true
                                             :initialValue    @text
                                             :value @text}))
@@ -148,11 +149,6 @@
                          ;(-> editor .-codemirror (.on "startCompletion" (fn [] (reset! hints-shown true))))
                          ;(-> editor .-codemirror (.on "endCompletion" (fn [] (reset! hints-shown false))))
                          )))
-
-     ;:component-did-update
-     ;              (fn [this]
-     ;                (let [node (r/dom-node this)]
-     ;                  (reset! dom-node node)))
      :reagent-render
                    (fn [text keys]
                      (js/console.log "editor content: " @text)

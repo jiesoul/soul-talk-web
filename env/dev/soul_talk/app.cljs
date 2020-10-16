@@ -1,11 +1,14 @@
 (ns soul-talk.app
   (:require [soul-talk.core :as core]
             [devtools.core :as devtools]
-            [re-frame.core :as rf]))
+            [re-frame.core :as rf]
+            [moment]))
 
 (enable-console-print!)
 
 (set! *warn-on-infer* true)
+
+(js/console.log moment)
 
 (devtools/set-pref! :dont-detect-custom-formatters true)
 (devtools/install!)

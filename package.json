@@ -1,19 +1,22 @@
 {
   "name": "soul-talk-web",
   "version": "1.0.0",
-  "description": "",
+  "description": "首先确保你安装了 java clojure nodejs",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "repository": "https://github.com//jiesoul/soul-talk-web.git",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com//jiesoul/soul-talk-web.git"
+  },
   "keywords": [],
   "author": "jiesoul <jiesoul@gmail.com>",
   "license": "ISC",
   "dependencies": {
     "antd": "^4.7.0",
     "highlight.js": "^9.15.8",
-    "moment": "^2.24.0",
+    "moment": "^2.29.1",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "showdown": "^1.9.0",
@@ -29,5 +32,9 @@
     "style-loader": "^0.23.1",
     "webpack": "^4.32.0",
     "webpack-cli": "^3.3.2"
+  },
+  "directories": {
+    "doc": "docs",
+    "test": "test"
   }
 }
